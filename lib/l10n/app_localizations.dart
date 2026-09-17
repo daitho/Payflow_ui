@@ -1199,6 +1199,71 @@ abstract class AppLocalizations {
     String rate,
     String targetCurrency,
   );
+  String get transferHistoryTitle;
+
+  String get transferDetailTitle;
+
+  String get transferNotFound;
+
+  String get transferStatusCreated;
+
+  String get transferStatusPending;
+
+  String get transferStatusProcessing;
+
+  String get transferStatusCompleted;
+
+  String get transferStatusFailed;
+
+  String get transferStatusCancelled;
+
+  String get transferStatusRefunded;
+
+  String get transferStatusUnknown;
+
+  String get transferBeneficiary;
+
+  String get transferAllBeneficiaries;
+
+  String get transferStatusLabel;
+
+  String get transferAllStatuses;
+
+  String get transferResetFilters;
+
+  String get transferCountLabel;
+
+  String get transferSentTotalLabel;
+
+  String get transferHistoryEmpty;
+
+  String get transferLoadMore;
+
+  String get transferRecipientName;
+
+  String get transferCountry;
+
+  String get transferOperator;
+
+  String get transferDestination;
+
+  String get transferAmounts;
+
+  String get transferSent;
+
+  String get transferFee;
+
+  String get transferTotalCharged;
+
+  String get transferRate;
+
+  String get transferReceived;
+
+  String get transferTracking;
+
+  String get transferReference;
+
+  String get transferCreatedAt;
 }
 
 class _AppLocalizationsDelegate

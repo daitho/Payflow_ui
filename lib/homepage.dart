@@ -109,15 +109,9 @@ class _HomePageState extends State<HomePage> {
           onExchangeRatesTap: () {
             context.push(AppRoutes.exchangeRates);
           },
-          /*onTransactionTap: (
-              String transactionId,
-              ) {
-            context.push(
-              AppRoutes.transactionDetailPath(
-                transactionId,
-              ),
-            );
-          },*/
+          onTransactionTap: (transaction) {
+            context.push(AppRoutes.transactionDetailPath(transaction.id));
+          },
 
           onViewAllTransactions: () {
             context.push(

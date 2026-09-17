@@ -222,6 +222,38 @@
         "type": "String"
       }
     }
-  }
-
+  },
+  "transferHistoryTitle": "Historique des transferts",
+  "transferDetailTitle": "Détail du transfert",
+  "transferNotFound": "Ce transfert est introuvable.",
+  "transferStatusCreated": "Créé",
+  "transferStatusPending": "En attente",
+  "transferStatusProcessing": "En cours",
+  "transferStatusCompleted": "Terminé",
+  "transferStatusFailed": "Échoué",
+  "transferStatusCancelled": "Annulé",
+  "transferStatusRefunded": "Remboursé",
+  "transferStatusUnknown": "Statut inconnu",
+  "transferBeneficiary": "Bénéficiaire",
+  "transferAllBeneficiaries": "Tous les bénéficiaires",
+  "transferStatusLabel": "Statut",
+  "transferAllStatuses": "Tous les statuts",
+  "transferResetFilters": "Réinitialiser les filtres",
+  "transferCountLabel": "Nombre de transferts",
+  "transferSentTotalLabel": "Total envoyé par devise",
+  "transferHistoryEmpty": "Aucun transfert ne correspond à votre recherche.",
+  "transferLoadMore": "Charger la suite",
+  "transferRecipientName": "Nom",
+  "transferCountry": "Pays",
+  "transferOperator": "Opérateur",
+  "transferDestination": "Destination",
+  "transferAmounts": "Montants",
+  "transferSent": "Montant envoyé",
+  "transferFee": "Frais",
+  "transferTotalCharged": "Total débité",
+  "transferRate": "Taux appliqué",
+  "transferReceived": "Montant à recevoir",
+  "transferTracking": "Suivi du transfert",
+  "transferReference": "Référence",
+  "transferCreatedAt": "Créé le"
 }

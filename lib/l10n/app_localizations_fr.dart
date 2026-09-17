@@ -611,4 +611,102 @@ class AppLocalizationsFr extends AppLocalizations {
   ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
+  @override
+  String get transferHistoryTitle => 'Historique des transferts';
+
+  @override
+  String get transferDetailTitle => 'Détail du transfert';
+
+  @override
+  String get transferNotFound => 'Ce transfert est introuvable.';
+
+  @override
+  String get transferStatusCreated => 'Créé';
+
+  @override
+  String get transferStatusPending => 'En attente';
+
+  @override
+  String get transferStatusProcessing => 'En cours';
+
+  @override
+  String get transferStatusCompleted => 'Terminé';
+
+  @override
+  String get transferStatusFailed => 'Échoué';
+
+  @override
+  String get transferStatusCancelled => 'Annulé';
+
+  @override
+  String get transferStatusRefunded => 'Remboursé';
+
+  @override
+  String get transferStatusUnknown => 'Statut inconnu';
+
+  @override
+  String get transferBeneficiary => 'Bénéficiaire';
+
+  @override
+  String get transferAllBeneficiaries => 'Tous les bénéficiaires';
+
+  @override
+  String get transferStatusLabel => 'Statut';
+
+  @override
+  String get transferAllStatuses => 'Tous les statuts';
+
+  @override
+  String get transferResetFilters => 'Réinitialiser les filtres';
+
+  @override
+  String get transferCountLabel => 'Nombre de transferts';
+
+  @override
+  String get transferSentTotalLabel => 'Total envoyé par devise';
+
+  @override
+  String get transferHistoryEmpty => 'Aucun transfert ne correspond à votre recherche.';
+
+  @override
+  String get transferLoadMore => 'Charger la suite';
+
+  @override
+  String get transferRecipientName => 'Nom';
+
+  @override
+  String get transferCountry => 'Pays';
+
+  @override
+  String get transferOperator => 'Opérateur';
+
+  @override
+  String get transferDestination => 'Destination';
+
+  @override
+  String get transferAmounts => 'Montants';
+
+  @override
+  String get transferSent => 'Montant envoyé';
+
+  @override
+  String get transferFee => 'Frais';
+
+  @override
+  String get transferTotalCharged => 'Total débité';
+
+  @override
+  String get transferRate => 'Taux appliqué';
+
+  @override
+  String get transferReceived => 'Montant à recevoir';
+
+  @override
+  String get transferTracking => 'Suivi du transfert';
+
+  @override
+  String get transferReference => 'Référence';
+
+  @override
+  String get transferCreatedAt => 'Créé le';
 }
