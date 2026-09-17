@@ -4,7 +4,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/exception/transfer_history_exception.dart';
 
 String transferMoney(BuildContext context, num amount, String currency) =>
-    NumberFormat.simpleCurrency(
+    NumberFormat.currency(
       locale: Localizations.localeOf(context).toLanguageTag(),
       name: currency, symbol: currency,
     ).format(amount);
