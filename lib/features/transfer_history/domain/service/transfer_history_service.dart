@@ -14,4 +14,9 @@ class TransferHistoryService {
 
   Future<TransferDetailModel> getDetail(String transferId) =>
       _repository.getDetail(transferId);
+  Future<List<int>> getReceipt(String transferId, String locale) =>
+      _repository.getReceipt(transferId, locale);
+
+  Future<List<int>> getStatement(TransferHistoryFilter filter, String locale) =>
+      _repository.getStatement(filter, locale);
 }

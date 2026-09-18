@@ -27,4 +27,7 @@ abstract interface class TransferHistoryApiService {
     bool download = false,
     String? locale,
   });
+  Future<List<int>> getStatement({
+    String? beneficiaryId, String? status, required String locale,
+  });
 }

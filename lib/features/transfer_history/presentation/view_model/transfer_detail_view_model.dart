@@ -38,6 +38,34 @@ class TransferDetailViewModel extends ChangeNotifier {
     }
   }
 
+  bool _exporting = false;
+  TransferHistoryFailure? _exportError;
+  bool get isExporting => _exporting;
+  TransferHistoryFailure? get exportError => _exportError;
+
+  Future<List<int>?> exportReceipt(String locale) async {
+    if (_disposed || _exporting) return null;
+    if (_detail?.receiptAvailable != true) return null;
+    _exporting = true;
+    _exportError = null;
+    notifyListeners();
+    try {
+      final bytes = await _service.getReceipt(transferId, locale);
+      return _disposed ? null : bytes;
+    } catch (error) {
+      if (!_disposed) {
+        _exportError = error is TransferHistoryException
+            ? error.failure : TransferHistoryFailure.unexpected;
+      }
+      return null;
+    } finally {
+      if (!_disposed) {
+        _exporting = false;
+        notifyListeners();
+      }
+    }
+  }
+
   @override
   void dispose() {
     _disposed = true;

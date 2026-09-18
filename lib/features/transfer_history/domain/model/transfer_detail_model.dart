@@ -10,6 +10,9 @@ class TransferDetailModel {
   final String? destination;
   final num sentAmount, receivedAmount, fee, totalChargedAmount, appliedRate;
   final DateTime createdAt;
+  final DateTime? receivedAt;
+  final String? providerReference;
+  final bool receiptAvailable, repeatAllowed;
   final List<TransferTimelineEntry> timeline;
   TransferDetailModel({
     required this.id, required this.reference, required this.status,
@@ -18,6 +21,8 @@ class TransferDetailModel {
     required this.sourceCurrencyCode, required this.targetCurrencyCode,
     required this.sentAmount, required this.receivedAmount, required this.fee,
     required this.totalChargedAmount, required this.appliedRate,
-    required this.createdAt, required List<TransferTimelineEntry> timeline,
+    required this.createdAt, this.receivedAt, this.providerReference,
+    this.receiptAvailable = false, this.repeatAllowed = false,
+    required List<TransferTimelineEntry> timeline,
   }) : timeline = List.unmodifiable(timeline);
 }

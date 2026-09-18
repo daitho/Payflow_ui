@@ -602,8 +602,9 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
+
   @override
-  String get transferHistoryTitle => 'Transfer history';
+  String get transferHistoryTitle => 'Transactions';
 
   @override
   String get transferDetailTitle => 'Transfer details';
@@ -651,7 +652,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferResetFilters => 'Reset filters';
 
   @override
-  String get transferCountLabel => 'Transfer count';
+  String get transferCountLabel => 'Total transactions';
 
   @override
   String get transferSentTotalLabel => 'Total sent by currency';
@@ -681,6 +682,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferSent => 'Amount sent';
 
   @override
+  String transferSentTo(String amount, String beneficiary) {
+    return 'You sent $amount to $beneficiary';
+  }
+
+  @override
   String get transferFee => 'Fees';
 
   @override
@@ -700,4 +706,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transferCreatedAt => 'Created on';
+
+  @override
+  String get transferExport => 'Export';
+
+  @override
+  String get transferReceiptAction => 'View / export receipt';
+
+  @override
+  String get transferRepeatAction => 'Repeat transfer';
+
+  @override
+  String get transferProviderReference => 'Operator confirmation';
+
+  @override
+  String get transferTotalAmount => 'Total amount';
+
+  @override
+  String get transferTimelineUnavailable =>
+      'Detailed tracking is unavailable for this transfer.';
+
+  @override
+  String get transferTrackingCompleted =>
+      'The funds have been delivered to the recipient.';
+
+  @override
+  String get transferTrackingFailed =>
+      'The transfer failed. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingCancelled =>
+      'The transfer is cancelled. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingRefunded => 'The transfer is marked as refunded.';
+
+  @override
+  String get transferTrackingPending =>
+      'The transfer is being processed. Receipt has not yet been confirmed.';
 }

@@ -7,4 +7,6 @@ abstract interface class TransferHistoryRepository {
     required TransferHistoryFilter filter, required int page, int size = 20,
   });
   Future<TransferDetailModel> getDetail(String transferId);
+  Future<List<int>> getReceipt(String transferId, String locale);
+  Future<List<int>> getStatement(TransferHistoryFilter filter, String locale);
 }

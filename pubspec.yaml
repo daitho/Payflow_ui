@@ -44,6 +44,7 @@ dependencies:
   provider: ^6.1.5+1
   flutter_secure_storage: ^11.0.0
   local_auth: ^3.0.2
+  printing: ^5.15.0
   intl: any
   country_picker: ^2.0.28
   uuid: ^4.6.0
@@ -75,7 +76,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/images/login/
+    - assets/images/login/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

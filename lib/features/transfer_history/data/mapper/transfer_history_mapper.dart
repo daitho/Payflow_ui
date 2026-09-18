@@ -36,6 +36,8 @@ abstract final class TransferHistoryMapper {
       sentAmount: dto.sentAmount, receivedAmount: dto.receivedAmount,
       fee: dto.fee, totalChargedAmount: dto.totalChargedAmount,
       appliedRate: dto.appliedRate, createdAt: dto.createdAt,
+      receivedAt: dto.receivedAt, providerReference: dto.providerReference,
+      receiptAvailable: dto.receiptAvailable, repeatAllowed: dto.repeatAllowed,
       timeline: dto.statusTimeline.map((item) =>
         TransferTimelineEntry(item.status, item.occurredAt)).toList(),
     );

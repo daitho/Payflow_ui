@@ -3,11 +3,12 @@ import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/exception/transfer_history_exception.dart';
 
-String transferMoney(BuildContext context, num amount, String currency) =>
-    NumberFormat.currency(
-      locale: Localizations.localeOf(context).toLanguageTag(),
-      name: currency, symbol: currency,
-    ).format(amount);
+String transferMoney(BuildContext context, num amount, String currency) {
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  // Keep the same presentation as the Home transaction row and avoid
+  // relying on optional NumberFormat.currency parameters across intl versions.
+  return '${NumberFormat('#,##0.00', locale).format(amount)} $currency';
+}
 
 String transferDate(BuildContext context, DateTime date) =>
     DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag())

@@ -223,7 +223,7 @@
       }
     }
   },
-  "transferHistoryTitle": "Transfer history",
+  "transferHistoryTitle": "Transactions",
   "transferDetailTitle": "Transfer details",
   "transferNotFound": "This transfer could not be found.",
   "transferStatusCreated": "Created",
@@ -239,7 +239,7 @@
   "transferStatusLabel": "Status",
   "transferAllStatuses": "All statuses",
   "transferResetFilters": "Reset filters",
-  "transferCountLabel": "Transfer count",
+  "transferCountLabel": "Total transactions",
   "transferSentTotalLabel": "Total sent by currency",
   "transferHistoryEmpty": "No transfers match your search.",
   "transferLoadMore": "Load more",
@@ -249,11 +249,33 @@
   "transferDestination": "Destination",
   "transferAmounts": "Amounts",
   "transferSent": "Amount sent",
+  "transferSentTo": "You sent {amount} to {beneficiary}",
+  "@transferSentTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "beneficiary": {
+        "type": "String"
+      }
+    }
+  },
   "transferFee": "Fees",
   "transferTotalCharged": "Total charged",
   "transferRate": "Applied rate",
   "transferReceived": "Amount to receive",
   "transferTracking": "Transfer tracking",
   "transferReference": "Reference",
-  "transferCreatedAt": "Created on"
+  "transferCreatedAt": "Created on",
+  "transferExport": "Export",
+  "transferReceiptAction": "View / export receipt",
+  "transferRepeatAction": "Repeat transfer",
+  "transferProviderReference": "Operator confirmation",
+  "transferTotalAmount": "Total amount",
+  "transferTimelineUnavailable": "Detailed tracking is unavailable for this transfer.",
+  "transferTrackingCompleted": "The funds have been delivered to the recipient.",
+  "transferTrackingFailed": "The transfer failed. The available tracking does not specify the debit or refund situation.",
+  "transferTrackingCancelled": "The transfer is cancelled. The available tracking does not specify the debit or refund situation.",
+  "transferTrackingRefunded": "The transfer is marked as refunded.",
+  "transferTrackingPending": "The transfer is being processed. Receipt has not yet been confirmed."
 }

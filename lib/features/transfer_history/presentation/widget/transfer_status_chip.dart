@@ -9,7 +9,8 @@ class TransferStatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      'COMPLETED' || 'REFUNDED' => const Color(0xFF008B80),
+      'COMPLETED' => const Color(0xFF008B80),
+      'REFUNDED' => const Color(0xFF7657A8),
       'FAILED' || 'CANCELLED' => const Color(0xFFB3261E),
       _ => const Color(0xFF946000),
     };

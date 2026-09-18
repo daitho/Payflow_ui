@@ -223,7 +223,7 @@
       }
     }
   },
-  "transferHistoryTitle": "Historique des transferts",
+  "transferHistoryTitle": "Transactions",
   "transferDetailTitle": "Détail du transfert",
   "transferNotFound": "Ce transfert est introuvable.",
   "transferStatusCreated": "Créé",
@@ -239,7 +239,7 @@
   "transferStatusLabel": "Statut",
   "transferAllStatuses": "Tous les statuts",
   "transferResetFilters": "Réinitialiser les filtres",
-  "transferCountLabel": "Nombre de transferts",
+  "transferCountLabel": "Total des transactions",
   "transferSentTotalLabel": "Total envoyé par devise",
   "transferHistoryEmpty": "Aucun transfert ne correspond à votre recherche.",
   "transferLoadMore": "Charger la suite",
@@ -249,11 +249,33 @@
   "transferDestination": "Destination",
   "transferAmounts": "Montants",
   "transferSent": "Montant envoyé",
+  "transferSentTo": "Vous avez envoyé {amount} à {beneficiary}",
+  "@transferSentTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "beneficiary": {
+        "type": "String"
+      }
+    }
+  },
   "transferFee": "Frais",
   "transferTotalCharged": "Total débité",
   "transferRate": "Taux appliqué",
   "transferReceived": "Montant à recevoir",
   "transferTracking": "Suivi du transfert",
   "transferReference": "Référence",
-  "transferCreatedAt": "Créé le"
+  "transferCreatedAt": "Créé le",
+  "transferExport": "Exporter",
+  "transferReceiptAction": "Voir / exporter le reçu",
+  "transferRepeatAction": "Répéter le transfert",
+  "transferProviderReference": "Confirmation opérateur",
+  "transferTotalAmount": "Montant total",
+  "transferTimelineUnavailable": "Le suivi détaillé est indisponible pour ce transfert.",
+  "transferTrackingCompleted": "Les fonds ont été remis au bénéficiaire.",
+  "transferTrackingFailed": "Le transfert a échoué. Le suivi disponible ne précise pas la situation du débit ou du remboursement.",
+  "transferTrackingCancelled": "Le transfert est annulé. Le suivi disponible ne précise pas la situation du débit ou du remboursement.",
+  "transferTrackingRefunded": "Le transfert est indiqué comme remboursé.",
+  "transferTrackingPending": "Le transfert est en cours de traitement. Sa réception n’est pas encore confirmée."
 }

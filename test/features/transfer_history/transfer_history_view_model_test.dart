@@ -18,6 +18,19 @@ class PendingRequest {
 
 class FakeRepository implements TransferHistoryRepository {
   final requests = <PendingRequest>[];
+  TransferHistoryFilter? exportedFilter;
+  String? exportedLocale;
+  Completer<List<int>>? document;
+  @override
+  Future<List<int>> getStatement(TransferHistoryFilter filter, String locale) {
+    exportedFilter = filter;
+    exportedLocale = locale;
+    document = Completer<List<int>>();
+    return document!.future;
+  }
+  @override
+  Future<List<int>> getReceipt(String transferId, String locale) =>
+      throw UnimplementedError();
   @override
   Future<TransferHistoryPageModel> getHistory({
     required TransferHistoryFilter filter, required int page, int size = 20,
@@ -130,5 +143,40 @@ void main() {
     repository.requests.single.completer.complete(page(['a']));
     await request;
     expect(notifications, 1);
+  });
+
+  test('summary and export cover the full active filter, not the loaded page', () async {
+    final first = vm.setFilter(const TransferHistoryFilter(
+      beneficiaryId: 'alice', status: 'COMPLETED'));
+    repository.requests.single.completer.complete(page(['a'], more: true));
+    await first;
+    expect(vm.items.length, 1);
+    expect(vm.page!.transactionCount, 3);
+    final export = vm.exportHistory('fr-FR');
+    expect(repository.exportedFilter!.beneficiaryId, 'alice');
+    expect(repository.exportedFilter!.status, 'COMPLETED');
+    expect(repository.exportedLocale, 'fr-FR');
+    expect(vm.isExporting, isTrue);
+    await vm.setFilter(const TransferHistoryFilter());
+    expect(vm.filter.beneficiaryId, 'alice');
+    repository.document!.complete([37, 80, 68, 70, 45]);
+    expect(await export, [37, 80, 68, 70, 45]);
+    expect(vm.isExporting, isFalse);
+    vm.dispose();
+  });
+
+  test('export failure preserves results and reports its own error', () async {
+    final first = vm.refresh();
+    repository.requests.single.completer.complete(page(['a']));
+    await first;
+    final export = vm.exportHistory('en');
+    repository.document!.completeError(
+      const TransferHistoryException(TransferHistoryFailure.network));
+    expect(await export, isNull);
+    expect(vm.exportError, TransferHistoryFailure.network);
+    expect(vm.error, isNull);
+    expect(vm.items.single.id, 'a');
+    expect(vm.isExporting, isFalse);
+    vm.dispose();
   });
 }

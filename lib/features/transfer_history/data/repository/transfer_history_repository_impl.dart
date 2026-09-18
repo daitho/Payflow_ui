@@ -25,6 +25,16 @@ class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
       _guard(() async => TransferHistoryMapper.detail(
         await _api.getDetail(transferId: transferId)));
 
+  @override
+  Future<List<int>> getReceipt(String transferId, String locale) =>
+      _guard(() => _api.getReceipt(
+        transferId: transferId, locale: locale, download: true));
+
+  @override
+  Future<List<int>> getStatement(TransferHistoryFilter filter, String locale) =>
+      _guard(() => _api.getStatement(
+        beneficiaryId: filter.beneficiaryId, status: filter.status, locale: locale));
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

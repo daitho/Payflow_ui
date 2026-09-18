@@ -25,15 +25,19 @@ class TransferHistoryViewModel extends ChangeNotifier {
   bool get isLoadingMore => _loadingMore;
 
   Future<void> setFilter(TransferHistoryFilter value) async {
+    if (_exporting || _disposed) return;
     _filter = value;
     _page = null;
     _items = const [];
     await refresh();
   }
 
-  Future<void> refresh() => _load(append: false);
+  Future<void> refresh() async {
+    if (_exporting) return;
+    await _load(append: false);
+  }
   Future<void> loadMore() async {
-    if (_loading || _loadingMore || _page?.hasNext != true) return;
+    if (_exporting || _loading || _loadingMore || _page?.hasNext != true) return;
     await _load(append: true);
   }
 
@@ -65,6 +69,34 @@ class TransferHistoryViewModel extends ChangeNotifier {
       if (!_disposed && generation == _generation) {
         _loading = false;
         _loadingMore = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  bool _exporting = false;
+  TransferHistoryFailure? _exportError;
+  bool get isExporting => _exporting;
+  TransferHistoryFailure? get exportError => _exportError;
+
+  Future<List<int>?> exportHistory(String locale) async {
+    if (_disposed || _exporting) return null;
+    if (_loading || _loadingMore || _page == null) return null;
+    _exporting = true;
+    _exportError = null;
+    notifyListeners();
+    try {
+      final bytes = await _service.getStatement(_filter, locale);
+      return _disposed ? null : bytes;
+    } catch (error) {
+      if (!_disposed) {
+        _exportError = error is TransferHistoryException
+            ? error.failure : TransferHistoryFailure.unexpected;
+      }
+      return null;
+    } finally {
+      if (!_disposed) {
+        _exporting = false;
         notifyListeners();
       }
     }
