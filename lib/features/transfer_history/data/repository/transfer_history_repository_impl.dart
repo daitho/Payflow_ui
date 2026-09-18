@@ -16,7 +16,7 @@ class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
   Future<TransferHistoryPageModel> getHistory({
     required TransferHistoryFilter filter, required int page, int size = 20,
   }) => _guard(() async => TransferHistoryMapper.page(await _api.getHistory(
-    beneficiaryId: filter.beneficiaryId, status: filter.status,
+    beneficiaryId: filter.beneficiaryId, status: filter.status, year: filter.year,
     page: page, size: size,
   )));
 
@@ -33,7 +33,7 @@ class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
   @override
   Future<List<int>> getStatement(TransferHistoryFilter filter, String locale) =>
       _guard(() => _api.getStatement(
-        beneficiaryId: filter.beneficiaryId, status: filter.status, locale: locale));
+        beneficiaryId: filter.beneficiaryId, status: filter.status, year: filter.year, locale: locale));
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
@@ -62,3 +62,4 @@ class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
     }
   }
 }
+

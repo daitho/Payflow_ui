@@ -755,4 +755,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get transferTrackingPending =>
       'Le transfert est en cours de traitement. Sa réception n’est pas encore confirmée.';
+  @override
+  String get transferYearLabel => 'Année';
+
+  @override
+  String get transferAllYears => 'Toutes les années';
 }
+

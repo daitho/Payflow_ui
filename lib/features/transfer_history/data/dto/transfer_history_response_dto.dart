@@ -15,6 +15,7 @@ final class TransferHistoryResponseDto {
 
   final List<TransferHistoryBeneficiaryDto> beneficiaries;
   final List<String> availableStatuses;
+  final List<int> availableYears;
 
   // ===========================================================
   // PAGINATION
@@ -40,6 +41,7 @@ final class TransferHistoryResponseDto {
     required this.items,
     required this.beneficiaries,
     required this.availableStatuses,
+    this.availableYears = const [],
     required this.page,
     required this.size,
     required this.totalElements,
@@ -97,6 +99,9 @@ final class TransferHistoryResponseDto {
       // PAGINATION
       // -------------------------------------------------------
 
+      availableYears: (json['availableYears'] as List<dynamic>? ?? const [])
+          .map((year) => year as int).toList(growable: false),
+
       page: json['page'] as int,
 
       size: json['size'] as int,
@@ -120,3 +125,4 @@ final class TransferHistoryResponseDto {
     );
   }
 }
+

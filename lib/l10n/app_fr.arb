@@ -196,7 +196,6 @@
   "exchangeRatesLoadError": "Impossible de charger les taux de change.",
   "exchangeRatesRefreshError": "Impossible d’actualiser les taux.",
   "exchangeRatesRetry": "Réessayer",
-
   "exchangeRateCorridor": "{sourceCountry} → {destinationCountry}",
   "@exchangeRateCorridor": {
     "placeholders": {
@@ -208,7 +207,6 @@
       }
     }
   },
-
   "exchangeRateEquation": "1 {sourceCurrency} = {rate} {targetCurrency}",
   "@exchangeRateEquation": {
     "placeholders": {
@@ -277,5 +275,7 @@
   "transferTrackingFailed": "Le transfert a échoué. Le suivi disponible ne précise pas la situation du débit ou du remboursement.",
   "transferTrackingCancelled": "Le transfert est annulé. Le suivi disponible ne précise pas la situation du débit ou du remboursement.",
   "transferTrackingRefunded": "Le transfert est indiqué comme remboursé.",
-  "transferTrackingPending": "Le transfert est en cours de traitement. Sa réception n’est pas encore confirmée."
+  "transferTrackingPending": "Le transfert est en cours de traitement. Sa réception n’est pas encore confirmée.",
+  "transferYearLabel": "Année",
+  "transferAllYears": "Toutes les années"
 }

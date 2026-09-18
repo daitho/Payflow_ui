@@ -17,6 +17,7 @@ abstract final class TransferHistoryMapper {
       beneficiaries: dto.beneficiaries.map((item) =>
         TransferHistoryBeneficiaryModel(item.id, item.displayName)).toList(),
       availableStatuses: dto.availableStatuses,
+      availableYears: dto.availableYears,
       sentTotals: dto.summary.sentTotals.map((item) =>
         TransferHistoryCurrencyTotalModel(item.currencyCode, item.amount)).toList(),
       page: dto.page, transactionCount: dto.summary.transactionCount,
@@ -43,3 +44,4 @@ abstract final class TransferHistoryMapper {
     );
   }
 }
+

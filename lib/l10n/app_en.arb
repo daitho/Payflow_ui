@@ -196,7 +196,6 @@
   "exchangeRatesLoadError": "Unable to load exchange rates.",
   "exchangeRatesRefreshError": "Unable to refresh exchange rates.",
   "exchangeRatesRetry": "Try again",
-
   "exchangeRateCorridor": "{sourceCountry} → {destinationCountry}",
   "@exchangeRateCorridor": {
     "placeholders": {
@@ -208,7 +207,6 @@
       }
     }
   },
-
   "exchangeRateEquation": "1 {sourceCurrency} = {rate} {targetCurrency}",
   "@exchangeRateEquation": {
     "placeholders": {
@@ -277,5 +275,7 @@
   "transferTrackingFailed": "The transfer failed. The available tracking does not specify the debit or refund situation.",
   "transferTrackingCancelled": "The transfer is cancelled. The available tracking does not specify the debit or refund situation.",
   "transferTrackingRefunded": "The transfer is marked as refunded.",
-  "transferTrackingPending": "The transfer is being processed. Receipt has not yet been confirmed."
+  "transferTrackingPending": "The transfer is being processed. Receipt has not yet been confirmed.",
+  "transferYearLabel": "Year",
+  "transferAllYears": "All years"
 }

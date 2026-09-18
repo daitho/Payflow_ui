@@ -147,7 +147,7 @@ void main() {
 
   test('summary and export cover the full active filter, not the loaded page', () async {
     final first = vm.setFilter(const TransferHistoryFilter(
-      beneficiaryId: 'alice', status: 'COMPLETED'));
+      beneficiaryId: 'alice', status: 'COMPLETED', year: 2024));
     repository.requests.single.completer.complete(page(['a'], more: true));
     await first;
     expect(vm.items.length, 1);
@@ -155,6 +155,8 @@ void main() {
     final export = vm.exportHistory('fr-FR');
     expect(repository.exportedFilter!.beneficiaryId, 'alice');
     expect(repository.exportedFilter!.status, 'COMPLETED');
+    expect(repository.exportedFilter!.year, 2024);
+    expect(repository.requests.single.filter.year, 2024);
     expect(repository.exportedLocale, 'fr-FR');
     expect(vm.isExporting, isTrue);
     await vm.setFilter(const TransferHistoryFilter());
@@ -180,3 +182,4 @@ void main() {
     vm.dispose();
   });
 }
+
