@@ -602,4 +602,152 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
+
+  @override
+  String get transferHistoryTitle => 'Transactions';
+
+  @override
+  String get transferDetailTitle => 'Transfer details';
+
+  @override
+  String get transferNotFound => 'This transfer could not be found.';
+
+  @override
+  String get transferStatusCreated => 'Created';
+
+  @override
+  String get transferStatusPending => 'Pending';
+
+  @override
+  String get transferStatusProcessing => 'Processing';
+
+  @override
+  String get transferStatusCompleted => 'Completed';
+
+  @override
+  String get transferStatusFailed => 'Failed';
+
+  @override
+  String get transferStatusCancelled => 'Cancelled';
+
+  @override
+  String get transferStatusRefunded => 'Refunded';
+
+  @override
+  String get transferStatusUnknown => 'Unknown status';
+
+  @override
+  String get transferBeneficiary => 'Recipient';
+
+  @override
+  String get transferAllBeneficiaries => 'All recipients';
+
+  @override
+  String get transferStatusLabel => 'Status';
+
+  @override
+  String get transferAllStatuses => 'All statuses';
+
+  @override
+  String get transferResetFilters => 'Reset filters';
+
+  @override
+  String get transferCountLabel => 'Total transactions';
+
+  @override
+  String get transferSentTotalLabel => 'Total sent by currency';
+
+  @override
+  String get transferHistoryEmpty => 'No transfers match your search.';
+
+  @override
+  String get transferLoadMore => 'Load more';
+
+  @override
+  String get transferRecipientName => 'Name';
+
+  @override
+  String get transferCountry => 'Country';
+
+  @override
+  String get transferOperator => 'Operator';
+
+  @override
+  String get transferDestination => 'Destination';
+
+  @override
+  String get transferAmounts => 'Amounts';
+
+  @override
+  String get transferSent => 'Amount sent';
+
+  @override
+  String transferSentTo(String amount, String beneficiary) {
+    return 'You sent $amount to $beneficiary';
+  }
+
+  @override
+  String get transferFee => 'Fees';
+
+  @override
+  String get transferTotalCharged => 'Total charged';
+
+  @override
+  String get transferRate => 'Applied rate';
+
+  @override
+  String get transferReceived => 'Amount to receive';
+
+  @override
+  String get transferTracking => 'Transfer tracking';
+
+  @override
+  String get transferReference => 'Reference';
+
+  @override
+  String get transferCreatedAt => 'Created on';
+
+  @override
+  String get transferExport => 'Export';
+
+  @override
+  String get transferReceiptAction => 'View / export receipt';
+
+  @override
+  String get transferRepeatAction => 'Repeat transfer';
+
+  @override
+  String get transferProviderReference => 'Operator confirmation';
+
+  @override
+  String get transferTotalAmount => 'Total amount';
+
+  @override
+  String get transferTimelineUnavailable =>
+      'Detailed tracking is unavailable for this transfer.';
+
+  @override
+  String get transferTrackingCompleted =>
+      'The funds have been delivered to the recipient.';
+
+  @override
+  String get transferTrackingFailed =>
+      'The transfer failed. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingCancelled =>
+      'The transfer is cancelled. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingRefunded => 'The transfer is marked as refunded.';
+
+  @override
+  String get transferTrackingPending =>
+      'The transfer is being processed. Receipt has not yet been confirmed.';
+  @override
+  String get transferYearLabel => 'Year';
+
+  @override
+  String get transferAllYears => 'All years';
 }
+

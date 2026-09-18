@@ -1,3 +1,10 @@
+import '../../features/transfer_history/data/repository/transfer_history_repository_impl.dart';
+import '../../features/transfer_history/data/service_api/transfer_history_api_service_impl.dart';
+import '../../features/transfer_history/domain/service/transfer_history_service.dart';
+import '../../features/transfer_history/presentation/view/transfer_history_view.dart';
+import '../../features/transfer_history/presentation/view/transfer_detail_view.dart';
+import '../../features/transfer_history/presentation/view_model/transfer_history_view_model.dart';
+import '../../features/transfer_history/presentation/view_model/transfer_detail_view_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -110,6 +117,12 @@ ExchangeRateRepositoryImpl(
   _exchangeRateApiService
 );
 
+final TransferHistoryService _transferHistoryService = TransferHistoryService(
+  repository: TransferHistoryRepositoryImpl(
+    apiService: TransferHistoryApiServiceImpl(dio: _dioClient.dio),
+  ),
+);
+
 final AuthGuard _authGuard = AuthGuard(sessionService: _sessionService);
 final GuestGuard _guestGuard = GuestGuard(sessionService: _sessionService);
 
@@ -177,7 +190,7 @@ GoRouter _createRouter() {
       final bool isProtectedRoute =
           location == AppRoutes.home ||
               location == AppRoutes.exchangeRates ||
-              location.startsWith('/transactions/history') ||
+              location.startsWith('/transactions/') ||
               location.startsWith('/profile');
 
       if (isProtectedRoute) {
@@ -187,6 +200,25 @@ GoRouter _createRouter() {
       return null;
     },
     routes: [
+      GoRoute(
+        path: AppRoutes.transactionHistory,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => TransferHistoryViewModel(
+            service: _transferHistoryService,
+          )..refresh(),
+          child: const TransferHistoryView(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionDetail,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => TransferDetailViewModel(
+            service: _transferHistoryService,
+            transferId: state.pathParameters['transactionId']!,
+          )..load(),
+          child: const TransferDetailView(),
+        ),
+      ),
       // =====================================================
       // SPLASH
       // =====================================================

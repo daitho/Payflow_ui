@@ -37,6 +37,7 @@ final class TransferHistoryApiServiceImpl
   Future<TransferHistoryResponseDto> getHistory({
     String? beneficiaryId,
     String? status,
+    int? year,
     required int page,
     required int size,
   }) async {
@@ -44,6 +45,7 @@ final class TransferHistoryApiServiceImpl
     <String, dynamic>{
       'page': page,
       'size': size,
+      if (year != null) 'year': year,
     };
 
     final String? normalizedBeneficiaryId =
@@ -167,7 +169,7 @@ final class TransferHistoryApiServiceImpl
       );
     }
 
-    return bytes;
+    return _requirePdf(bytes);
   }
 
   // ===========================================================
@@ -228,4 +230,41 @@ final class TransferHistoryApiServiceImpl
 
     return normalized;
   }
+
+  @override
+  Future<List<int>> getStatement({
+    String? beneficiaryId, String? status, int? year, required String locale,
+  }) async {
+    final String? normalizedBeneficiaryId =
+        _normalizeOptionalString(beneficiaryId);
+    final String? normalizedStatus = _normalizeOptionalString(status);
+    final String? normalizedLocale = _normalizeOptionalString(locale);
+
+    final response = await _dio.get<List<int>>(
+      '$_historyPath/export/pdf',
+      queryParameters: {
+        if (normalizedBeneficiaryId != null)
+          'beneficiaryId': normalizedBeneficiaryId,
+        if (normalizedStatus != null) 'status': normalizedStatus,
+        if (normalizedLocale != null) 'locale': normalizedLocale,
+        'download': true,
+        if (year != null) 'year': year,
+      },
+      options: Options(responseType: ResponseType.bytes),
+    );
+    return _requirePdf(response.data);
+  }
+
+  List<int> _requirePdf(List<int>? bytes) {
+    // Reject a successful HTTP response that actually contains JSON/HTML.
+    const signature = [0x25, 0x50, 0x44, 0x46, 0x2D];
+    if (bytes == null || bytes.length < signature.length) {
+      throw StateError('Empty PDF response');
+    }
+    for (var i = 0; i < signature.length; i++) {
+      if (bytes[i] != signature[i]) throw StateError('Invalid PDF response');
+    }
+    return bytes;
+  }
 }
+

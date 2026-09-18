@@ -1199,6 +1199,280 @@ abstract class AppLocalizations {
     String rate,
     String targetCurrency,
   );
+
+  /// No description provided for @transferHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transferHistoryTitle;
+
+  /// No description provided for @transferDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer details'**
+  String get transferDetailTitle;
+
+  /// No description provided for @transferNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer could not be found.'**
+  String get transferNotFound;
+
+  /// No description provided for @transferStatusCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get transferStatusCreated;
+
+  /// No description provided for @transferStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get transferStatusPending;
+
+  /// No description provided for @transferStatusProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get transferStatusProcessing;
+
+  /// No description provided for @transferStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get transferStatusCompleted;
+
+  /// No description provided for @transferStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get transferStatusFailed;
+
+  /// No description provided for @transferStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get transferStatusCancelled;
+
+  /// No description provided for @transferStatusRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get transferStatusRefunded;
+
+  /// No description provided for @transferStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown status'**
+  String get transferStatusUnknown;
+
+  /// No description provided for @transferBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get transferBeneficiary;
+
+  /// No description provided for @transferAllBeneficiaries.
+  ///
+  /// In en, this message translates to:
+  /// **'All recipients'**
+  String get transferAllBeneficiaries;
+
+  /// No description provided for @transferStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get transferStatusLabel;
+
+  String get transferYearLabel;
+
+  String get transferAllYears;
+
+  /// No description provided for @transferAllStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'All statuses'**
+  String get transferAllStatuses;
+
+  /// No description provided for @transferResetFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filters'**
+  String get transferResetFilters;
+
+  /// No description provided for @transferCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total transactions'**
+  String get transferCountLabel;
+
+  /// No description provided for @transferSentTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total sent by currency'**
+  String get transferSentTotalLabel;
+
+  /// No description provided for @transferHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No transfers match your search.'**
+  String get transferHistoryEmpty;
+
+  /// No description provided for @transferLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get transferLoadMore;
+
+  /// No description provided for @transferRecipientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get transferRecipientName;
+
+  /// No description provided for @transferCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get transferCountry;
+
+  /// No description provided for @transferOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get transferOperator;
+
+  /// No description provided for @transferDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get transferDestination;
+
+  /// No description provided for @transferAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts'**
+  String get transferAmounts;
+
+  /// No description provided for @transferSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount sent'**
+  String get transferSent;
+
+  /// No description provided for @transferSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'You sent {amount} to {beneficiary}'**
+  String transferSentTo(String amount, String beneficiary);
+
+  /// No description provided for @transferFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Fees'**
+  String get transferFee;
+
+  /// No description provided for @transferTotalCharged.
+  ///
+  /// In en, this message translates to:
+  /// **'Total charged'**
+  String get transferTotalCharged;
+
+  /// No description provided for @transferRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied rate'**
+  String get transferRate;
+
+  /// No description provided for @transferReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount to receive'**
+  String get transferReceived;
+
+  /// No description provided for @transferTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer tracking'**
+  String get transferTracking;
+
+  /// No description provided for @transferReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get transferReference;
+
+  /// No description provided for @transferCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created on'**
+  String get transferCreatedAt;
+
+  /// No description provided for @transferExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get transferExport;
+
+  /// No description provided for @transferReceiptAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View / export receipt'**
+  String get transferReceiptAction;
+
+  /// No description provided for @transferRepeatAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat transfer'**
+  String get transferRepeatAction;
+
+  /// No description provided for @transferProviderReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator confirmation'**
+  String get transferProviderReference;
+
+  /// No description provided for @transferTotalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total amount'**
+  String get transferTotalAmount;
+
+  /// No description provided for @transferTimelineUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed tracking is unavailable for this transfer.'**
+  String get transferTimelineUnavailable;
+
+  /// No description provided for @transferTrackingCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The funds have been delivered to the recipient.'**
+  String get transferTrackingCompleted;
+
+  /// No description provided for @transferTrackingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer failed. The available tracking does not specify the debit or refund situation.'**
+  String get transferTrackingFailed;
+
+  /// No description provided for @transferTrackingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is cancelled. The available tracking does not specify the debit or refund situation.'**
+  String get transferTrackingCancelled;
+
+  /// No description provided for @transferTrackingRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is marked as refunded.'**
+  String get transferTrackingRefunded;
+
+  /// No description provided for @transferTrackingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is being processed. Receipt has not yet been confirmed.'**
+  String get transferTrackingPending;
 }
 
 class _AppLocalizationsDelegate
@@ -1234,3 +1508,4 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

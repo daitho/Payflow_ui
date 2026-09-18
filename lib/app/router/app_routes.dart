@@ -11,8 +11,9 @@ abstract final class AppRoutes {
   // =========================================================
   static const String transactionHistory = '/transactions/history';
   static const String transactionDetail = '/transactions/:transactionId';
+
   static String transactionDetailPath(String transactionId) {
-    return '/transactions/$transactionId';
+    return '/transactions/${Uri.encodeComponent(transactionId)}';
   }
 
   // =========================================================

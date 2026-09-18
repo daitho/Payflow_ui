@@ -196,7 +196,6 @@
   "exchangeRatesLoadError": "Unable to load exchange rates.",
   "exchangeRatesRefreshError": "Unable to refresh exchange rates.",
   "exchangeRatesRetry": "Try again",
-
   "exchangeRateCorridor": "{sourceCountry} → {destinationCountry}",
   "@exchangeRateCorridor": {
     "placeholders": {
@@ -208,7 +207,6 @@
       }
     }
   },
-
   "exchangeRateEquation": "1 {sourceCurrency} = {rate} {targetCurrency}",
   "@exchangeRateEquation": {
     "placeholders": {
@@ -222,5 +220,62 @@
         "type": "String"
       }
     }
-  }
+  },
+  "transferHistoryTitle": "Transactions",
+  "transferDetailTitle": "Transfer details",
+  "transferNotFound": "This transfer could not be found.",
+  "transferStatusCreated": "Created",
+  "transferStatusPending": "Pending",
+  "transferStatusProcessing": "Processing",
+  "transferStatusCompleted": "Completed",
+  "transferStatusFailed": "Failed",
+  "transferStatusCancelled": "Cancelled",
+  "transferStatusRefunded": "Refunded",
+  "transferStatusUnknown": "Unknown status",
+  "transferBeneficiary": "Recipient",
+  "transferAllBeneficiaries": "All recipients",
+  "transferStatusLabel": "Status",
+  "transferAllStatuses": "All statuses",
+  "transferResetFilters": "Reset filters",
+  "transferCountLabel": "Total transactions",
+  "transferSentTotalLabel": "Total sent by currency",
+  "transferHistoryEmpty": "No transfers match your search.",
+  "transferLoadMore": "Load more",
+  "transferRecipientName": "Name",
+  "transferCountry": "Country",
+  "transferOperator": "Operator",
+  "transferDestination": "Destination",
+  "transferAmounts": "Amounts",
+  "transferSent": "Amount sent",
+  "transferSentTo": "You sent {amount} to {beneficiary}",
+  "@transferSentTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "beneficiary": {
+        "type": "String"
+      }
+    }
+  },
+  "transferFee": "Fees",
+  "transferTotalCharged": "Total charged",
+  "transferRate": "Applied rate",
+  "transferReceived": "Amount to receive",
+  "transferTracking": "Transfer tracking",
+  "transferReference": "Reference",
+  "transferCreatedAt": "Created on",
+  "transferExport": "Export",
+  "transferReceiptAction": "View / export receipt",
+  "transferRepeatAction": "Repeat transfer",
+  "transferProviderReference": "Operator confirmation",
+  "transferTotalAmount": "Total amount",
+  "transferTimelineUnavailable": "Detailed tracking is unavailable for this transfer.",
+  "transferTrackingCompleted": "The funds have been delivered to the recipient.",
+  "transferTrackingFailed": "The transfer failed. The available tracking does not specify the debit or refund situation.",
+  "transferTrackingCancelled": "The transfer is cancelled. The available tracking does not specify the debit or refund situation.",
+  "transferTrackingRefunded": "The transfer is marked as refunded.",
+  "transferTrackingPending": "The transfer is being processed. Receipt has not yet been confirmed.",
+  "transferYearLabel": "Year",
+  "transferAllYears": "All years"
 }
