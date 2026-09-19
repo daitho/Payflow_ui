@@ -23,44 +23,69 @@ class TransferHistoryFilters extends StatelessWidget {
     }
     final statuses = {...?page?.availableStatuses,
       if (filter.status != null) filter.status!};
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        child: Row(children: [
-          _chip(l10n.transferAllBeneficiaries, filter.beneficiaryId == null,
-            () => onChanged(TransferHistoryFilter(status: filter.status))),
-          ...beneficiaries.entries.map((entry) => _chip(entry.value,
-            filter.beneficiaryId == entry.key,
-            () => onChanged(TransferHistoryFilter(
-              beneficiaryId: entry.key, status: filter.status)))),
-        ]),
-      ),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        child: Row(children: [
-          _chip(l10n.transferAllStatuses, filter.status == null,
-            () => onChanged(TransferHistoryFilter(beneficiaryId: filter.beneficiaryId))),
-          ...statuses.map((status) => _chip(transferStatus(l10n, status),
-            filter.status == status,
-            () => onChanged(TransferHistoryFilter(
-              beneficiaryId: filter.beneficiaryId, status: status)))),
-        ]),
-      ),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(children: [
+        _dropdown(
+          label: l10n.transferBeneficiary,
+          allLabel: l10n.transferAllBeneficiaries,
+          value: filter.beneficiaryId,
+          options: beneficiaries,
+          onSelected: (value) => onChanged(TransferHistoryFilter(
+            beneficiaryId: value, status: filter.status)),
+        ),
+        const SizedBox(height: 12),
+        _dropdown(
+          label: l10n.transferStatusLabel,
+          allLabel: l10n.transferAllStatuses,
+          value: filter.status,
+          options: {for (final status in statuses) status: transferStatus(l10n, status)},
+          onSelected: (value) => onChanged(TransferHistoryFilter(
+            beneficiaryId: filter.beneficiaryId, status: value)),
+        ),
+      ]),
+    );
   }
 
-  Widget _chip(String label, bool selected, VoidCallback action) => Padding(
-    padding: const EdgeInsets.only(right: 10),
-    child: ChoiceChip(
-      label: Text(label), selected: selected, showCheckmark: false,
-      selectedColor: const Color(0xFFE96C15),
-      backgroundColor: Colors.white,
-      labelStyle: TextStyle(color: selected ? Colors.white : const Color(0xFF302B28),
-        fontWeight: selected ? FontWeight.w700 : FontWeight.w500),
-      shape: const StadiumBorder(),
-      onSelected: enabled ? (_) => action() : null,
-    ),
-  );
+  Widget _dropdown({
+    required String label,
+    required String allLabel,
+    required String? value,
+    required Map<String, String> options,
+    required ValueChanged<String?> onSelected,
+  }) {
+    // Zero represents all options without reserving a possible backend ID.
+    final keys = options.keys.toList();
+    final selectedIndex = value == null ? 0 : keys.indexOf(value) + 1;
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: label,
+        enabled: enabled,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int>(
+          value: selectedIndex,
+          isExpanded: true,
+          menuMaxHeight: 320,
+          borderRadius: BorderRadius.circular(12),
+          items: [
+            DropdownMenuItem(value: 0,
+              child: Text(allLabel, maxLines: 1, overflow: TextOverflow.ellipsis)),
+            for (var index = 0; index < keys.length; index++)
+              DropdownMenuItem(value: index + 1,
+                child: Text(options[keys[index]]!, maxLines: 1,
+                  overflow: TextOverflow.ellipsis)),
+          ],
+          onChanged: enabled ? (index) {
+            if (index == null || index == selectedIndex) return;
+            onSelected(index == 0 ? null : keys[index - 1]);
+          } : null,
+        ),
+      ),
+    );
+  }
 }
