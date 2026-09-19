@@ -1286,6 +1286,37 @@ abstract class AppLocalizations {
 
   String get transferYearLabel;
 
+  String get contactTitle;
+  String get contactSearch;
+  String get contactAdd;
+  String get contactSection;
+  String get contactNew;
+  String get contactEdit;
+  String get contactInformation;
+  String get contactFullName;
+  String get contactPhone;
+  String get contactCountry;
+  String get contactOperator;
+  String get contactGender;
+  String get contactMale;
+  String get contactFemale;
+  String get contactUnspecified;
+  String get contactSave;
+  String get contactEmpty;
+  String get contactNoPhone;
+  String get contactChoose;
+  String get contactRequired;
+  String get contactNameTooLong;
+  String get contactPhoneInvalid;
+  String get contactNoOperators;
+  String get contactNetworkError;
+  String get contactSessionError;
+  String get contactInvalidError;
+  String get contactNotFoundError;
+  String get contactServerError;
+  String get contactUnavailable;
+
+
   String get transferAllYears;
 
   /// No description provided for @transferAllStatuses.

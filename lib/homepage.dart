@@ -1,3 +1,4 @@
+import 'features/beneficiaries/presentation/view/beneficiaries_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> {
       // CONTACTS
       // -------------------------------------------------------
       case 1:
-        return const _ComingSoonPage(icon: Icons.people_outline_rounded);
+        return const BeneficiariesView();
       // -------------------------------------------------------
       // REFERRAL
       // -------------------------------------------------------
@@ -426,3 +427,4 @@ class _ComingSoonPage extends StatelessWidget {
     );
   }
 }
+

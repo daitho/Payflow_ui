@@ -749,5 +749,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transferAllYears => 'All years';
+  @override
+  String get contactTitle => "Beneficiaries";
+
+  @override
+  String get contactSearch => "Enter a name to search…";
+
+  @override
+  String get contactAdd => "Add a beneficiary";
+
+  @override
+  String get contactSection => "YOUR BENEFICIARIES";
+
+  @override
+  String get contactNew => "New Beneficiary";
+
+  @override
+  String get contactEdit => "Edit beneficiary";
+
+  @override
+  String get contactInformation => "Contact information";
+
+  @override
+  String get contactFullName => "Full name";
+
+  @override
+  String get contactPhone => "Phone number";
+
+  @override
+  String get contactCountry => "Country";
+
+  @override
+  String get contactOperator => "Operator";
+
+  @override
+  String get contactGender => "Gender";
+
+  @override
+  String get contactMale => "Male";
+
+  @override
+  String get contactFemale => "Female";
+
+  @override
+  String get contactUnspecified => "Not specified";
+
+  @override
+  String get contactSave => "Save changes";
+
+  @override
+  String get contactEmpty => "No beneficiaries found.";
+
+  @override
+  String get contactNoPhone => "No phone number";
+
+  @override
+  String get contactChoose => "Choose";
+
+  @override
+  String get contactRequired => "Required field";
+
+  @override
+  String get contactNameTooLong => "Maximum 120 characters";
+
+  @override
+  String get contactPhoneInvalid => "Enter the number with its country code, e.g. +237…";
+
+  @override
+  String get contactNoOperators => "No Mobile Money operators available.";
+
+  @override
+  String get contactNetworkError => "Connection unavailable. Check your network.";
+
+  @override
+  String get contactSessionError => "Your session has expired. Please sign in again.";
+
+  @override
+  String get contactInvalidError => "Check the phone, country and operator. A contact with multiple destinations cannot change country here.";
+
+  @override
+  String get contactNotFoundError => "This beneficiary or operator is no longer available.";
+
+  @override
+  String get contactServerError => "Unable to complete this action. Please try again.";
+
+  @override
+  String get contactUnavailable => "This destination cannot be edited in the Mobile Money form.";
+
 }
 

@@ -1,3 +1,9 @@
+import '../../features/beneficiaries/data/service_api/beneficiary_api_service.dart';
+import '../../features/beneficiaries/data/repository/beneficiary_repository_impl.dart';
+import '../../features/beneficiaries/domain/service/beneficiary_service.dart';
+import '../../features/beneficiaries/presentation/view_model/beneficiaries_view_model.dart';
+import '../../features/beneficiaries/presentation/view_model/beneficiary_form_view_model.dart';
+import '../../features/beneficiaries/presentation/view/beneficiary_form_view.dart';
 import '../../features/transfer_history/data/repository/transfer_history_repository_impl.dart';
 import '../../features/transfer_history/data/service_api/transfer_history_api_service_impl.dart';
 import '../../features/transfer_history/domain/service/transfer_history_service.dart';
@@ -123,6 +129,10 @@ final TransferHistoryService _transferHistoryService = TransferHistoryService(
   ),
 );
 
+final BeneficiaryService _beneficiaryService = BeneficiaryService(
+  BeneficiaryRepositoryImpl(BeneficiaryApiService(_dioClient.dio)),
+);
+
 final AuthGuard _authGuard = AuthGuard(sessionService: _sessionService);
 final GuestGuard _guestGuard = GuestGuard(sessionService: _sessionService);
 
@@ -191,7 +201,8 @@ GoRouter _createRouter() {
           location == AppRoutes.home ||
               location == AppRoutes.exchangeRates ||
               location.startsWith('/transactions/') ||
-              location.startsWith('/profile');
+              location.startsWith('/profile') ||
+              location.startsWith('/beneficiaries/');
 
       if (isProtectedRoute) {
         return _authGuard.redirect();
@@ -200,6 +211,15 @@ GoRouter _createRouter() {
       return null;
     },
     routes: [
+      GoRoute(path: AppRoutes.beneficiaryCreate,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => BeneficiaryFormViewModel(_beneficiaryService)..load(),
+          child: const BeneficiaryFormView())),
+      GoRoute(path: AppRoutes.beneficiaryEdit,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => BeneficiaryFormViewModel(_beneficiaryService,
+            id: state.pathParameters['beneficiaryId']!)..load(),
+          child: const BeneficiaryFormView())),
       GoRoute(
         path: AppRoutes.transactionHistory,
         builder: (context, state) => ChangeNotifierProvider(
@@ -276,6 +296,8 @@ GoRouter _createRouter() {
         builder: (context, state) {
           return MultiProvider(
             providers: [
+              ChangeNotifierProvider<BeneficiariesViewModel>(
+                create: (_) => BeneficiariesViewModel(_beneficiaryService)..load()),
               ChangeNotifierProvider<ProfileViewModel>(
                 create: (_) =>
                     ProfileViewModel(sessionService: _sessionService),
@@ -368,3 +390,4 @@ GoRouter _createRouter() {
     ],
   );
 }
+

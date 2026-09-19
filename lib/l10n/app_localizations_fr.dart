@@ -760,5 +760,92 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get transferAllYears => 'Toutes les années';
+  @override
+  String get contactTitle => "Bénéficiaire";
+
+  @override
+  String get contactSearch => "Entrer le nom à rechercher…";
+
+  @override
+  String get contactAdd => "Ajouter un bénéficiaire";
+
+  @override
+  String get contactSection => "VOS BÉNÉFICIAIRES";
+
+  @override
+  String get contactNew => "Nouveau Bénéficiaire";
+
+  @override
+  String get contactEdit => "Modifier le bénéficiaire";
+
+  @override
+  String get contactInformation => "Informations du contact";
+
+  @override
+  String get contactFullName => "Nom complet";
+
+  @override
+  String get contactPhone => "Numéro de téléphone";
+
+  @override
+  String get contactCountry => "Pays";
+
+  @override
+  String get contactOperator => "Opérateur";
+
+  @override
+  String get contactGender => "Genre";
+
+  @override
+  String get contactMale => "Homme";
+
+  @override
+  String get contactFemale => "Femme";
+
+  @override
+  String get contactUnspecified => "Non renseigné";
+
+  @override
+  String get contactSave => "Enregistrer les modifications";
+
+  @override
+  String get contactEmpty => "Aucun bénéficiaire trouvé.";
+
+  @override
+  String get contactNoPhone => "Numéro non renseigné";
+
+  @override
+  String get contactChoose => "Choisir";
+
+  @override
+  String get contactRequired => "Champ obligatoire";
+
+  @override
+  String get contactNameTooLong => "120 caractères maximum";
+
+  @override
+  String get contactPhoneInvalid => "Saisissez le numéro avec son indicatif, par exemple +237…";
+
+  @override
+  String get contactNoOperators => "Aucun opérateur Mobile Money disponible.";
+
+  @override
+  String get contactNetworkError => "Connexion indisponible. Vérifiez votre réseau.";
+
+  @override
+  String get contactSessionError => "Votre session a expiré. Reconnectez-vous.";
+
+  @override
+  String get contactInvalidError => "Vérifiez le numéro, le pays et l’opérateur. Un contact avec plusieurs destinations ne peut pas changer de pays ici.";
+
+  @override
+  String get contactNotFoundError => "Ce bénéficiaire ou cet opérateur n’est plus disponible.";
+
+  @override
+  String get contactServerError => "Impossible de terminer cette action. Réessayez.";
+
+  @override
+  String get contactUnavailable => "Cette destination n’est pas modifiable dans le formulaire Mobile Money.";
+
 }
 
