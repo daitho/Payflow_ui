@@ -744,4 +744,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transferTrackingPending =>
       'The transfer is being processed. Receipt has not yet been confirmed.';
+  @override
+  String get transferYearLabel => 'Year';
+
+  @override
+  String get transferAllYears => 'All years';
 }
+

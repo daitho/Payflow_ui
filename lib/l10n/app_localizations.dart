@@ -1284,6 +1284,10 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get transferStatusLabel;
 
+  String get transferYearLabel;
+
+  String get transferAllYears;
+
   /// No description provided for @transferAllStatuses.
   ///
   /// In en, this message translates to:
@@ -1504,3 +1508,4 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'that was used.',
   );
 }
+

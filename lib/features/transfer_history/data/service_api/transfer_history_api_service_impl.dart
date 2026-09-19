@@ -37,6 +37,7 @@ final class TransferHistoryApiServiceImpl
   Future<TransferHistoryResponseDto> getHistory({
     String? beneficiaryId,
     String? status,
+    int? year,
     required int page,
     required int size,
   }) async {
@@ -44,6 +45,7 @@ final class TransferHistoryApiServiceImpl
     <String, dynamic>{
       'page': page,
       'size': size,
+      if (year != null) 'year': year,
     };
 
     final String? normalizedBeneficiaryId =
@@ -231,7 +233,7 @@ final class TransferHistoryApiServiceImpl
 
   @override
   Future<List<int>> getStatement({
-    String? beneficiaryId, String? status, required String locale,
+    String? beneficiaryId, String? status, int? year, required String locale,
   }) async {
     final String? normalizedBeneficiaryId =
         _normalizeOptionalString(beneficiaryId);
@@ -246,6 +248,7 @@ final class TransferHistoryApiServiceImpl
         if (normalizedStatus != null) 'status': normalizedStatus,
         if (normalizedLocale != null) 'locale': normalizedLocale,
         'download': true,
+        if (year != null) 'year': year,
       },
       options: Options(responseType: ResponseType.bytes),
     );
@@ -264,3 +267,4 @@ final class TransferHistoryApiServiceImpl
     return bytes;
   }
 }
+

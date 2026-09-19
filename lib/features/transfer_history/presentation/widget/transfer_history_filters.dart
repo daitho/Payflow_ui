@@ -23,6 +23,26 @@ class TransferHistoryFilters extends StatelessWidget {
     }
     final statuses = {...?page?.availableStatuses,
       if (filter.status != null) filter.status!};
+    final years = {...?page?.availableYears,
+      if (filter.year != null) filter.year!}.toList()
+      ..sort((a, b) => b.compareTo(a));
+    final statusField = _dropdown(
+      label: l10n.transferStatusLabel,
+      allLabel: l10n.transferAllStatuses,
+      value: filter.status,
+      options: {for (final status in statuses) status: transferStatus(l10n, status)},
+      onSelected: (value) => onChanged(TransferHistoryFilter(
+        beneficiaryId: filter.beneficiaryId, status: value, year: filter.year)),
+    );
+    final yearField = _dropdown(
+      label: l10n.transferYearLabel,
+      allLabel: l10n.transferAllYears,
+      value: filter.year?.toString(),
+      options: {for (final year in years) '$year': '$year'},
+      onSelected: (value) => onChanged(TransferHistoryFilter(
+        beneficiaryId: filter.beneficiaryId, status: filter.status,
+        year: value == null ? null : int.parse(value))),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(children: [
@@ -32,17 +52,22 @@ class TransferHistoryFilters extends StatelessWidget {
           value: filter.beneficiaryId,
           options: beneficiaries,
           onSelected: (value) => onChanged(TransferHistoryFilter(
-            beneficiaryId: value, status: filter.status)),
+            beneficiaryId: value, status: filter.status, year: filter.year)),
         ),
         const SizedBox(height: 12),
-        _dropdown(
-          label: l10n.transferStatusLabel,
-          allLabel: l10n.transferAllStatuses,
-          value: filter.status,
-          options: {for (final status in statuses) status: transferStatus(l10n, status)},
-          onSelected: (value) => onChanged(TransferHistoryFilter(
-            beneficiaryId: filter.beneficiaryId, status: value)),
-        ),
+        LayoutBuilder(builder: (context, constraints) {
+          if (constraints.maxWidth < 300 ||
+              MediaQuery.textScalerOf(context).scale(14) > 20) {
+            return Column(children: [
+              statusField, const SizedBox(height: 12), yearField,
+            ]);
+          }
+          return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(child: statusField),
+            const SizedBox(width: 12),
+            Expanded(child: yearField),
+          ]);
+        }),
       ]),
     );
   }
