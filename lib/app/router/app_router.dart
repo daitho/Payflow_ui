@@ -64,6 +64,7 @@ import '../../features/profile/presentation/view_model/profile_view_model.dart';
 import '../../features/profile/presentation/view_model/security_privacy_view_model.dart';
 import '../../homepage.dart';
 import 'app_routes.dart';
+import 'routes/change_password_route.dart';
 import 'guards/auth_guard.dart';
 import 'guards/guest_guard.dart';
 
@@ -368,6 +369,7 @@ GoRouter _createRouter() {
           );
         },
       ),
+      buildChangePasswordRoute(dio: _dioClient.dio),
       GoRoute(
         path: AppRoutes.profileSecurity,
         builder: (context, state) {
