@@ -912,4 +912,15 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get transferUnavailableError =>
       'Ce transfert n’est pas disponible pour ce bénéficiaire ou ce montant.';
+  @override
+  String get systemLanguage => 'Langue du téléphone';
+
+  @override
+  String get spanish => 'Espagnol';
+
+  @override
+  String get mandarin => 'Chinois mandarin';
+
+  @override
+  String get hindi => 'Hindi';
 }
