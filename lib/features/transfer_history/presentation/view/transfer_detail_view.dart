@@ -79,14 +79,21 @@ class TransferDetailView extends StatelessWidget {
                   busy: vm.isExporting,
                   onReceipt: () => _receipt(context, vm),
                   onRepeat: detail.repeatAllowed
-                      ? () => context.push(
-                          AppRoutes.transfer,
-                          extra: TransferDraftSeed(
-                            beneficiaryId: detail.beneficiaryId,
-                            sentAmount: detail.sentAmount,
-                            sentCurrency: detail.sourceCurrencyCode,
-                          ),
-                        )
+                      ? () async {
+                          final transferId = await context.push<String>(
+                            AppRoutes.transfer,
+                            extra: TransferDraftSeed(
+                              beneficiaryId: detail.beneficiaryId,
+                              sentAmount: detail.sentAmount,
+                              sentCurrency: detail.sourceCurrencyCode,
+                            ),
+                          );
+                          if (context.mounted && transferId != null) {
+                            context.pushReplacement(
+                              AppRoutes.transactionDetailPath(transferId),
+                            );
+                          }
+                        }
                       : null,
                 ),
                 TransferDetailField(

@@ -50,7 +50,7 @@ class _TransferViewState extends State<TransferView> {
       _showError(vm.error);
       return;
     }
-    await showModalBottomSheet<void>(
+    final confirmedTransferId = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
@@ -61,11 +61,13 @@ class _TransferViewState extends State<TransferView> {
       builder: (sheetContext) => _TransferReviewSheet(
         viewModel: vm,
         onConfirmed: (transferId) {
-          Navigator.of(sheetContext).pop();
-          context.pushReplacement(AppRoutes.transactionDetailPath(transferId));
+          Navigator.of(sheetContext).pop(transferId);
         },
       ),
     );
+    if (mounted && confirmedTransferId != null) {
+      context.pop(confirmedTransferId);
+    }
   }
 
   void _showError(TransferFailure? failure) {
@@ -552,6 +554,14 @@ class _TransferReviewSheet extends StatelessWidget {
             _ReviewLine(
               label: l10n.transferBeneficiary,
               value: contact.fullName,
+            ),
+            _ReviewLine(
+              label: l10n.contactPhone,
+              value: contact.phoneE164 ?? l10n.contactNoPhone,
+            ),
+            _ReviewLine(
+              label: l10n.transferOperator,
+              value: contact.operatorName ?? '—',
             ),
             _ReviewLine(
               label: l10n.transferSent,

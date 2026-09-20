@@ -368,8 +368,8 @@ class _HomePageState extends State<HomePage> {
   // TRANSFER
   // =========================================================
 
-  void _openTransfer() {
-    context.push(
+  Future<void> _openTransfer() async {
+    final transferId = await context.push<String>(
       AppRoutes.transfer,
       extra: TransferDraftSeed(
         beneficiaryId: _selectedBeneficiary?.id,
@@ -380,10 +380,11 @@ class _HomePageState extends State<HomePage> {
             ?.sourceCurrencyCode,
       ),
     );
+    await _refreshHomeAndOpenTransfer(transferId);
   }
 
-  void _openTransferForBeneficiary(String beneficiaryId) {
-    context.push(
+  Future<void> _openTransferForBeneficiary(String beneficiaryId) async {
+    final transferId = await context.push<String>(
       AppRoutes.transfer,
       extra: TransferDraftSeed(
         beneficiaryId: beneficiaryId,
@@ -393,6 +394,20 @@ class _HomePageState extends State<HomePage> {
             ?.exchangeRate
             ?.sourceCurrencyCode,
       ),
+    );
+    await _refreshHomeAndOpenTransfer(transferId);
+  }
+
+  Future<void> _refreshHomeAndOpenTransfer(String? transferId) async {
+    if (!mounted || transferId == null) {
+      return;
+    }
+    await context.read<HomeViewModel>().load();
+    if (!mounted) {
+      return;
+    }
+    await context.push(
+      AppRoutes.transactionDetailPath(transferId),
     );
   }
 
