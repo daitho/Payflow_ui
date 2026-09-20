@@ -327,5 +327,22 @@
   "systemLanguage": "Device language",
   "spanish": "Spanish",
   "mandarin": "Mandarin Chinese",
-  "hindi": "Hindi"
+  "hindi": "Hindi",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "confirmNewPassword": "Confirm new password",
+  "currentPasswordRequired": "Please enter your current password",
+  "currentPasswordIncorrect": "The current password is incorrect.",
+  "newPasswordRequired": "Please enter a new password",
+  "newPasswordUnchanged": "The new password must be different from the current password.",
+  "confirmNewPasswordRequired": "Please confirm your new password",
+  "passwordChangeSessionInfo": "For your security, all other devices will be signed out. This device will remain signed in.",
+  "changePasswordAction": "Change password",
+  "passwordChangedTitle": "Password changed",
+  "passwordChangedMessage": "Your password has been changed. Your other devices have been signed out.",
+  "continueAction": "Continue",
+  "passwordLoginUnavailable": "This account uses an external sign-in provider and does not have a PayFlow password.",
+  "changePasswordNetworkError": "Unable to change the password. Check your connection.",
+  "changePasswordServerError": "The password service is temporarily unavailable.",
+  "changePasswordUnexpectedError": "Unable to change the password right now."
 }
