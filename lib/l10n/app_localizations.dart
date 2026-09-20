@@ -1775,6 +1775,24 @@ abstract class AppLocalizations {
 
   /// The Hindi language label.
   String get hindi;
+  String get currentPassword;
+  String get newPassword;
+  String get confirmNewPassword;
+  String get currentPasswordRequired;
+  String get currentPasswordIncorrect;
+  String get newPasswordRequired;
+  String get newPasswordUnchanged;
+  String get confirmNewPasswordRequired;
+  String get passwordChangeSessionInfo;
+  String get changePasswordAction;
+  String get passwordChangedTitle;
+  String get passwordChangedMessage;
+  String get continueAction;
+  String get passwordLoginUnavailable;
+  String get changePasswordNetworkError;
+  String get changePasswordServerError;
+  String get changePasswordUnexpectedError;
+
 }
 
 class _AppLocalizationsDelegate
