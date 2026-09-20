@@ -327,5 +327,22 @@
   "systemLanguage": "Langue du téléphone",
   "spanish": "Espagnol",
   "mandarin": "Chinois mandarin",
-  "hindi": "Hindi"
+  "hindi": "Hindi",
+  "currentPassword": "Mot de passe actuel",
+  "newPassword": "Nouveau mot de passe",
+  "confirmNewPassword": "Confirmer le nouveau mot de passe",
+  "currentPasswordRequired": "Veuillez saisir votre mot de passe actuel",
+  "currentPasswordIncorrect": "Le mot de passe actuel est incorrect.",
+  "newPasswordRequired": "Veuillez saisir un nouveau mot de passe",
+  "newPasswordUnchanged": "Le nouveau mot de passe doit être différent du mot de passe actuel.",
+  "confirmNewPasswordRequired": "Veuillez confirmer votre nouveau mot de passe",
+  "passwordChangeSessionInfo": "Pour votre sécurité, tous les autres appareils seront déconnectés. Cet appareil restera connecté.",
+  "changePasswordAction": "Changer le mot de passe",
+  "passwordChangedTitle": "Mot de passe modifié",
+  "passwordChangedMessage": "Votre mot de passe a été modifié. Vos autres appareils ont été déconnectés.",
+  "continueAction": "Continuer",
+  "passwordLoginUnavailable": "Ce compte utilise un fournisseur de connexion externe et ne possède pas de mot de passe PayFlow.",
+  "changePasswordNetworkError": "Impossible de modifier le mot de passe. Vérifiez votre connexion.",
+  "changePasswordServerError": "Le service de changement de mot de passe est temporairement indisponible.",
+  "changePasswordUnexpectedError": "Impossible de modifier le mot de passe pour le moment."
 }
