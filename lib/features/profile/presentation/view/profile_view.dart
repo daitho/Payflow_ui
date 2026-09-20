@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app/localization/app_language.dart';
+import '../../../../app/localization/locale_controller.dart';
 import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../active_sessions/domain/exception/active_sessions_exception.dart';
@@ -16,6 +18,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProfileViewModel viewModel = context.watch<ProfileViewModel>();
+    final LocaleController localeController = context.watch<LocaleController>();
     final profile = viewModel.profile;
 
     if (profile == null) {
@@ -102,8 +105,10 @@ class ProfileView extends StatelessWidget {
                     iconColor: const Color(0xFF6D5BD0),
                     iconBackgroundColor: const Color(0xFFF0EDFF),
                     title: l10n.language,
-                    subtitle: l10n.languageSubtitle,
-                    onTap: () {},
+                    subtitle: _languageLabel(l10n, localeController.language),
+                    onTap: () {
+                      _showLanguagePicker(context);
+                    },
                   ),
                 ],
               ),
@@ -167,6 +172,70 @@ class ProfileView extends StatelessWidget {
       ),
     );
   }
+}
+
+
+Future<void> _showLanguagePicker(BuildContext context) async {
+  final LocaleController controller = context.read<LocaleController>();
+
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    backgroundColor: Colors.white,
+    builder: (BuildContext sheetContext) {
+      final AppLocalizations l10n = AppLocalizations.of(sheetContext);
+
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.changeLanguage,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF302B29),
+                ),
+              ),
+              const SizedBox(height: 10),
+              for (final AppLanguage language in AppLanguage.values)
+                RadioListTile<AppLanguage>(
+                  value: language,
+                  groupValue: controller.language,
+                  activeColor: const Color(0xFF168C88),
+                  title: Text(_languageLabel(l10n, language)),
+                  onChanged: (AppLanguage? selected) async {
+                    if (selected == null) {
+                      return;
+                    }
+                    await controller.setLanguage(selected);
+                    if (sheetContext.mounted) {
+                      Navigator.of(sheetContext).pop();
+                    }
+                  },
+                ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+String _languageLabel(AppLocalizations l10n, AppLanguage language) {
+  return switch (language) {
+    AppLanguage.system => l10n.systemLanguage,
+    AppLanguage.french => l10n.french,
+    AppLanguage.english => l10n.english,
+    AppLanguage.spanish => l10n.spanish,
+    AppLanguage.mandarin => l10n.mandarin,
+    AppLanguage.hindi => l10n.hindi,
+  };
 }
 
 Future<void> _confirmProfileLogout(BuildContext context) async {
