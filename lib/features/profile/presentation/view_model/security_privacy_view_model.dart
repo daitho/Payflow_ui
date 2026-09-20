@@ -53,13 +53,9 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
 
       _biometricsEnabled = await _biometricService.isBiometricsEnabled();
 
-      debugPrint(
-        '[BIOMETRIC] available=$_biometricsAvailable',
-      );
+      debugPrint('[BIOMETRIC] available=$_biometricsAvailable');
 
-      debugPrint(
-          '[BIOMETRIC] enabled=$_biometricsEnabled',
-      );
+      debugPrint('[BIOMETRIC] enabled=$_biometricsEnabled');
 
       /*
        * Cas :

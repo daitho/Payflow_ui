@@ -22,8 +22,7 @@ class HomeView extends StatefulWidget {
 
   final HomeBeneficiaryModel? selectedBeneficiary;
 
-  final ValueChanged<HomeBeneficiaryModel>
-  onBeneficiarySelected;
+  final ValueChanged<HomeBeneficiaryModel> onBeneficiarySelected;
 
   /*
    * Conservé pour rester compatible avec ton HomePage actuel.
@@ -61,8 +60,7 @@ class HomeView extends StatefulWidget {
   });
 
   @override
-  State<HomeView> createState() =>
-      _HomeViewState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
@@ -74,21 +72,17 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback(
-          (_) {
-        if (!mounted) {
-          return;
-        }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
 
-        final HomeViewModel viewModel =
-        context.read<HomeViewModel>();
+      final HomeViewModel viewModel = context.read<HomeViewModel>();
 
-        if (viewModel.status ==
-            HomeViewStatus.initial) {
-          viewModel.load();
-        }
-      },
-    );
+      if (viewModel.status == HomeViewStatus.initial) {
+        viewModel.load();
+      }
+    });
   }
 
   // =========================================================
@@ -97,28 +91,21 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final HomeViewModel viewModel =
-    context.watch<HomeViewModel>();
+    final HomeViewModel viewModel = context.watch<HomeViewModel>();
 
     // =======================================================
     // FIRST LOADING
     // =======================================================
 
-    if (viewModel.isLoading &&
-        viewModel.home == null) {
-      return const SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    if (viewModel.isLoading && viewModel.home == null) {
+      return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
 
     // =======================================================
     // FIRST ERROR
     // =======================================================
 
-    if (viewModel.hasError &&
-        viewModel.home == null) {
+    if (viewModel.hasError && viewModel.home == null) {
       return _HomeErrorView(
         errorType: viewModel.errorType,
         onRetry: viewModel.retry,
@@ -154,8 +141,7 @@ class _HomeViewState extends State<HomeView> {
         onRefresh: viewModel.load,
 
         child: ListView(
-          physics:
-          const AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
 
           /*
            * 14 px après SafeArea pour éviter que le header
@@ -165,12 +151,7 @@ class _HomeViewState extends State<HomeView> {
            * - le CTA "Transfert"
            * - la barre de navigation flottante
            */
-          padding: const EdgeInsets.fromLTRB(
-            20,
-            14,
-            20,
-            180,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 180),
 
           children: [
             // =================================================
@@ -179,41 +160,29 @@ class _HomeViewState extends State<HomeView> {
 
             if (viewModel.isLoading)
               const Padding(
-                padding: EdgeInsets.only(
-                  bottom: 12,
-                ),
-                child: LinearProgressIndicator(
-                  minHeight: 2,
-                ),
+                padding: EdgeInsets.only(bottom: 12),
+                child: LinearProgressIndicator(minHeight: 2),
               ),
 
             // =================================================
             // REFRESH ERROR WHILE OLD DATA REMAINS VISIBLE
             // =================================================
-
             if (viewModel.hasError)
               Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 14,
-                ),
+                padding: const EdgeInsets.only(bottom: 14),
                 child: _InlineHomeError(
-                  errorType:
-                  viewModel.errorType,
-                  onRetry:
-                  viewModel.retry,
+                  errorType: viewModel.errorType,
+                  onRetry: viewModel.retry,
                 ),
               ),
 
             // =================================================
             // HEADER
             // =================================================
-
             HomeHeader(
               user: home.user,
-              onProfileTap:
-              widget.onProfileTap,
-              onNotificationsTap:
-              widget.onNotificationsTap,
+              onProfileTap: widget.onProfileTap,
+              onNotificationsTap: widget.onNotificationsTap,
             ),
 
             const SizedBox(height: 28),
@@ -221,12 +190,9 @@ class _HomeViewState extends State<HomeView> {
             // =================================================
             // EXCHANGE RATE
             // =================================================
-
             ExchangeRateCard(
-              exchangeRate:
-              home.exchangeRate,
-              onTap:
-              widget.onExchangeRatesTap,
+              exchangeRate: home.exchangeRate,
+              onTap: widget.onExchangeRatesTap,
             ),
 
             const SizedBox(height: 26),
@@ -234,19 +200,14 @@ class _HomeViewState extends State<HomeView> {
             // =================================================
             // BENEFICIARIES
             // =================================================
-
             RecentBeneficiariesSection(
-              beneficiaries:
-              home.recentBeneficiaries,
+              beneficiaries: home.recentBeneficiaries,
 
-              selectedBeneficiary:
-              widget.selectedBeneficiary,
+              selectedBeneficiary: widget.selectedBeneficiary,
 
-              onBeneficiaryTap:
-              widget.onBeneficiarySelected,
+              onBeneficiaryTap: widget.onBeneficiarySelected,
 
-              onSeeAll:
-              widget.onSeeAllBeneficiaries,
+              onSeeAll: widget.onSeeAllBeneficiaries,
             ),
 
             const SizedBox(height: 28),
@@ -257,10 +218,8 @@ class _HomeViewState extends State<HomeView> {
             RecentTransactionsSection(
               transactions: home.recentTransactions,
 
-              onViewAll:
-              widget.onViewAllTransactions,
-              onTransactionTap:
-              widget.onTransactionTap,
+              onViewAll: widget.onViewAllTransactions,
+              onTransactionTap: widget.onTransactionTap,
             ),
 
             // =================================================
@@ -276,49 +235,30 @@ class _HomeViewState extends State<HomeView> {
              *
              * Les deux ouvriront plus tard l'historique complet.
              */
-
             if (home.recentTransactions.isNotEmpty) ...[
               const SizedBox(height: 12),
 
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed:
-                  widget.onMoreTransactions,
+                  onPressed: widget.onMoreTransactions,
 
                   style: OutlinedButton.styleFrom(
-                    foregroundColor:
-                    const Color(
-                      0xFFE96C15,
-                    ),
+                    foregroundColor: const Color(0xFFE96C15),
 
-                    side: const BorderSide(
-                      color: Color(
-                        0xFFE2DDDA,
-                      ),
-                    ),
+                    side: const BorderSide(color: Color(0xFFE2DDDA)),
 
-                    padding:
-                    const EdgeInsets.symmetric(
-                      vertical: 13,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 13),
 
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(
-                        12,
-                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
 
                   child: Text(
-                    AppLocalizations.of(context)
-                        .homeViewMoreTransactions,
+                    AppLocalizations.of(context).homeViewMoreTransactions,
 
-                    style: const TextStyle(
-                      fontWeight:
-                      FontWeight.w700,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
@@ -339,23 +279,18 @@ class _HomeErrorView extends StatelessWidget {
 
   final Future<void> Function() onRetry;
 
-  const _HomeErrorView({
-    required this.errorType,
-    required this.onRetry,
-  });
+  const _HomeErrorView({required this.errorType, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     return SafeArea(
       child: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(28),
           child: Column(
-            mainAxisAlignment:
-            MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // =================================================
               // ICON
@@ -380,7 +315,6 @@ class _HomeErrorView extends StatelessWidget {
               // =================================================
               // TITLE
               // =================================================
-
               Text(
                 l10n.homeLoadErrorTitle,
                 textAlign: TextAlign.center,
@@ -396,12 +330,8 @@ class _HomeErrorView extends StatelessWidget {
               // =================================================
               // MESSAGE
               // =================================================
-
               Text(
-                _homeErrorMessage(
-                  l10n,
-                  errorType,
-                ),
+                _homeErrorMessage(l10n, errorType),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF847C78),
@@ -415,22 +345,13 @@ class _HomeErrorView extends StatelessWidget {
               // =================================================
               // RETRY
               // =================================================
-
               FilledButton.icon(
                 onPressed: onRetry,
-                icon: const Icon(
-                  Icons.refresh_rounded,
-                ),
-                label: Text(
-                  l10n.homeRetry,
-                ),
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(l10n.homeRetry),
                 style: FilledButton.styleFrom(
-                  backgroundColor:
-                  const Color(
-                    0xFFE96C15,
-                  ),
-                  foregroundColor:
-                  Colors.white,
+                  backgroundColor: const Color(0xFFE96C15),
+                  foregroundColor: Colors.white,
                 ),
               ),
             ],
@@ -450,24 +371,17 @@ class _InlineHomeError extends StatelessWidget {
 
   final Future<void> Function() onRetry;
 
-  const _InlineHomeError({
-    required this.errorType,
-    required this.onRetry,
-  });
+  const _InlineHomeError({required this.errorType, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(
-          0xFFFFF2EA,
-        ),
-        borderRadius:
-        BorderRadius.circular(12),
+        color: const Color(0xFFFFF2EA),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
@@ -481,23 +395,14 @@ class _InlineHomeError extends StatelessWidget {
 
           Expanded(
             child: Text(
-              _homeErrorMessage(
-                l10n,
-                errorType,
-              ),
-              style: const TextStyle(
-                color: Color(0xFF6D5A50),
-                fontSize: 12.5,
-              ),
+              _homeErrorMessage(l10n, errorType),
+              style: const TextStyle(color: Color(0xFF6D5A50), fontSize: 12.5),
             ),
           ),
 
           IconButton(
             onPressed: onRetry,
-            icon: const Icon(
-              Icons.refresh_rounded,
-              size: 20,
-            ),
+            icon: const Icon(Icons.refresh_rounded, size: 20),
           ),
         ],
       ),
@@ -509,10 +414,7 @@ class _InlineHomeError extends StatelessWidget {
 // ERROR MESSAGE
 // ===========================================================
 
-String _homeErrorMessage(
-    AppLocalizations l10n,
-    HomeErrorType? type,
-    ) {
+String _homeErrorMessage(AppLocalizations l10n, HomeErrorType? type) {
   switch (type) {
     case HomeErrorType.network:
       return l10n.homeNetworkError;

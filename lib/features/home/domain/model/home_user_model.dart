@@ -12,11 +12,9 @@ class HomeUserModel {
   });
 
   String get displayName {
-    final String? normalizedFirstName =
-    firstName?.trim();
+    final String? normalizedFirstName = firstName?.trim();
 
-    if (normalizedFirstName == null ||
-        normalizedFirstName.isEmpty) {
+    if (normalizedFirstName == null || normalizedFirstName.isEmpty) {
       return lastName;
     }
 
@@ -26,23 +24,16 @@ class HomeUserModel {
   String get initials {
     final List<String> values = [];
 
-    final String? normalizedFirstName =
-    firstName?.trim();
+    final String? normalizedFirstName = firstName?.trim();
 
-    if (normalizedFirstName != null &&
-        normalizedFirstName.isNotEmpty) {
-      values.add(
-        normalizedFirstName[0].toUpperCase(),
-      );
+    if (normalizedFirstName != null && normalizedFirstName.isNotEmpty) {
+      values.add(normalizedFirstName[0].toUpperCase());
     }
 
-    final String normalizedLastName =
-    lastName.trim();
+    final String normalizedLastName = lastName.trim();
 
     if (normalizedLastName.isNotEmpty) {
-      values.add(
-        normalizedLastName[0].toUpperCase(),
-      );
+      values.add(normalizedLastName[0].toUpperCase());
     }
 
     return values.take(2).join();

@@ -5,7 +5,12 @@ class TransferTimelineEntry {
 }
 
 class TransferDetailModel {
-  final String id, reference, status, beneficiaryName, operatorName;
+  final String id,
+      reference,
+      status,
+      beneficiaryId,
+      beneficiaryName,
+      operatorName;
   final String countryCode, sourceCurrencyCode, targetCurrencyCode;
   final String? destination;
   final num sentAmount, receivedAmount, fee, totalChargedAmount, appliedRate;
@@ -15,14 +20,26 @@ class TransferDetailModel {
   final bool receiptAvailable, repeatAllowed;
   final List<TransferTimelineEntry> timeline;
   TransferDetailModel({
-    required this.id, required this.reference, required this.status,
-    required this.beneficiaryName, required this.operatorName,
-    required this.countryCode, required this.destination,
-    required this.sourceCurrencyCode, required this.targetCurrencyCode,
-    required this.sentAmount, required this.receivedAmount, required this.fee,
-    required this.totalChargedAmount, required this.appliedRate,
-    required this.createdAt, this.receivedAt, this.providerReference,
-    this.receiptAvailable = false, this.repeatAllowed = false,
+    required this.id,
+    required this.reference,
+    required this.status,
+    required this.beneficiaryId,
+    required this.beneficiaryName,
+    required this.operatorName,
+    required this.countryCode,
+    required this.destination,
+    required this.sourceCurrencyCode,
+    required this.targetCurrencyCode,
+    required this.sentAmount,
+    required this.receivedAmount,
+    required this.fee,
+    required this.totalChargedAmount,
+    required this.appliedRate,
+    required this.createdAt,
+    this.receivedAt,
+    this.providerReference,
+    this.receiptAvailable = false,
+    this.repeatAllowed = false,
     required List<TransferTimelineEntry> timeline,
   }) : timeline = List.unmodifiable(timeline);
 }

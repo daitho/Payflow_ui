@@ -6,7 +6,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +99,9 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('fr'),
     Locale('en'),
+    Locale('es'),
+    Locale('zh'),
+    Locale('hi'),
   ];
 
   /// No description provided for @appName.
@@ -1284,10 +1290,6 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get transferStatusLabel;
 
-  String get transferYearLabel;
-
-  String get transferAllYears;
-
   /// No description provided for @transferAllStatuses.
   ///
   /// In en, this message translates to:
@@ -1473,6 +1475,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The transfer is being processed. Receipt has not yet been confirmed.'**
   String get transferTrackingPending;
+
+  /// No description provided for @transferYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get transferYearLabel;
+
+  /// No description provided for @transferAllYears.
+  ///
+  /// In en, this message translates to:
+  /// **'All years'**
+  String get transferAllYears;
+
+  /// No description provided for @contactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Beneficiaries'**
+  String get contactTitle;
+
+  /// No description provided for @contactSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name to search…'**
+  String get contactSearch;
+
+  /// No description provided for @contactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a beneficiary'**
+  String get contactAdd;
+
+  /// No description provided for @contactSection.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR BENEFICIARIES'**
+  String get contactSection;
+
+  /// No description provided for @contactNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New Beneficiary'**
+  String get contactNew;
+
+  /// No description provided for @contactEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit beneficiary'**
+  String get contactEdit;
+
+  /// No description provided for @contactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact information'**
+  String get contactInformation;
+
+  /// No description provided for @contactFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get contactFullName;
+
+  /// No description provided for @contactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get contactPhone;
+
+  /// No description provided for @contactCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get contactCountry;
+
+  /// No description provided for @contactOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get contactOperator;
+
+  /// No description provided for @contactGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get contactGender;
+
+  /// No description provided for @contactMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get contactMale;
+
+  /// No description provided for @contactFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get contactFemale;
+
+  /// No description provided for @contactUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get contactUnspecified;
+
+  /// No description provided for @contactSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get contactSave;
+
+  /// No description provided for @contactEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No beneficiaries found.'**
+  String get contactEmpty;
+
+  /// No description provided for @contactNoPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'No phone number'**
+  String get contactNoPhone;
+
+  /// No description provided for @contactChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get contactChoose;
+
+  /// No description provided for @contactRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get contactRequired;
+
+  /// No description provided for @contactNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 120 characters'**
+  String get contactNameTooLong;
+
+  /// No description provided for @contactPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the number with its country code, e.g. +237…'**
+  String get contactPhoneInvalid;
+
+  /// No description provided for @contactNoOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'No Mobile Money operators available.'**
+  String get contactNoOperators;
+
+  /// No description provided for @contactNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection unavailable. Check your network.'**
+  String get contactNetworkError;
+
+  /// No description provided for @contactSessionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get contactSessionError;
+
+  /// No description provided for @contactInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the phone, country and operator. A contact with multiple destinations cannot change country here.'**
+  String get contactInvalidError;
+
+  /// No description provided for @contactNotFoundError.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or operator is no longer available.'**
+  String get contactNotFoundError;
+
+  /// No description provided for @contactServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to complete this action. Please try again.'**
+  String get contactServerError;
+
+  /// No description provided for @contactUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This destination cannot be edited in the Mobile Money form.'**
+  String get contactUnavailable;
+
+  /// No description provided for @transferSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send money'**
+  String get transferSendTitle;
+
+  /// No description provided for @transferChooseBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary'**
+  String get transferChooseBeneficiary;
+
+  /// No description provided for @transferYouSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You send'**
+  String get transferYouSend;
+
+  /// No description provided for @transferAmountReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount received'**
+  String get transferAmountReceived;
+
+  /// No description provided for @transferFundingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get transferFundingLabel;
+
+  /// No description provided for @transferFundingCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
+  String get transferFundingCard;
+
+  /// No description provided for @transferCurrentRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rate'**
+  String get transferCurrentRate;
+
+  /// No description provided for @transferChooseForQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary to calculate the rate and fees.'**
+  String get transferChooseForQuote;
+
+  /// No description provided for @transferContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get transferContinue;
+
+  /// No description provided for @transferReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your transfer'**
+  String get transferReviewTitle;
+
+  /// No description provided for @transferTrustWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.'**
+  String get transferTrustWarning;
+
+  /// No description provided for @transferConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm transfer'**
+  String get transferConfirm;
+
+  /// No description provided for @transferInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the beneficiary and the amount entered.'**
+  String get transferInvalidError;
+
+  /// No description provided for @transferBeneficiaryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or destination is no longer available.'**
+  String get transferBeneficiaryUnavailable;
+
+  /// No description provided for @transferConflictError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer has already been confirmed or can no longer be used.'**
+  String get transferConflictError;
+
+  /// No description provided for @transferQuoteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The rate has expired. A new quote will be calculated.'**
+  String get transferQuoteExpired;
+
+  /// No description provided for @transferUnavailableError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer is not available for this beneficiary or amount.'**
+  String get transferUnavailableError;
+
+  /// Uses the language configured by the device.
+  String get systemLanguage;
+
+  /// The Spanish language label.
+  String get spanish;
+
+  /// The Mandarin Chinese language label.
+  String get mandarin;
+
+  /// The Hindi language label.
+  String get hindi;
 }
 
 class _AppLocalizationsDelegate
@@ -1486,7 +1788,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['en', 'es', 'fr', 'hi', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1497,8 +1799,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
@@ -1508,4 +1816,3 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'that was used.',
   );
 }
-

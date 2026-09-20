@@ -1,10 +1,14 @@
+import 'features/beneficiaries/presentation/view/beneficiaries_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:ui';
 import 'app/router/app_routes.dart';
 import 'features/home/domain/model/home_beneficiary_model.dart';
 import 'features/home/presentation/view/home_view.dart';
+import 'features/home/presentation/view_model/home_view_model.dart';
+import 'features/transfer/domain/model/transfer_draft_seed.dart';
 import 'features/profile/presentation/view/profile_view.dart';
 import 'l10n/app_localizations.dart';
 
@@ -14,6 +18,7 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
   // =========================================================
   // STATE
@@ -75,6 +80,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   // =========================================================
   // SELECTED PAGE
   // =========================================================
@@ -114,15 +120,11 @@ class _HomePageState extends State<HomePage> {
           },
 
           onViewAllTransactions: () {
-            context.push(
-              AppRoutes.transactionHistory,
-            );
+            context.push(AppRoutes.transactionHistory);
           },
 
           onMoreTransactions: () {
-            context.push(
-              AppRoutes.transactionHistory,
-            );
+            context.push(AppRoutes.transactionHistory);
           },
         );
 
@@ -130,7 +132,11 @@ class _HomePageState extends State<HomePage> {
       // CONTACTS
       // -------------------------------------------------------
       case 1:
-        return const _ComingSoonPage(icon: Icons.people_outline_rounded);
+        return BeneficiariesView(
+          onBeneficiaryTap: (contact) {
+            _openTransferForBeneficiary(contact.id);
+          },
+        );
       // -------------------------------------------------------
       // REFERRAL
       // -------------------------------------------------------
@@ -220,15 +226,9 @@ class _HomePageState extends State<HomePage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(38),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 3,
-            sigmaY: 3,
-          ),
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 4,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
             decoration: BoxDecoration(
               // 92 % opaque = légère transparence professionnelle
               color: Colors.white.withValues(alpha: 0.55),
@@ -368,20 +368,45 @@ class _HomePageState extends State<HomePage> {
   // TRANSFER
   // =========================================================
 
-  void _openTransfer() {
-    /*
-     * Plus tard :
-     *
-     * context.push(
-     *   AppRoutes.transfer,
-     *   extra: _selectedBeneficiary,
-     * );
-     *
-     * Si un bénéficiaire a été sélectionné depuis Home,
-     * il sera donc prérempli.
-     */
+  Future<void> _openTransfer() async {
+    final transferId = await context.push<String>(
+      AppRoutes.transfer,
+      extra: TransferDraftSeed(
+        beneficiaryId: _selectedBeneficiary?.id,
+        sentCurrency: context
+            .read<HomeViewModel>()
+            .home
+            ?.exchangeRate
+            ?.sourceCurrencyCode,
+      ),
+    );
+    await _refreshHomeAndOpenTransfer(transferId);
+  }
 
-    _showComingSoon();
+  Future<void> _openTransferForBeneficiary(String beneficiaryId) async {
+    final transferId = await context.push<String>(
+      AppRoutes.transfer,
+      extra: TransferDraftSeed(
+        beneficiaryId: beneficiaryId,
+        sentCurrency: context
+            .read<HomeViewModel>()
+            .home
+            ?.exchangeRate
+            ?.sourceCurrencyCode,
+      ),
+    );
+    await _refreshHomeAndOpenTransfer(transferId);
+  }
+
+  Future<void> _refreshHomeAndOpenTransfer(String? transferId) async {
+    if (!mounted || transferId == null) {
+      return;
+    }
+    await context.read<HomeViewModel>().load();
+    if (!mounted) {
+      return;
+    }
+    await context.push(AppRoutes.transactionDetailPath(transferId));
   }
 
   // =========================================================

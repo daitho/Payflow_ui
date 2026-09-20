@@ -22,39 +22,90 @@ class TransferStatusTimeline extends StatelessWidget {
     };
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAE5E2))),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(transferStatus(l10n, detail.status),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 6),
-        Text(message, style: const TextStyle(color: Color(0xFF77706C))),
-        if (detail.status == 'COMPLETED' && detail.receivedAt != null)
-          Text(transferDate(context, detail.receivedAt!)),
-        const SizedBox(height: 20),
-        if (events.isEmpty) Text(l10n.transferTimelineUnavailable)
-        else SingleChildScrollView(scrollDirection: Axis.horizontal,
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            for (var i = 0; i < events.length; i++) SizedBox(width: 112,
-              child: Column(children: [
-                Row(children: [
-                  Expanded(child: Container(height: 2,
-                    color: i == 0 ? Colors.transparent : const Color(0xFF1E3A5F))),
-                  CircleAvatar(radius: 17,
-                    backgroundColor: _eventColor(events[i].status),
-                    child: Icon(_icon(events[i].status), color: Colors.white, size: 19)),
-                  Expanded(child: Container(height: 2,
-                    color: i == events.length - 1 ? Colors.transparent : const Color(0xFF1E3A5F))),
-                ]),
-                const SizedBox(height: 8),
-                Text(transferStatus(l10n, events[i].status), textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text(transferDate(context, events[i].occurredAt), textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 10, color: Color(0xFF948C88))),
-              ])),
-          ])),
-      ]),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFEAE5E2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            transferStatus(l10n, detail.status),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 6),
+          Text(message, style: const TextStyle(color: Color(0xFF77706C))),
+          if (detail.status == 'COMPLETED' && detail.receivedAt != null)
+            Text(transferDate(context, detail.receivedAt!)),
+          const SizedBox(height: 20),
+          if (events.isEmpty)
+            Text(l10n.transferTimelineUnavailable)
+          else
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var i = 0; i < events.length; i++)
+                    SizedBox(
+                      width: 112,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height: 2,
+                                  color: i == 0
+                                      ? Colors.transparent
+                                      : const Color(0xFF1E3A5F),
+                                ),
+                              ),
+                              CircleAvatar(
+                                radius: 17,
+                                backgroundColor: _eventColor(events[i].status),
+                                child: Icon(
+                                  _icon(events[i].status),
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  height: 2,
+                                  color: i == events.length - 1
+                                      ? Colors.transparent
+                                      : const Color(0xFF1E3A5F),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            transferStatus(l10n, events[i].status),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            transferDate(context, events[i].occurredAt),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Color(0xFF948C88),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 

@@ -4,16 +4,14 @@ import '../dto/transfer_detail_dto.dart';
 import '../dto/transfer_history_response_dto.dart';
 import 'transfer_history_api_service.dart';
 
-final class TransferHistoryApiServiceImpl
-    implements TransferHistoryApiService {
+final class TransferHistoryApiServiceImpl implements TransferHistoryApiService {
   // ===========================================================
   // ENDPOINTS
   // ===========================================================
 
   static const String _basePath = '/api/v1/transfers';
 
-  static const String _historyPath =
-      '$_basePath/history';
+  static const String _historyPath = '$_basePath/history';
 
   // ===========================================================
   // DEPENDENCIES
@@ -25,9 +23,7 @@ final class TransferHistoryApiServiceImpl
   // CONSTRUCTOR
   // ===========================================================
 
-  TransferHistoryApiServiceImpl({
-    required Dio dio,
-  }) : _dio = dio;
+  TransferHistoryApiServiceImpl({required Dio dio}) : _dio = dio;
 
   // ===========================================================
   // HISTORY
@@ -41,48 +37,38 @@ final class TransferHistoryApiServiceImpl
     required int page,
     required int size,
   }) async {
-    final Map<String, dynamic> queryParameters =
-    <String, dynamic>{
+    final Map<String, dynamic> queryParameters = <String, dynamic>{
       'page': page,
       'size': size,
       if (year != null) 'year': year,
     };
 
-    final String? normalizedBeneficiaryId =
-    _normalizeOptionalString(
+    final String? normalizedBeneficiaryId = _normalizeOptionalString(
       beneficiaryId,
     );
 
-    final String? normalizedStatus =
-    _normalizeOptionalString(
-      status,
-    );
+    final String? normalizedStatus = _normalizeOptionalString(status);
 
     if (normalizedBeneficiaryId != null) {
-      queryParameters['beneficiaryId'] =
-          normalizedBeneficiaryId;
+      queryParameters['beneficiaryId'] = normalizedBeneficiaryId;
     }
 
     if (normalizedStatus != null) {
-      queryParameters['status'] =
-          normalizedStatus;
+      queryParameters['status'] = normalizedStatus;
     }
 
-    final Response<Map<String, dynamic>> response =
-    await _dio.get<Map<String, dynamic>>(
-      _historyPath,
-      queryParameters: queryParameters,
-    );
+    final Response<Map<String, dynamic>> response = await _dio
+        .get<Map<String, dynamic>>(
+          _historyPath,
+          queryParameters: queryParameters,
+        );
 
-    final Map<String, dynamic> data =
-    _requireJsonBody(
+    final Map<String, dynamic> data = _requireJsonBody(
       response.data,
       endpoint: _historyPath,
     );
 
-    return TransferHistoryResponseDto.fromJson(
-      data,
-    );
+    return TransferHistoryResponseDto.fromJson(data);
   }
 
   // ===========================================================
@@ -90,32 +76,23 @@ final class TransferHistoryApiServiceImpl
   // ===========================================================
 
   @override
-  Future<TransferDetailDto> getDetail({
-    required String transferId,
-  }) async {
-    final String normalizedTransferId =
-    _requireIdentifier(
+  Future<TransferDetailDto> getDetail({required String transferId}) async {
+    final String normalizedTransferId = _requireIdentifier(
       transferId,
       parameterName: 'transferId',
     );
 
-    final String path =
-        '$_basePath/detail/$normalizedTransferId';
+    final String path = '$_basePath/detail/$normalizedTransferId';
 
-    final Response<Map<String, dynamic>> response =
-    await _dio.get<Map<String, dynamic>>(
-      path,
-    );
+    final Response<Map<String, dynamic>> response = await _dio
+        .get<Map<String, dynamic>>(path);
 
-    final Map<String, dynamic> data =
-    _requireJsonBody(
+    final Map<String, dynamic> data = _requireJsonBody(
       response.data,
       endpoint: path,
     );
 
-    return TransferDetailDto.fromJson(
-      data,
-    );
+    return TransferDetailDto.fromJson(data);
   }
 
   // ===========================================================
@@ -128,45 +105,33 @@ final class TransferHistoryApiServiceImpl
     bool download = false,
     String? locale,
   }) async {
-    final String normalizedTransferId =
-    _requireIdentifier(
+    final String normalizedTransferId = _requireIdentifier(
       transferId,
       parameterName: 'transferId',
     );
 
-    final String path =
-        '$_basePath/receipt/$normalizedTransferId';
+    final String path = '$_basePath/receipt/$normalizedTransferId';
 
-    final Map<String, dynamic> queryParameters =
-    <String, dynamic>{
+    final Map<String, dynamic> queryParameters = <String, dynamic>{
       'download': download,
     };
 
-    final String? normalizedLocale =
-    _normalizeOptionalString(
-      locale,
-    );
+    final String? normalizedLocale = _normalizeOptionalString(locale);
 
     if (normalizedLocale != null) {
-      queryParameters['locale'] =
-          normalizedLocale;
+      queryParameters['locale'] = normalizedLocale;
     }
 
-    final Response<List<int>> response =
-    await _dio.get<List<int>>(
+    final Response<List<int>> response = await _dio.get<List<int>>(
       path,
       queryParameters: queryParameters,
-      options: Options(
-        responseType: ResponseType.bytes,
-      ),
+      options: Options(responseType: ResponseType.bytes),
     );
 
     final List<int>? bytes = response.data;
 
     if (bytes == null || bytes.isEmpty) {
-      throw StateError(
-        'La réponse PDF reçue depuis $path est vide.',
-      );
+      throw StateError('La réponse PDF reçue depuis $path est vide.');
     }
 
     return _requirePdf(bytes);
@@ -177,13 +142,13 @@ final class TransferHistoryApiServiceImpl
   // ===========================================================
 
   Map<String, dynamic> _requireJsonBody(
-      Map<String, dynamic>? data, {
-        required String endpoint,
-      }) {
+    Map<String, dynamic>? data, {
+    required String endpoint,
+  }) {
     if (data == null) {
       throw StateError(
         'La réponse reçue depuis $endpoint '
-            'ne contient aucun corps JSON.',
+        'ne contient aucun corps JSON.',
       );
     }
 
@@ -194,10 +159,7 @@ final class TransferHistoryApiServiceImpl
   // INTERNAL - REQUIRED IDENTIFIER
   // ===========================================================
 
-  String _requireIdentifier(
-      String value, {
-        required String parameterName,
-      }) {
+  String _requireIdentifier(String value, {required String parameterName}) {
     final String normalized = value.trim();
 
     if (normalized.isEmpty) {
@@ -215,9 +177,7 @@ final class TransferHistoryApiServiceImpl
   // INTERNAL - OPTIONAL STRING
   // ===========================================================
 
-  String? _normalizeOptionalString(
-      String? value,
-      ) {
+  String? _normalizeOptionalString(String? value) {
     if (value == null) {
       return null;
     }
@@ -233,10 +193,14 @@ final class TransferHistoryApiServiceImpl
 
   @override
   Future<List<int>> getStatement({
-    String? beneficiaryId, String? status, int? year, required String locale,
+    String? beneficiaryId,
+    String? status,
+    int? year,
+    required String locale,
   }) async {
-    final String? normalizedBeneficiaryId =
-        _normalizeOptionalString(beneficiaryId);
+    final String? normalizedBeneficiaryId = _normalizeOptionalString(
+      beneficiaryId,
+    );
     final String? normalizedStatus = _normalizeOptionalString(status);
     final String? normalizedLocale = _normalizeOptionalString(locale);
 
@@ -267,4 +231,3 @@ final class TransferHistoryApiServiceImpl
     return bytes;
   }
 }
-

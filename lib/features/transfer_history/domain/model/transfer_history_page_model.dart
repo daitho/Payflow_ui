@@ -25,11 +25,12 @@ class TransferHistoryPageModel {
     required List<String> availableStatuses,
     List<int> availableYears = const [],
     required List<TransferHistoryCurrencyTotalModel> sentTotals,
-    required this.page, required this.transactionCount, required this.hasNext,
+    required this.page,
+    required this.transactionCount,
+    required this.hasNext,
   }) : items = List.unmodifiable(items),
        beneficiaries = List.unmodifiable(beneficiaries),
        availableStatuses = List.unmodifiable(availableStatuses),
        availableYears = List.unmodifiable(availableYears),
        sentTotals = List.unmodifiable(sentTotals);
 }
-

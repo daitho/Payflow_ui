@@ -28,38 +28,54 @@ class FakeRepository implements TransferHistoryRepository {
     document = Completer<List<int>>();
     return document!.future;
   }
+
   @override
   Future<List<int>> getReceipt(String transferId, String locale) =>
       throw UnimplementedError();
   @override
   Future<TransferHistoryPageModel> getHistory({
-    required TransferHistoryFilter filter, required int page, int size = 20,
+    required TransferHistoryFilter filter,
+    required int page,
+    int size = 20,
   }) {
     final request = PendingRequest(filter, page);
     requests.add(request);
     return request.completer.future;
   }
+
   @override
   Future<TransferDetailModel> getDetail(String transferId) =>
       throw UnimplementedError();
 }
 
 TransferHistoryItemModel item(String id) => TransferHistoryItemModel(
-  id: id, reference: id, beneficiaryName: 'Alice', status: 'COMPLETED',
-  sentAmount: 10, receivedAmount: 6500,
-  sourceCurrencyCode: 'EUR', targetCurrencyCode: 'XAF',
+  id: id,
+  reference: id,
+  beneficiaryName: 'Alice',
+  status: 'COMPLETED',
+  sentAmount: 10,
+  receivedAmount: 6500,
+  sourceCurrencyCode: 'EUR',
+  targetCurrencyCode: 'XAF',
   createdAt: DateTime.utc(2026, 9, 17),
 );
 
-TransferHistoryPageModel page(List<String> ids, {int index = 0, bool more = false}) =>
-    TransferHistoryPageModel(
-      items: ids.map(item).toList(), beneficiaries: [],
-      availableStatuses: ['COMPLETED'], sentTotals: [
-        const TransferHistoryCurrencyTotalModel('EUR', 10),
-        const TransferHistoryCurrencyTotalModel('USD', 20),
-      ],
-      page: index, transactionCount: 3, hasNext: more,
-    );
+TransferHistoryPageModel page(
+  List<String> ids, {
+  int index = 0,
+  bool more = false,
+}) => TransferHistoryPageModel(
+  items: ids.map(item).toList(),
+  beneficiaries: [],
+  availableStatuses: ['COMPLETED'],
+  sentTotals: [
+    const TransferHistoryCurrencyTotalModel('EUR', 10),
+    const TransferHistoryCurrencyTotalModel('USD', 20),
+  ],
+  page: index,
+  transactionCount: 3,
+  hasNext: more,
+);
 
 void main() {
   late FakeRepository repository;
@@ -67,13 +83,15 @@ void main() {
   setUp(() {
     repository = FakeRepository();
     vm = TransferHistoryViewModel(
-      service: TransferHistoryService(repository: repository));
+      service: TransferHistoryService(repository: repository),
+    );
   });
 
   test('a filter change ignores an older response', () async {
     final old = vm.refresh();
     final current = vm.setFilter(
-      const TransferHistoryFilter(status: 'COMPLETED'));
+      const TransferHistoryFilter(status: 'COMPLETED'),
+    );
     expect(repository.requests.last.filter.status, 'COMPLETED');
     expect(repository.requests.last.page, 0);
     repository.requests.last.completer.complete(page(['new']));
@@ -81,25 +99,31 @@ void main() {
     repository.requests.first.completer.complete(page(['old']));
     await old;
     expect(vm.items.single.id, 'new');
-    expect(vm.page!.sentTotals.map((total) => total.currencyCode), ['EUR', 'USD']);
+    expect(vm.page!.sentTotals.map((total) => total.currencyCode), [
+      'EUR',
+      'USD',
+    ]);
     vm.dispose();
   });
 
-  test('pagination appends without duplicates and blocks concurrent loads', () async {
-    final first = vm.refresh();
-    repository.requests[0].completer.complete(page(['a'], more: true));
-    await first;
-    final next = vm.loadMore();
-    await vm.loadMore();
-    expect(repository.requests.length, 2);
-    expect(repository.requests[1].page, 1);
-    repository.requests[1].completer.complete(page(['a', 'b'], index: 1));
-    await next;
-    expect(vm.items.map((item) => item.id), ['a', 'b']);
-    await vm.loadMore();
-    expect(repository.requests.length, 2);
-    vm.dispose();
-  });
+  test(
+    'pagination appends without duplicates and blocks concurrent loads',
+    () async {
+      final first = vm.refresh();
+      repository.requests[0].completer.complete(page(['a'], more: true));
+      await first;
+      final next = vm.loadMore();
+      await vm.loadMore();
+      expect(repository.requests.length, 2);
+      expect(repository.requests[1].page, 1);
+      repository.requests[1].completer.complete(page(['a', 'b'], index: 1));
+      await next;
+      expect(vm.items.map((item) => item.id), ['a', 'b']);
+      await vm.loadMore();
+      expect(repository.requests.length, 2);
+      vm.dispose();
+    },
+  );
 
   test('failed next page keeps items and can retry the same page', () async {
     final first = vm.refresh();
@@ -107,7 +131,8 @@ void main() {
     await first;
     final next = vm.loadMore();
     repository.requests[1].completer.completeError(
-      const TransferHistoryException(TransferHistoryFailure.network));
+      const TransferHistoryException(TransferHistoryFailure.network),
+    );
     await next;
     expect(vm.items.single.id, 'a');
     expect(vm.error, TransferHistoryFailure.network);
@@ -145,27 +170,35 @@ void main() {
     expect(notifications, 1);
   });
 
-  test('summary and export cover the full active filter, not the loaded page', () async {
-    final first = vm.setFilter(const TransferHistoryFilter(
-      beneficiaryId: 'alice', status: 'COMPLETED', year: 2024));
-    repository.requests.single.completer.complete(page(['a'], more: true));
-    await first;
-    expect(vm.items.length, 1);
-    expect(vm.page!.transactionCount, 3);
-    final export = vm.exportHistory('fr-FR');
-    expect(repository.exportedFilter!.beneficiaryId, 'alice');
-    expect(repository.exportedFilter!.status, 'COMPLETED');
-    expect(repository.exportedFilter!.year, 2024);
-    expect(repository.requests.single.filter.year, 2024);
-    expect(repository.exportedLocale, 'fr-FR');
-    expect(vm.isExporting, isTrue);
-    await vm.setFilter(const TransferHistoryFilter());
-    expect(vm.filter.beneficiaryId, 'alice');
-    repository.document!.complete([37, 80, 68, 70, 45]);
-    expect(await export, [37, 80, 68, 70, 45]);
-    expect(vm.isExporting, isFalse);
-    vm.dispose();
-  });
+  test(
+    'summary and export cover the full active filter, not the loaded page',
+    () async {
+      final first = vm.setFilter(
+        const TransferHistoryFilter(
+          beneficiaryId: 'alice',
+          status: 'COMPLETED',
+          year: 2024,
+        ),
+      );
+      repository.requests.single.completer.complete(page(['a'], more: true));
+      await first;
+      expect(vm.items.length, 1);
+      expect(vm.page!.transactionCount, 3);
+      final export = vm.exportHistory('fr-FR');
+      expect(repository.exportedFilter!.beneficiaryId, 'alice');
+      expect(repository.exportedFilter!.status, 'COMPLETED');
+      expect(repository.exportedFilter!.year, 2024);
+      expect(repository.requests.single.filter.year, 2024);
+      expect(repository.exportedLocale, 'fr-FR');
+      expect(vm.isExporting, isTrue);
+      await vm.setFilter(const TransferHistoryFilter());
+      expect(vm.filter.beneficiaryId, 'alice');
+      repository.document!.complete([37, 80, 68, 70, 45]);
+      expect(await export, [37, 80, 68, 70, 45]);
+      expect(vm.isExporting, isFalse);
+      vm.dispose();
+    },
+  );
 
   test('export failure preserves results and reports its own error', () async {
     final first = vm.refresh();
@@ -173,7 +206,8 @@ void main() {
     await first;
     final export = vm.exportHistory('en');
     repository.document!.completeError(
-      const TransferHistoryException(TransferHistoryFailure.network));
+      const TransferHistoryException(TransferHistoryFailure.network),
+    );
     expect(await export, isNull);
     expect(vm.exportError, TransferHistoryFailure.network);
     expect(vm.error, isNull);
@@ -182,4 +216,3 @@ void main() {
     vm.dispose();
   });
 }
-

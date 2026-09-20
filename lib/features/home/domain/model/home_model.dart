@@ -8,11 +8,9 @@ class HomeModel {
 
   final HomeExchangeRateModel? exchangeRate;
 
-  final List<HomeBeneficiaryModel>
-  recentBeneficiaries;
+  final List<HomeBeneficiaryModel> recentBeneficiaries;
 
-  final List<HomeTransferModel>
-  recentTransactions;
+  final List<HomeTransferModel> recentTransactions;
 
   const HomeModel({
     required this.user,

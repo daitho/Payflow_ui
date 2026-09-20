@@ -7,8 +7,7 @@ final class TransferHistorySummaryDto {
 
   final int transactionCount;
 
-  final List<TransferHistoryCurrencyTotalDto>
-  sentTotals;
+  final List<TransferHistoryCurrencyTotalDto> sentTotals;
 
   // ===========================================================
   // CONSTRUCTOR
@@ -23,22 +22,16 @@ final class TransferHistorySummaryDto {
   // JSON
   // ===========================================================
 
-  factory TransferHistorySummaryDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory TransferHistorySummaryDto.fromJson(Map<String, dynamic> json) {
     return TransferHistorySummaryDto(
-      transactionCount:
-      json['transactionCount'] as int,
+      transactionCount: json['transactionCount'] as int,
 
-      sentTotals:
-      (json['sentTotals'] as List<dynamic>)
+      sentTotals: (json['sentTotals'] as List<dynamic>)
           .map(
-            (item) =>
-            TransferHistoryCurrencyTotalDto
-                .fromJson(
+            (item) => TransferHistoryCurrencyTotalDto.fromJson(
               item as Map<String, dynamic>,
             ),
-      )
+          )
           .toList(),
     );
   }

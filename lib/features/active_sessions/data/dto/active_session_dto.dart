@@ -22,41 +22,25 @@ class ActiveSessionDto {
     required this.expiresAt,
   });
 
-  factory ActiveSessionDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory ActiveSessionDto.fromJson(Map<String, dynamic> json) {
     return ActiveSessionDto(
-      sessionId:
-      json['sessionId'] as String,
+      sessionId: json['sessionId'] as String,
 
-      deviceId:
-      json['deviceId'] as String?,
+      deviceId: json['deviceId'] as String?,
 
-      deviceName:
-      json['deviceName'] as String?,
+      deviceName: json['deviceName'] as String?,
 
-      userAgent:
-      json['userAgent'] as String?,
+      userAgent: json['userAgent'] as String?,
 
-      creationIp:
-      json['creationIp'] as String?,
+      creationIp: json['creationIp'] as String?,
 
-      sessionCreatedAt:
-      DateTime.parse(
-        json['sessionCreatedAt'] as String,
-      ),
+      sessionCreatedAt: DateTime.parse(json['sessionCreatedAt'] as String),
 
-      lastUsedAt:
-      json['lastUsedAt'] == null
+      lastUsedAt: json['lastUsedAt'] == null
           ? null
-          : DateTime.parse(
-        json['lastUsedAt'] as String,
-      ),
+          : DateTime.parse(json['lastUsedAt'] as String),
 
-      expiresAt:
-      DateTime.parse(
-        json['expiresAt'] as String,
-      ),
+      expiresAt: DateTime.parse(json['expiresAt'] as String),
     );
   }
 
@@ -67,12 +51,9 @@ class ActiveSessionDto {
       deviceName: deviceName,
       userAgent: userAgent,
       creationIp: creationIp,
-      sessionCreatedAt:
-      sessionCreatedAt,
-      lastUsedAt:
-      lastUsedAt,
-      expiresAt:
-      expiresAt,
+      sessionCreatedAt: sessionCreatedAt,
+      lastUsedAt: lastUsedAt,
+      expiresAt: expiresAt,
     );
   }
 }

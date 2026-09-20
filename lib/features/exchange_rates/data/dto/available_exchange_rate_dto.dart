@@ -46,64 +46,41 @@ class AvailableExchangeRateDto {
     required this.validUntil,
   });
 
-  factory AvailableExchangeRateDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory AvailableExchangeRateDto.fromJson(Map<String, dynamic> json) {
     return AvailableExchangeRateDto(
       corridorId: json['corridorId'] as String,
 
-      sourceCountryCode:
-      json['sourceCountryCode'] as String,
+      sourceCountryCode: json['sourceCountryCode'] as String,
 
-      sourceCountryName:
-      json['sourceCountryName'] as String,
+      sourceCountryName: json['sourceCountryName'] as String,
 
-      destinationCountryCode:
-      json['destinationCountryCode'] as String,
+      destinationCountryCode: json['destinationCountryCode'] as String,
 
-      destinationCountryName:
-      json['destinationCountryName'] as String,
+      destinationCountryName: json['destinationCountryName'] as String,
 
-      destinationCountryFlagUrl:
-      json['destinationCountryFlagUrl'] as String?,
+      destinationCountryFlagUrl: json['destinationCountryFlagUrl'] as String?,
 
-      sourceCurrencyCode:
-      json['sourceCurrencyCode'] as String,
+      sourceCurrencyCode: json['sourceCurrencyCode'] as String,
 
-      sourceCurrencyName:
-      json['sourceCurrencyName'] as String,
+      sourceCurrencyName: json['sourceCurrencyName'] as String,
 
-      sourceCurrencySymbol:
-      json['sourceCurrencySymbol'] as String?,
+      sourceCurrencySymbol: json['sourceCurrencySymbol'] as String?,
 
-      targetCurrencyCode:
-      json['targetCurrencyCode'] as String,
+      targetCurrencyCode: json['targetCurrencyCode'] as String,
 
-      targetCurrencyName:
-      json['targetCurrencyName'] as String,
+      targetCurrencyName: json['targetCurrencyName'] as String,
 
-      targetCurrencySymbol:
-      json['targetCurrencySymbol'] as String?,
+      targetCurrencySymbol: json['targetCurrencySymbol'] as String?,
 
-      rate: _decimalToString(
-        json['rate'],
-      ),
+      rate: _decimalToString(json['rate']),
 
-      minAmount: _nullableDecimalToString(
-        json['minAmount'],
-      ),
+      minAmount: _nullableDecimalToString(json['minAmount']),
 
-      maxAmount: _nullableDecimalToString(
-        json['maxAmount'],
-      ),
+      maxAmount: _nullableDecimalToString(json['maxAmount']),
 
-      validFrom: _parseDateTime(
-        json['validFrom'],
-      ),
+      validFrom: _parseDateTime(json['validFrom']),
 
-      validUntil: _parseDateTime(
-        json['validUntil'],
-      ),
+      validUntil: _parseDateTime(json['validUntil']),
     );
   }
 
@@ -135,21 +112,15 @@ class AvailableExchangeRateDto {
     );
   }
 
-  static String _decimalToString(
-      dynamic value,
-      ) {
+  static String _decimalToString(dynamic value) {
     if (value == null) {
-      throw const FormatException(
-        'Exchange rate is missing.',
-      );
+      throw const FormatException('Exchange rate is missing.');
     }
 
     return value.toString();
   }
 
-  static String? _nullableDecimalToString(
-      dynamic value,
-      ) {
+  static String? _nullableDecimalToString(dynamic value) {
     if (value == null) {
       return null;
     }
@@ -157,15 +128,11 @@ class AvailableExchangeRateDto {
     return value.toString();
   }
 
-  static DateTime? _parseDateTime(
-      dynamic value,
-      ) {
+  static DateTime? _parseDateTime(dynamic value) {
     if (value == null) {
       return null;
     }
 
-    return DateTime.tryParse(
-      value.toString(),
-    );
+    return DateTime.tryParse(value.toString());
   }
 }

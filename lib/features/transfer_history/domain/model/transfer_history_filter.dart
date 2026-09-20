@@ -4,4 +4,3 @@ class TransferHistoryFilter {
   final int? year;
   const TransferHistoryFilter({this.beneficiaryId, this.status, this.year});
 }
-

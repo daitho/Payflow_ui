@@ -35,60 +35,33 @@ class HomeExchangeRateDto {
     required this.source,
   });
 
-  factory HomeExchangeRateDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory HomeExchangeRateDto.fromJson(Map<String, dynamic> json) {
     return HomeExchangeRateDto(
-      sourceCountryIsoCode2:
-      json['sourceCountryIsoCode2']
-      as String?,
+      sourceCountryIsoCode2: json['sourceCountryIsoCode2'] as String?,
 
-      sourceCountryFlagUrl:
-      json['sourceCountryFlagUrl']
-      as String?,
+      sourceCountryFlagUrl: json['sourceCountryFlagUrl'] as String?,
 
-      targetCountryIsoCode2:
-      json['targetCountryIsoCode2']
-      as String?,
+      targetCountryIsoCode2: json['targetCountryIsoCode2'] as String?,
 
-      targetCountryFlagUrl:
-      json['targetCountryFlagUrl']
-      as String?,
+      targetCountryFlagUrl: json['targetCountryFlagUrl'] as String?,
 
-      sourceCurrencyCode:
-      json['sourceCurrencyCode']
-      as String,
+      sourceCurrencyCode: json['sourceCurrencyCode'] as String,
 
-      sourceCurrencyName:
-      json['sourceCurrencyName']
-      as String,
+      sourceCurrencyName: json['sourceCurrencyName'] as String,
 
-      sourceCurrencySymbol:
-      json['sourceCurrencySymbol']
-      as String?,
+      sourceCurrencySymbol: json['sourceCurrencySymbol'] as String?,
 
-      targetCurrencyCode:
-      json['targetCurrencyCode']
-      as String,
+      targetCurrencyCode: json['targetCurrencyCode'] as String,
 
-      targetCurrencyName:
-      json['targetCurrencyName']
-      as String,
+      targetCurrencyName: json['targetCurrencyName'] as String,
 
-      targetCurrencySymbol:
-      json['targetCurrencySymbol']
-      as String?,
+      targetCurrencySymbol: json['targetCurrencySymbol'] as String?,
 
-      rate:
-      json['rate'] as num,
+      rate: json['rate'] as num,
 
-      rateAt:
-      DateTime.parse(
-        json['rateAt'] as String,
-      ),
+      rateAt: DateTime.parse(json['rateAt'] as String),
 
-      source:
-      json['source'] as String,
+      source: json['source'] as String,
     );
   }
 }

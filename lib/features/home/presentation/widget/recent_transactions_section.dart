@@ -20,8 +20,7 @@ class RecentTransactionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,32 +62,21 @@ class RecentTransactionsSection extends StatelessWidget {
         // =====================================================
         // EMPTY
         // =====================================================
-
         if (transactions.isEmpty)
-          _EmptyTransactions(
-            message: l10n.homeNoRecentTransactions,
-          )
-
+          _EmptyTransactions(message: l10n.homeNoRecentTransactions)
         // =====================================================
         // TRANSACTIONS
         // =====================================================
-
         else
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: const Color(0xFFEAE5E2),
-              ),
+              border: Border.all(color: const Color(0xFFEAE5E2)),
             ),
             child: Column(
               children: [
-                for (
-                int index = 0;
-                index < transactions.length;
-                index++
-                ) ...[
+                for (int index = 0; index < transactions.length; index++) ...[
                   TransferSummaryTile(
                     beneficiaryName: transactions[index].beneficiaryName ?? '',
                     reference: transactions[index].reference,
@@ -101,10 +89,8 @@ class RecentTransactionsSection extends StatelessWidget {
                     onTap: onTransactionTap == null
                         ? null
                         : () {
-                      onTransactionTap!(
-                        transactions[index],
-                      );
-                    },
+                            onTransactionTap!(transactions[index]);
+                          },
                   ),
 
                   if (index < transactions.length - 1)
@@ -134,9 +120,7 @@ class RecentTransactionsSection extends StatelessWidget {
 class _EmptyTransactions extends StatelessWidget {
   final String message;
 
-  const _EmptyTransactions({
-    required this.message,
-  });
+  const _EmptyTransactions({required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -146,16 +130,11 @@ class _EmptyTransactions extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xFFEAE5E2),
-        ),
+        border: Border.all(color: const Color(0xFFEAE5E2)),
       ),
       child: Text(
         message,
-        style: const TextStyle(
-          color: Color(0xFF847C78),
-          fontSize: 13,
-        ),
+        style: const TextStyle(color: Color(0xFF847C78), fontSize: 13),
       ),
     );
   }

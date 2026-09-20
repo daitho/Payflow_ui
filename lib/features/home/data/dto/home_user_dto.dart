@@ -11,9 +11,7 @@ class HomeUserDto {
     required this.verified,
   });
 
-  factory HomeUserDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory HomeUserDto.fromJson(Map<String, dynamic> json) {
     return HomeUserDto(
       publicId: json['publicId'] as String,
       firstName: json['firstName'] as String?,

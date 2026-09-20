@@ -10,30 +10,48 @@ import '../service_api/transfer_history_api_service.dart';
 class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
   final TransferHistoryApiService _api;
   TransferHistoryRepositoryImpl({required TransferHistoryApiService apiService})
-      : _api = apiService;
+    : _api = apiService;
 
   @override
   Future<TransferHistoryPageModel> getHistory({
-    required TransferHistoryFilter filter, required int page, int size = 20,
-  }) => _guard(() async => TransferHistoryMapper.page(await _api.getHistory(
-    beneficiaryId: filter.beneficiaryId, status: filter.status, year: filter.year,
-    page: page, size: size,
-  )));
+    required TransferHistoryFilter filter,
+    required int page,
+    int size = 20,
+  }) => _guard(
+    () async => TransferHistoryMapper.page(
+      await _api.getHistory(
+        beneficiaryId: filter.beneficiaryId,
+        status: filter.status,
+        year: filter.year,
+        page: page,
+        size: size,
+      ),
+    ),
+  );
 
   @override
-  Future<TransferDetailModel> getDetail(String transferId) =>
-      _guard(() async => TransferHistoryMapper.detail(
-        await _api.getDetail(transferId: transferId)));
+  Future<TransferDetailModel> getDetail(String transferId) => _guard(
+    () async => TransferHistoryMapper.detail(
+      await _api.getDetail(transferId: transferId),
+    ),
+  );
 
   @override
-  Future<List<int>> getReceipt(String transferId, String locale) =>
-      _guard(() => _api.getReceipt(
-        transferId: transferId, locale: locale, download: true));
+  Future<List<int>> getReceipt(String transferId, String locale) => _guard(
+    () =>
+        _api.getReceipt(transferId: transferId, locale: locale, download: true),
+  );
 
   @override
   Future<List<int>> getStatement(TransferHistoryFilter filter, String locale) =>
-      _guard(() => _api.getStatement(
-        beneficiaryId: filter.beneficiaryId, status: filter.status, year: filter.year, locale: locale));
+      _guard(
+        () => _api.getStatement(
+          beneficiaryId: filter.beneficiaryId,
+          status: filter.status,
+          year: filter.year,
+          locale: locale,
+        ),
+      );
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
@@ -54,12 +72,17 @@ class TransferHistoryRepositoryImpl implements TransferHistoryRepository {
       };
       throw TransferHistoryException(failure);
     } on FormatException {
-      throw const TransferHistoryException(TransferHistoryFailure.invalidResponse);
+      throw const TransferHistoryException(
+        TransferHistoryFailure.invalidResponse,
+      );
     } on TypeError {
-      throw const TransferHistoryException(TransferHistoryFailure.invalidResponse);
+      throw const TransferHistoryException(
+        TransferHistoryFailure.invalidResponse,
+      );
     } on StateError {
-      throw const TransferHistoryException(TransferHistoryFailure.invalidResponse);
+      throw const TransferHistoryException(
+        TransferHistoryFailure.invalidResponse,
+      );
     }
   }
 }
-

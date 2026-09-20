@@ -3,17 +3,13 @@ enum HomeExchangeRateSource {
   defaultAvailable,
   unknown;
 
-  factory HomeExchangeRateSource.fromApi(
-      String value,
-      ) {
+  factory HomeExchangeRateSource.fromApi(String value) {
     switch (value) {
       case 'LAST_TRANSACTION':
-        return HomeExchangeRateSource
-            .lastTransaction;
+        return HomeExchangeRateSource.lastTransaction;
 
       case 'DEFAULT_AVAILABLE':
-        return HomeExchangeRateSource
-            .defaultAvailable;
+        return HomeExchangeRateSource.defaultAvailable;
 
       default:
         return HomeExchangeRateSource.unknown;

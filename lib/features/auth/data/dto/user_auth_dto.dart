@@ -1,5 +1,3 @@
-
-
 import '../../domain/model/user_auth_model.dart';
 
 class UserAuthDto {
@@ -25,9 +23,7 @@ class UserAuthDto {
     required this.verified,
   });
 
-  factory UserAuthDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory UserAuthDto.fromJson(Map<String, dynamic> json) {
     return UserAuthDto(
       id: json['id'] as String,
       publicId: json['publicId'] as String,

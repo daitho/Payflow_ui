@@ -20,24 +20,16 @@ class AuthSessionDto {
     required this.user,
   });
 
-  factory AuthSessionDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory AuthSessionDto.fromJson(Map<String, dynamic> json) {
     return AuthSessionDto(
       tokenType: json['tokenType'] as String,
       accessToken: json['accessToken'] as String,
-      accessExpiresAt: DateTime.parse(
-        json['accessExpiresAt'] as String,
-      ),
+      accessExpiresAt: DateTime.parse(json['accessExpiresAt'] as String),
       refreshToken: json['refreshToken'] as String,
-      refreshExpiresAt: DateTime.parse(
-        json['refreshExpiresAt'] as String,
-      ),
+      refreshExpiresAt: DateTime.parse(json['refreshExpiresAt'] as String),
       sessionId: json['sessionId'] as String,
 
-      user: UserAuthDto.fromJson(
-        json['user'] as Map<String, dynamic>,
-      ),
+      user: UserAuthDto.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 

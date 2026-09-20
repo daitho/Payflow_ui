@@ -744,10 +744,173 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transferTrackingPending =>
       'The transfer is being processed. Receipt has not yet been confirmed.';
+
   @override
   String get transferYearLabel => 'Year';
 
   @override
   String get transferAllYears => 'All years';
-}
 
+  @override
+  String get contactTitle => 'Beneficiaries';
+
+  @override
+  String get contactSearch => 'Enter a name to search…';
+
+  @override
+  String get contactAdd => 'Add a beneficiary';
+
+  @override
+  String get contactSection => 'YOUR BENEFICIARIES';
+
+  @override
+  String get contactNew => 'New Beneficiary';
+
+  @override
+  String get contactEdit => 'Edit beneficiary';
+
+  @override
+  String get contactInformation => 'Contact information';
+
+  @override
+  String get contactFullName => 'Full name';
+
+  @override
+  String get contactPhone => 'Phone number';
+
+  @override
+  String get contactCountry => 'Country';
+
+  @override
+  String get contactOperator => 'Operator';
+
+  @override
+  String get contactGender => 'Gender';
+
+  @override
+  String get contactMale => 'Male';
+
+  @override
+  String get contactFemale => 'Female';
+
+  @override
+  String get contactUnspecified => 'Not specified';
+
+  @override
+  String get contactSave => 'Save changes';
+
+  @override
+  String get contactEmpty => 'No beneficiaries found.';
+
+  @override
+  String get contactNoPhone => 'No phone number';
+
+  @override
+  String get contactChoose => 'Choose';
+
+  @override
+  String get contactRequired => 'Required field';
+
+  @override
+  String get contactNameTooLong => 'Maximum 120 characters';
+
+  @override
+  String get contactPhoneInvalid =>
+      'Enter the number with its country code, e.g. +237…';
+
+  @override
+  String get contactNoOperators => 'No Mobile Money operators available.';
+
+  @override
+  String get contactNetworkError =>
+      'Connection unavailable. Check your network.';
+
+  @override
+  String get contactSessionError =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get contactInvalidError =>
+      'Check the phone, country and operator. A contact with multiple destinations cannot change country here.';
+
+  @override
+  String get contactNotFoundError =>
+      'This beneficiary or operator is no longer available.';
+
+  @override
+  String get contactServerError =>
+      'Unable to complete this action. Please try again.';
+
+  @override
+  String get contactUnavailable =>
+      'This destination cannot be edited in the Mobile Money form.';
+
+  @override
+  String get transferSendTitle => 'Send money';
+
+  @override
+  String get transferChooseBeneficiary => 'Choose a beneficiary';
+
+  @override
+  String get transferYouSend => 'You send';
+
+  @override
+  String get transferAmountReceived => 'Amount received';
+
+  @override
+  String get transferFundingLabel => 'Payment method';
+
+  @override
+  String get transferFundingCard => 'Bank card';
+
+  @override
+  String get transferCurrentRate => 'Exchange rate';
+
+  @override
+  String get transferChooseForQuote =>
+      'Choose a beneficiary to calculate the rate and fees.';
+
+  @override
+  String get transferContinue => 'Continue';
+
+  @override
+  String get transferReviewTitle => 'Review your transfer';
+
+  @override
+  String get transferTrustWarning =>
+      'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.';
+
+  @override
+  String get transferConfirm => 'Confirm transfer';
+
+  @override
+  String get transferInvalidError =>
+      'Check the beneficiary and the amount entered.';
+
+  @override
+  String get transferBeneficiaryUnavailable =>
+      'This beneficiary or destination is no longer available.';
+
+  @override
+  String get transferConflictError =>
+      'This transfer has already been confirmed or can no longer be used.';
+
+  @override
+  String get transferQuoteExpired =>
+      'The rate has expired. A new quote will be calculated.';
+
+  @override
+  String get transferUnavailableError =>
+      'This transfer is not available for this beneficiary or amount.';
+  @override
+  String get systemLanguage => 'Device language';
+
+  @override
+  String get spanish => 'Spanish';
+
+  @override
+  String get mandarin => 'Mandarin Chinese';
+
+  @override
+  String get hindi => 'Hindi';
+}

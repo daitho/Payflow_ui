@@ -18,15 +18,11 @@ final class TransferStatusTimelineDto {
   // ===========================================================
   // JSON
   // ===========================================================
-  factory TransferStatusTimelineDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory TransferStatusTimelineDto.fromJson(Map<String, dynamic> json) {
     return TransferStatusTimelineDto(
       previousStatus: json['previousStatus'] as String?,
       status: json['status'] as String,
-      occurredAt: DateTime.parse(
-        json['occurredAt'] as String,
-      ),
+      occurredAt: DateTime.parse(json['occurredAt'] as String),
     );
   }
 }

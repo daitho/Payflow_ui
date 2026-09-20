@@ -8,9 +8,7 @@ enum HomeTransferStatus {
   refunded,
   unknown;
 
-  factory HomeTransferStatus.fromApi(
-      String value,
-      ) {
+  factory HomeTransferStatus.fromApi(String value) {
     switch (value) {
       case 'CREATED':
         return HomeTransferStatus.created;
