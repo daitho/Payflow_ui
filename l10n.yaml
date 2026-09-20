@@ -6,3 +6,6 @@ nullable-getter: false
 preferred-supported-locales:
   - fr
   - en
+  - es
+  - zh
+  - hi
