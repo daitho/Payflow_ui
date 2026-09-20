@@ -856,4 +856,55 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get hindi => '印地语';
 
+  @override
+  String get currentPassword => '当前密码';
+
+  @override
+  String get newPassword => '新密码';
+
+  @override
+  String get confirmNewPassword => '确认新密码';
+
+  @override
+  String get currentPasswordRequired => '请输入当前密码';
+
+  @override
+  String get currentPasswordIncorrect => '当前密码不正确。';
+
+  @override
+  String get newPasswordRequired => '请输入新密码';
+
+  @override
+  String get newPasswordUnchanged => '新密码必须与当前密码不同。';
+
+  @override
+  String get confirmNewPasswordRequired => '请确认新密码';
+
+  @override
+  String get passwordChangeSessionInfo => '为了您的安全，所有其他设备都将退出登录。此设备将保持登录状态。';
+
+  @override
+  String get changePasswordAction => '更改密码';
+
+  @override
+  String get passwordChangedTitle => '密码已更改';
+
+  @override
+  String get passwordChangedMessage => '您的密码已更改，其他设备均已退出登录。';
+
+  @override
+  String get continueAction => '继续';
+
+  @override
+  String get passwordLoginUnavailable => '此账户使用外部登录提供商，没有 PayFlow 密码。';
+
+  @override
+  String get changePasswordNetworkError => '无法更改密码，请检查网络连接。';
+
+  @override
+  String get changePasswordServerError => '密码服务暂时不可用。';
+
+  @override
+  String get changePasswordUnexpectedError => '目前无法更改密码。';
+
 }
