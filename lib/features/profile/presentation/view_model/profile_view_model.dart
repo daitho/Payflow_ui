@@ -3,33 +3,26 @@ import 'package:flutter/foundation.dart';
 import '../../../../core/service/session_service.dart';
 import '../../domain/model/profile_model.dart';
 
-class ProfileViewModel
-    extends ChangeNotifier {
+class ProfileViewModel extends ChangeNotifier {
   final SessionService _sessionService;
 
-  ProfileViewModel({
-    required SessionService sessionService,
-  }) : _sessionService =
-      sessionService {
-    _sessionService.addListener(
-      _onSessionChanged,
-    );
+  ProfileViewModel({required SessionService sessionService})
+    : _sessionService = sessionService {
+    _sessionService.addListener(_onSessionChanged);
   }
 
   // =========================================================
   // PROFILE
   // =========================================================
   ProfileModel? get profile {
-    final user =
-        _sessionService.currentUser;
+    final user = _sessionService.currentUser;
     if (user == null) {
       return null;
     }
 
     return ProfileModel(
       publicId: user.publicId,
-      firstName:
-      user.firstName ?? '',
+      firstName: user.firstName ?? '',
       lastName: user.lastName,
       email: user.email,
       phone: user.phoneE164,
@@ -51,9 +44,7 @@ class ProfileViewModel
   // =========================================================
   @override
   void dispose() {
-    _sessionService.removeListener(
-      _onSessionChanged,
-    );
+    _sessionService.removeListener(_onSessionChanged);
     super.dispose();
   }
 }

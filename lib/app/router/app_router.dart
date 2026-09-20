@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../../features/beneficiaries/data/service_api/beneficiary_api_service.dart';
 import '../../features/beneficiaries/data/repository/beneficiary_repository_impl.dart';
 import '../../features/beneficiaries/domain/service/beneficiary_service.dart';
@@ -64,6 +66,7 @@ import '../../homepage.dart';
 import 'app_routes.dart';
 import 'guards/auth_guard.dart';
 import 'guards/guest_guard.dart';
+
 // ===========================================================
 // DEPENDENCIES
 // ===========================================================
@@ -121,14 +124,10 @@ late final HomeService _homeService = HomeService(repository: _homeRepository);
 // EXCHANGE RATES
 // ===========================================================
 final ExchangeRateApiService _exchangeRateApiService =
-ExchangeRateApiServiceImpl(
-  _dioClient.dio,
-);
+    ExchangeRateApiServiceImpl(_dioClient.dio);
 
 final ExchangeRateRepository _exchangeRateRepository =
-ExchangeRateRepositoryImpl(
-  _exchangeRateApiService
-);
+    ExchangeRateRepositoryImpl(_exchangeRateApiService);
 
 final TransferHistoryService _transferHistoryService = TransferHistoryService(
   repository: TransferHistoryRepositoryImpl(
@@ -146,7 +145,6 @@ final TransferService _transferService = TransferService(
 
 final AuthGuard _authGuard = AuthGuard(sessionService: _sessionService);
 final GuestGuard _guestGuard = GuestGuard(sessionService: _sessionService);
-
 
 // ===========================================================
 // ROUTER
@@ -210,11 +208,11 @@ GoRouter _createRouter() {
       // =====================================================
       final bool isProtectedRoute =
           location == AppRoutes.home ||
-              location == AppRoutes.exchangeRates ||
-              location.startsWith('/transactions/') ||
-              location.startsWith('/transfer') ||
-              location.startsWith('/profile') ||
-              location.startsWith('/beneficiaries/');
+          location == AppRoutes.exchangeRates ||
+          location.startsWith('/transactions/') ||
+          location.startsWith('/transfer') ||
+          location.startsWith('/profile') ||
+          location.startsWith('/beneficiaries/');
 
       if (isProtectedRoute) {
         return _authGuard.redirect();
@@ -244,29 +242,35 @@ GoRouter _createRouter() {
         path: AppRoutes.transferBeneficiaryPicker,
         builder: (context, state) => ChangeNotifierProvider(
           create: (_) => BeneficiariesViewModel(_beneficiaryService)..load(),
-          child: Builder(
-            builder: (context) => BeneficiariesView(
-              selectionMode: true,
-              onBeneficiaryTap: (contact) => context.pop(contact),
-            ),
+          child: BeneficiariesView(
+            selectionMode: true,
+            onBeneficiaryTap: (contact) => context.pop(contact),
           ),
         ),
       ),
-      GoRoute(path: AppRoutes.beneficiaryCreate,
+      GoRoute(
+        path: AppRoutes.beneficiaryCreate,
         builder: (context, state) => ChangeNotifierProvider(
           create: (_) => BeneficiaryFormViewModel(_beneficiaryService)..load(),
-          child: const BeneficiaryFormView())),
-      GoRoute(path: AppRoutes.beneficiaryEdit,
+          child: const BeneficiaryFormView(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.beneficiaryEdit,
         builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => BeneficiaryFormViewModel(_beneficiaryService,
-            id: state.pathParameters['beneficiaryId']!)..load(),
-          child: const BeneficiaryFormView())),
+          create: (_) => BeneficiaryFormViewModel(
+            _beneficiaryService,
+            id: state.pathParameters['beneficiaryId']!,
+          )..load(),
+          child: const BeneficiaryFormView(),
+        ),
+      ),
       GoRoute(
         path: AppRoutes.transactionHistory,
         builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => TransferHistoryViewModel(
-            service: _transferHistoryService,
-          )..refresh(),
+          create: (_) =>
+              TransferHistoryViewModel(service: _transferHistoryService)
+                ..refresh(),
           child: const TransferHistoryView(),
         ),
       ),
@@ -338,7 +342,9 @@ GoRouter _createRouter() {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider<BeneficiariesViewModel>(
-                create: (_) => BeneficiariesViewModel(_beneficiaryService)..load()),
+                create: (_) =>
+                    BeneficiariesViewModel(_beneficiaryService)..load(),
+              ),
               ChangeNotifierProvider<ProfileViewModel>(
                 create: (_) =>
                     ProfileViewModel(sessionService: _sessionService),
@@ -421,9 +427,7 @@ GoRouter _createRouter() {
         path: AppRoutes.exchangeRates,
         builder: (context, state) {
           return ChangeNotifierProvider<ExchangeRatesViewModel>(
-            create: (_) => ExchangeRatesViewModel(
-              _exchangeRateRepository,
-            ),
+            create: (_) => ExchangeRatesViewModel(_exchangeRateRepository),
             child: const ExchangeRatesView(),
           );
         },
@@ -431,4 +435,3 @@ GoRouter _createRouter() {
     ],
   );
 }
-

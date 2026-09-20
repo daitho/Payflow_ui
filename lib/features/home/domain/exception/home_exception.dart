@@ -1,9 +1,7 @@
 abstract class HomeException implements Exception {
   final Object? cause;
 
-  const HomeException({
-    this.cause,
-  });
+  const HomeException({this.cause});
 }
 
 // ============================================================
@@ -11,9 +9,7 @@ abstract class HomeException implements Exception {
 // ============================================================
 
 class HomeNetworkException extends HomeException {
-  const HomeNetworkException({
-    super.cause,
-  });
+  const HomeNetworkException({super.cause});
 }
 
 // ============================================================
@@ -21,9 +17,7 @@ class HomeNetworkException extends HomeException {
 // ============================================================
 
 class HomeTimeoutException extends HomeException {
-  const HomeTimeoutException({
-    super.cause,
-  });
+  const HomeTimeoutException({super.cause});
 }
 
 // ============================================================
@@ -33,10 +27,7 @@ class HomeTimeoutException extends HomeException {
 class HomeServerException extends HomeException {
   final int? statusCode;
 
-  const HomeServerException({
-    this.statusCode,
-    super.cause,
-  });
+  const HomeServerException({this.statusCode, super.cause});
 }
 
 // ============================================================
@@ -44,9 +35,7 @@ class HomeServerException extends HomeException {
 // ============================================================
 
 class HomeSessionExpiredException extends HomeException {
-  const HomeSessionExpiredException({
-    super.cause,
-  });
+  const HomeSessionExpiredException({super.cause});
 }
 
 // ============================================================
@@ -54,9 +43,7 @@ class HomeSessionExpiredException extends HomeException {
 // ============================================================
 
 class HomeInvalidResponseException extends HomeException {
-  const HomeInvalidResponseException({
-    super.cause,
-  });
+  const HomeInvalidResponseException({super.cause});
 }
 
 // ============================================================
@@ -64,7 +51,5 @@ class HomeInvalidResponseException extends HomeException {
 // ============================================================
 
 class HomeUnexpectedException extends HomeException {
-  const HomeUnexpectedException({
-    super.cause,
-  });
+  const HomeUnexpectedException({super.cause});
 }

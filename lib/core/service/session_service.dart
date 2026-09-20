@@ -5,6 +5,7 @@ import '../../features/auth/domain/model/auth_session_model.dart';
 import '../../features/auth/domain/model/user_auth_model.dart';
 
 enum SessionStatus { unknown, unauthenticated, refreshRequired, authenticated }
+
 class SessionService extends ChangeNotifier {
   // =========================================================
   // STORAGE KEYS
@@ -120,6 +121,7 @@ class SessionService extends ChangeNotifier {
     }
     return DateTime.tryParse(rawValue);
   }
+
   Future<String?> readStoredSessionId() {
     return _secureStorage.read(key: _sessionIdKey);
   }

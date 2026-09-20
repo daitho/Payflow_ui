@@ -19,9 +19,7 @@ final class TransferHistoryBeneficiaryDto {
   // JSON
   // ===========================================================
 
-  factory TransferHistoryBeneficiaryDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory TransferHistoryBeneficiaryDto.fromJson(Map<String, dynamic> json) {
     return TransferHistoryBeneficiaryDto(
       id: json['id'] as String,
       displayName: json['displayName'] as String,

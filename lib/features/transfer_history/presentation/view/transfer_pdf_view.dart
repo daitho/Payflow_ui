@@ -7,8 +7,12 @@ import 'package:printing/printing.dart';
 class TransferPdfView extends StatelessWidget {
   final Uint8List bytes;
   final String title, filename;
-  TransferPdfView({super.key, required List<int> bytes,
-    required this.title, required this.filename}) : bytes = Uint8List.fromList(bytes);
+  TransferPdfView({
+    super.key,
+    required List<int> bytes,
+    required this.title,
+    required this.filename,
+  }) : bytes = Uint8List.fromList(bytes);
 
   @override
   Widget build(BuildContext context) => Scaffold(

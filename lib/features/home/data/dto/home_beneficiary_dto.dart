@@ -22,32 +22,23 @@ class HomeBeneficiaryDto {
     required this.favorite,
   });
 
-  factory HomeBeneficiaryDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory HomeBeneficiaryDto.fromJson(Map<String, dynamic> json) {
     return HomeBeneficiaryDto(
       id: json['id'] as String,
 
-      displayName:
-      json['displayName'] as String,
+      displayName: json['displayName'] as String,
 
-      countryId:
-      json['countryId'] as String,
+      countryId: json['countryId'] as String,
 
-      countryIsoCode2:
-      json['countryIsoCode2'] as String?,
+      countryIsoCode2: json['countryIsoCode2'] as String?,
 
-      countryFlagUrl:
-      json['countryFlagUrl'] as String?,
+      countryFlagUrl: json['countryFlagUrl'] as String?,
 
-      phoneE164:
-      json['phoneE164'] as String?,
+      phoneE164: json['phoneE164'] as String?,
 
-      operatorName:
-      json['operatorName'] as String?,
+      operatorName: json['operatorName'] as String?,
 
-      favorite:
-      json['favorite'] as bool? ?? false,
+      favorite: json['favorite'] as bool? ?? false,
     );
   }
 }

@@ -11,12 +11,20 @@ class BeneficiaryService {
   Future<BeneficiaryContact> save(BeneficiaryContactInput input, {String? id}) {
     final name = input.fullName.trim().replaceAll(RegExp(r'\s+'), ' ');
     final phone = input.phoneE164.replaceAll(RegExp(r'[\s().-]'), '');
-    if (name.isEmpty || name.length > 120 ||
+    if (name.isEmpty ||
+        name.length > 120 ||
         !RegExp(r'^\+[1-9][0-9]{6,14}$').hasMatch(phone)) {
       throw const BeneficiaryException(BeneficiaryFailure.invalid);
     }
-    return repository.save(BeneficiaryContactInput(fullName: name,
-      countryId: input.countryId, operatorId: input.operatorId,
-      phoneE164: phone, gender: input.gender), id: id);
+    return repository.save(
+      BeneficiaryContactInput(
+        fullName: name,
+        countryId: input.countryId,
+        operatorId: input.operatorId,
+        phoneE164: phone,
+        gender: input.gender,
+      ),
+      id: id,
+    );
   }
 }

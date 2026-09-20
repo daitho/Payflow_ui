@@ -131,9 +131,7 @@ class SecurityPrivacyView extends StatelessWidget {
                 title: l10n.thisDevice,
                 subtitle: l10n.thisDeviceSubtitle,
                 onTap: () {
-                  context.push(
-                    AppRoutes.currentDevice,
-                  );
+                  context.push(AppRoutes.currentDevice);
                 },
               ),
               const _Divider(),

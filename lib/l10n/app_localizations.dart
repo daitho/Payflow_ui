@@ -1656,22 +1656,106 @@ abstract class AppLocalizations {
   /// **'This destination cannot be edited in the Mobile Money form.'**
   String get contactUnavailable;
 
+  /// No description provided for @transferSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send money'**
   String get transferSendTitle;
+
+  /// No description provided for @transferChooseBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary'**
   String get transferChooseBeneficiary;
+
+  /// No description provided for @transferYouSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You send'**
   String get transferYouSend;
+
+  /// No description provided for @transferAmountReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount received'**
   String get transferAmountReceived;
+
+  /// No description provided for @transferFundingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
   String get transferFundingLabel;
+
+  /// No description provided for @transferFundingCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
   String get transferFundingCard;
+
+  /// No description provided for @transferCurrentRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rate'**
   String get transferCurrentRate;
+
+  /// No description provided for @transferChooseForQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary to calculate the rate and fees.'**
   String get transferChooseForQuote;
+
+  /// No description provided for @transferContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
   String get transferContinue;
+
+  /// No description provided for @transferReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your transfer'**
   String get transferReviewTitle;
+
+  /// No description provided for @transferTrustWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.'**
   String get transferTrustWarning;
+
+  /// No description provided for @transferConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm transfer'**
   String get transferConfirm;
+
+  /// No description provided for @transferInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the beneficiary and the amount entered.'**
   String get transferInvalidError;
+
+  /// No description provided for @transferBeneficiaryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or destination is no longer available.'**
   String get transferBeneficiaryUnavailable;
+
+  /// No description provided for @transferConflictError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer has already been confirmed or can no longer be used.'**
   String get transferConflictError;
+
+  /// No description provided for @transferQuoteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The rate has expired. A new quote will be calculated.'**
   String get transferQuoteExpired;
+
+  /// No description provided for @transferUnavailableError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer is not available for this beneficiary or amount.'**
   String get transferUnavailableError;
 }
 

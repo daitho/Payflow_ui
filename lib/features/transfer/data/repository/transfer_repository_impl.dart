@@ -15,21 +15,25 @@ class TransferRepositoryImpl implements TransferRepository {
     required String destinationId,
     required num sentAmount,
     required String sentCurrency,
-  }) => _guard(() async => (await _api.createQuote(
-    beneficiaryId: beneficiaryId,
-    destinationId: destinationId,
-    sentAmount: sentAmount,
-    sentCurrency: sentCurrency,
-  )).toDomain());
+  }) => _guard(
+    () async => (await _api.createQuote(
+      beneficiaryId: beneficiaryId,
+      destinationId: destinationId,
+      sentAmount: sentAmount,
+      sentCurrency: sentCurrency,
+    )).toDomain(),
+  );
 
   @override
   Future<ConfirmedTransfer> confirm({
     required String quoteId,
     required String idempotencyKey,
-  }) => _guard(() async => (await _api.confirm(
-    quoteId: quoteId,
-    idempotencyKey: idempotencyKey,
-  )).toDomain());
+  }) => _guard(
+    () async => (await _api.confirm(
+      quoteId: quoteId,
+      idempotencyKey: idempotencyKey,
+    )).toDomain(),
+  );
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

@@ -17,14 +17,11 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
-    final String? firstName =
-    user.firstName?.trim();
+    final String? firstName = user.firstName?.trim();
 
-    final String greetingName =
-    firstName != null && firstName.isNotEmpty
+    final String greetingName = firstName != null && firstName.isNotEmpty
         ? firstName
         : user.lastName;
 
@@ -37,8 +34,7 @@ class HomeHeader extends StatelessWidget {
             customBorder: const CircleBorder(),
             child: CircleAvatar(
               radius: 23,
-              backgroundColor:
-              const Color(0xFFFFE8D7),
+              backgroundColor: const Color(0xFFFFE8D7),
               child: const Icon(
                 Icons.person_rounded,
                 color: Color(0xFFFF970F),
@@ -52,8 +48,7 @@ class HomeHeader extends StatelessWidget {
 
         Expanded(
           child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 l10n.homeWelcome,

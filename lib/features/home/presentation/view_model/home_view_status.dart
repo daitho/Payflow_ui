@@ -1,6 +1,1 @@
-enum HomeViewStatus {
-  initial,
-  loading,
-  success,
-  failure,
-}
+enum HomeViewStatus { initial, loading, success, failure }

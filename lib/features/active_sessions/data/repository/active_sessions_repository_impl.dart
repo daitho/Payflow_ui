@@ -47,19 +47,13 @@ class ActiveSessionsRepositoryImpl implements ActiveSessionsRepository {
   }
 
   @override
-  Future<void> logoutCurrent({
-    required String refreshToken,
-  }) async {
+  Future<void> logoutCurrent({required String refreshToken}) async {
     try {
-      await _apiService.logoutCurrent(
-        refreshToken: refreshToken,
-      );
+      await _apiService.logoutCurrent(refreshToken: refreshToken);
     } on DioException catch (error) {
       throw _mapDioException(error);
     } catch (_) {
-      throw const ActiveSessionsException(
-        ActiveSessionsErrorType.unexpected,
-      );
+      throw const ActiveSessionsException(ActiveSessionsErrorType.unexpected);
     }
   }
 

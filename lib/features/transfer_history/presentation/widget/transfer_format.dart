@@ -10,9 +10,9 @@ String transferMoney(BuildContext context, num amount, String currency) {
   return '${NumberFormat('#,##0.00', locale).format(amount)} $currency';
 }
 
-String transferDate(BuildContext context, DateTime date) =>
-    DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag())
-        .add_Hm().format(date.toLocal());
+String transferDate(BuildContext context, DateTime date) => DateFormat.yMMMd(
+  Localizations.localeOf(context).toLanguageTag(),
+).add_Hm().format(date.toLocal());
 
 String transferError(AppLocalizations l10n, TransferHistoryFailure failure) =>
     switch (failure) {

@@ -5,13 +5,13 @@ abstract final class AppRoutes {
   static const String home = '/home';
   static const beneficiaryCreate = '/beneficiaries/new';
   static const beneficiaryEdit = '/beneficiaries/:beneficiaryId/edit';
-  static String beneficiaryEditPath(String id) => '/beneficiaries/${Uri.encodeComponent(id)}/edit';
+  static String beneficiaryEditPath(String id) =>
+      '/beneficiaries/${Uri.encodeComponent(id)}/edit';
 
   static const String exchangeRates = '/exchange-rates';
 
   static const String transfer = '/transfer';
-  static const String transferBeneficiaryPicker =
-      '/transfer/beneficiary';
+  static const String transferBeneficiaryPicker = '/transfer/beneficiary';
 
   // =========================================================
   // TRANSACTIONS
@@ -30,4 +30,3 @@ abstract final class AppRoutes {
   static const String activeSessions = '/profile/security/sessions';
   static const String currentDevice = '/profile/security/device';
 }
-

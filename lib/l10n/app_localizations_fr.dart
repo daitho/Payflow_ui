@@ -856,43 +856,59 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cette destination n’est pas modifiable dans le formulaire Mobile Money.';
 
   @override
-  String get transferSendTitle => "Envoyer de l'argent";
+  String get transferSendTitle => 'Envoyer de l\'argent';
+
   @override
   String get transferChooseBeneficiary => 'Choisir un bénéficiaire';
+
   @override
   String get transferYouSend => 'Vous envoyez';
+
   @override
   String get transferAmountReceived => 'Montant reçu';
+
   @override
-  String get transferFundingLabel => "Mode d'envoi";
+  String get transferFundingLabel => 'Mode d\'envoi';
+
   @override
   String get transferFundingCard => 'Carte bancaire';
+
   @override
   String get transferCurrentRate => 'Taux de change';
+
   @override
   String get transferChooseForQuote =>
       'Choisissez un bénéficiaire pour calculer le taux et les frais.';
+
   @override
   String get transferContinue => 'Continuer à envoyer';
+
   @override
   String get transferReviewTitle => 'Vérifiez votre transfert';
+
   @override
   String get transferTrustWarning =>
-      "Connaissez-vous cette personne ? Assurez-vous d'envoyer de l'argent à une personne de confiance et que ses informations sont exactes.";
+      'Connaissez-vous cette personne ? Assurez-vous d\'envoyer de l\'argent à une personne de confiance et que ses informations sont exactes.';
+
   @override
   String get transferConfirm => 'Confirmer le transfert';
+
   @override
   String get transferInvalidError =>
       'Vérifiez le bénéficiaire et le montant saisi.';
+
   @override
   String get transferBeneficiaryUnavailable =>
       'Ce bénéficiaire ou sa destination n’est plus disponible.';
+
   @override
   String get transferConflictError =>
       'Ce transfert a déjà été confirmé ou ne peut plus être utilisé.';
+
   @override
   String get transferQuoteExpired =>
       'Le taux a expiré. Une nouvelle cotation va être calculée.';
+
   @override
   String get transferUnavailableError =>
       'Ce transfert n’est pas disponible pour ce bénéficiaire ou ce montant.';

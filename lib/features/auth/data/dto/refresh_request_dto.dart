@@ -1,13 +1,9 @@
 class RefreshRequestDto {
   final String refreshToken;
 
-  const RefreshRequestDto({
-    required this.refreshToken,
-  });
+  const RefreshRequestDto({required this.refreshToken});
 
   Map<String, dynamic> toJson() {
-    return {
-      'refreshToken': refreshToken,
-    };
+    return {'refreshToken': refreshToken};
   }
 }

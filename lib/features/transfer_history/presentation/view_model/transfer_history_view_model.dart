@@ -8,7 +8,7 @@ import '../../domain/service/transfer_history_service.dart';
 class TransferHistoryViewModel extends ChangeNotifier {
   final TransferHistoryService _service;
   TransferHistoryViewModel({required TransferHistoryService service})
-      : _service = service;
+    : _service = service;
 
   TransferHistoryFilter _filter = const TransferHistoryFilter();
   TransferHistoryPageModel? _page;
@@ -36,8 +36,10 @@ class TransferHistoryViewModel extends ChangeNotifier {
     if (_exporting) return;
     await _load(append: false);
   }
+
   Future<void> loadMore() async {
-    if (_exporting || _loading || _loadingMore || _page?.hasNext != true) return;
+    if (_exporting || _loading || _loadingMore || _page?.hasNext != true)
+      return;
     await _load(append: true);
   }
 
@@ -51,7 +53,9 @@ class TransferHistoryViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final result = await _service.getHistory(
-        filter: _filter, page: requestedPage);
+        filter: _filter,
+        page: requestedPage,
+      );
       if (_disposed || generation != _generation) return;
       // A refresh or filter change invalidates any older page request.
       final combined = append ? [..._items, ...result.items] : result.items;
@@ -64,7 +68,8 @@ class TransferHistoryViewModel extends ChangeNotifier {
     } catch (error) {
       if (_disposed || generation != _generation) return;
       _error = error is TransferHistoryException
-          ? error.failure : TransferHistoryFailure.unexpected;
+          ? error.failure
+          : TransferHistoryFailure.unexpected;
     } finally {
       if (!_disposed && generation == _generation) {
         _loading = false;
@@ -91,7 +96,8 @@ class TransferHistoryViewModel extends ChangeNotifier {
     } catch (error) {
       if (!_disposed) {
         _exportError = error is TransferHistoryException
-            ? error.failure : TransferHistoryFailure.unexpected;
+            ? error.failure
+            : TransferHistoryFailure.unexpected;
       }
       return null;
     } finally {

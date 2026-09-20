@@ -202,11 +202,7 @@ class _TransferViewState extends State<TransferView> {
                         const SizedBox(height: 8),
                         _QuoteLine(
                           label: l10n.transferFee,
-                          value: _money(
-                            context,
-                            quote.fee,
-                            quote.sentCurrency,
-                          ),
+                          value: _money(context, quote.fee, quote.sentCurrency),
                         ),
                       ] else if (contact == null)
                         Text(
@@ -584,11 +580,7 @@ class _TransferReviewSheet extends StatelessWidget {
             ),
             _ReviewLine(
               label: l10n.transferTotalAmount,
-              value: _money(
-                context,
-                quote.totalDebited,
-                quote.sentCurrency,
-              ),
+              value: _money(context, quote.totalDebited, quote.sentCurrency),
               emphasized: true,
             ),
             const SizedBox(height: 20),
@@ -600,10 +592,7 @@ class _TransferReviewSheet extends StatelessWidget {
               ),
               child: Text(
                 l10n.transferTrustWarning,
-                style: const TextStyle(
-                  color: Color(0xFF765143),
-                  height: 1.4,
-                ),
+                style: const TextStyle(color: Color(0xFF765143), height: 1.4),
               ),
             ),
             if (viewModel.error != null) ...[
@@ -732,19 +721,18 @@ String _money(BuildContext context, num amount, String currency) =>
       decimalDigits: currency == 'XAF' || currency == 'XOF' ? 0 : 2,
     ).format(amount);
 
-String _errorText(AppLocalizations l10n, TransferFailure? failure) => switch (
-  failure
-) {
-  TransferFailure.invalid => l10n.transferInvalidError,
-  TransferFailure.sessionExpired => l10n.contactSessionError,
-  TransferFailure.notFound => l10n.transferBeneficiaryUnavailable,
-  TransferFailure.conflict => l10n.transferConflictError,
-  TransferFailure.quoteExpired => l10n.transferQuoteExpired,
-  TransferFailure.unavailable => l10n.transferUnavailableError,
-  TransferFailure.network => l10n.contactNetworkError,
-  TransferFailure.timeout => l10n.homeTimeoutError,
-  TransferFailure.server ||
-  TransferFailure.invalidResponse ||
-  TransferFailure.unexpected ||
-  null => l10n.contactServerError,
-};
+String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
+    switch (failure) {
+      TransferFailure.invalid => l10n.transferInvalidError,
+      TransferFailure.sessionExpired => l10n.contactSessionError,
+      TransferFailure.notFound => l10n.transferBeneficiaryUnavailable,
+      TransferFailure.conflict => l10n.transferConflictError,
+      TransferFailure.quoteExpired => l10n.transferQuoteExpired,
+      TransferFailure.unavailable => l10n.transferUnavailableError,
+      TransferFailure.network => l10n.contactNetworkError,
+      TransferFailure.timeout => l10n.homeTimeoutError,
+      TransferFailure.server ||
+      TransferFailure.invalidResponse ||
+      TransferFailure.unexpected ||
+      null => l10n.contactServerError,
+    };

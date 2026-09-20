@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
   // =========================================================
   // STATE
@@ -79,6 +80,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   // =========================================================
   // SELECTED PAGE
   // =========================================================
@@ -118,15 +120,11 @@ class _HomePageState extends State<HomePage> {
           },
 
           onViewAllTransactions: () {
-            context.push(
-              AppRoutes.transactionHistory,
-            );
+            context.push(AppRoutes.transactionHistory);
           },
 
           onMoreTransactions: () {
-            context.push(
-              AppRoutes.transactionHistory,
-            );
+            context.push(AppRoutes.transactionHistory);
           },
         );
 
@@ -228,15 +226,9 @@ class _HomePageState extends State<HomePage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(38),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 3,
-            sigmaY: 3,
-          ),
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 4,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
             decoration: BoxDecoration(
               // 92 % opaque = légère transparence professionnelle
               color: Colors.white.withValues(alpha: 0.55),
@@ -381,8 +373,11 @@ class _HomePageState extends State<HomePage> {
       AppRoutes.transfer,
       extra: TransferDraftSeed(
         beneficiaryId: _selectedBeneficiary?.id,
-        sentCurrency:
-            context.read<HomeViewModel>().home?.exchangeRate?.sourceCurrencyCode,
+        sentCurrency: context
+            .read<HomeViewModel>()
+            .home
+            ?.exchangeRate
+            ?.sourceCurrencyCode,
       ),
     );
   }
@@ -392,8 +387,11 @@ class _HomePageState extends State<HomePage> {
       AppRoutes.transfer,
       extra: TransferDraftSeed(
         beneficiaryId: beneficiaryId,
-        sentCurrency:
-            context.read<HomeViewModel>().home?.exchangeRate?.sourceCurrencyCode,
+        sentCurrency: context
+            .read<HomeViewModel>()
+            .home
+            ?.exchangeRate
+            ?.sourceCurrencyCode,
       ),
     );
   }

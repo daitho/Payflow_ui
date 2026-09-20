@@ -20,8 +20,10 @@ class TransferStatusChip extends StatelessWidget {
         color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(transferStatus(AppLocalizations.of(context), status),
-        style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+      child: Text(
+        transferStatus(AppLocalizations.of(context), status),
+        style: TextStyle(color: color, fontWeight: FontWeight.w600),
+      ),
     );
   }
 }

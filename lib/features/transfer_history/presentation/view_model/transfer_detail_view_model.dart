@@ -7,7 +7,8 @@ class TransferDetailViewModel extends ChangeNotifier {
   final TransferHistoryService _service;
   final String transferId;
   TransferDetailViewModel({
-    required TransferHistoryService service, required this.transferId,
+    required TransferHistoryService service,
+    required this.transferId,
   }) : _service = service;
 
   TransferDetailModel? _detail;
@@ -28,7 +29,8 @@ class TransferDetailViewModel extends ChangeNotifier {
     } catch (error) {
       if (!_disposed) {
         _error = error is TransferHistoryException
-            ? error.failure : TransferHistoryFailure.unexpected;
+            ? error.failure
+            : TransferHistoryFailure.unexpected;
       }
     } finally {
       if (!_disposed) {
@@ -55,7 +57,8 @@ class TransferDetailViewModel extends ChangeNotifier {
     } catch (error) {
       if (!_disposed) {
         _exportError = error is TransferHistoryException
-            ? error.failure : TransferHistoryFailure.unexpected;
+            ? error.failure
+            : TransferHistoryFailure.unexpected;
       }
       return null;
     } finally {

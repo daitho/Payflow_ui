@@ -6,9 +6,7 @@ import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
 class PayFlowApp extends StatelessWidget {
-  const PayFlowApp({
-    super.key,
-  });
+  const PayFlowApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +23,7 @@ class _PayFlowMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localeController =
-    context.watch<LocaleController>();
+    final localeController = context.watch<LocaleController>();
 
     return MaterialApp.router(
       title: 'PayFlow',
@@ -37,11 +34,9 @@ class _PayFlowMaterialApp extends StatelessWidget {
 
       locale: localeController.locale,
 
-      supportedLocales:
-      AppLocalizations.supportedLocales,
+      supportedLocales: AppLocalizations.supportedLocales,
 
-      localizationsDelegates:
-      AppLocalizations.localizationsDelegates,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
 
       routerConfig: appRouter,
     );
