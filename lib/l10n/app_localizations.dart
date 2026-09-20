@@ -6,7 +6,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +99,9 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('fr'),
     Locale('en'),
+    Locale('es'),
+    Locale('zh'),
+    Locale('hi'),
   ];
 
   /// No description provided for @appName.
@@ -1757,6 +1763,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This transfer is not available for this beneficiary or amount.'**
   String get transferUnavailableError;
+
+  /// Uses the language configured by the device.
+  String get systemLanguage;
+
+  /// The Spanish language label.
+  String get spanish;
+
+  /// The Mandarin Chinese language label.
+  String get mandarin;
+
+  /// The Hindi language label.
+  String get hindi;
 }
 
 class _AppLocalizationsDelegate
@@ -1770,7 +1788,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['en', 'es', 'fr', 'hi', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1781,8 +1799,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
