@@ -44,7 +44,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           backgroundColor: const Color(0xFFF8F7F6),
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
-            onPressed: viewModel.isSubmitting ? null : context.pop,
+            onPressed: viewModel.isSubmitting
+                ? null
+                : () {
+                    context.pop();
+                  },
             icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
           ),
           title: Text(
