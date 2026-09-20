@@ -856,4 +856,55 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get hindi => 'हिन्दी';
 
+  @override
+  String get currentPassword => 'वर्तमान पासवर्ड';
+
+  @override
+  String get newPassword => 'नया पासवर्ड';
+
+  @override
+  String get confirmNewPassword => 'नए पासवर्ड की पुष्टि करें';
+
+  @override
+  String get currentPasswordRequired => 'कृपया अपना वर्तमान पासवर्ड दर्ज करें';
+
+  @override
+  String get currentPasswordIncorrect => 'वर्तमान पासवर्ड गलत है।';
+
+  @override
+  String get newPasswordRequired => 'कृपया नया पासवर्ड दर्ज करें';
+
+  @override
+  String get newPasswordUnchanged => 'नया पासवर्ड वर्तमान पासवर्ड से अलग होना चाहिए।';
+
+  @override
+  String get confirmNewPasswordRequired => 'कृपया अपने नए पासवर्ड की पुष्टि करें';
+
+  @override
+  String get passwordChangeSessionInfo => 'आपकी सुरक्षा के लिए, अन्य सभी डिवाइस से साइन आउट कर दिया जाएगा। यह डिवाइस साइन इन रहेगा।';
+
+  @override
+  String get changePasswordAction => 'पासवर्ड बदलें';
+
+  @override
+  String get passwordChangedTitle => 'पासवर्ड बदल दिया गया';
+
+  @override
+  String get passwordChangedMessage => 'आपका पासवर्ड बदल दिया गया है। आपके अन्य डिवाइस से साइन आउट कर दिया गया है।';
+
+  @override
+  String get continueAction => 'जारी रखें';
+
+  @override
+  String get passwordLoginUnavailable => 'यह खाता बाहरी साइन-इन प्रदाता का उपयोग करता है और इसमें PayFlow पासवर्ड नहीं है।';
+
+  @override
+  String get changePasswordNetworkError => 'पासवर्ड नहीं बदला जा सका। अपना कनेक्शन जाँचें।';
+
+  @override
+  String get changePasswordServerError => 'पासवर्ड सेवा अस्थायी रूप से उपलब्ध नहीं है।';
+
+  @override
+  String get changePasswordUnexpectedError => 'अभी पासवर्ड नहीं बदला जा सकता।';
+
 }
