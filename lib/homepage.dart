@@ -1,11 +1,14 @@
 import 'features/beneficiaries/presentation/view/beneficiaries_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:ui';
 import 'app/router/app_routes.dart';
 import 'features/home/domain/model/home_beneficiary_model.dart';
 import 'features/home/presentation/view/home_view.dart';
+import 'features/home/presentation/view_model/home_view_model.dart';
+import 'features/transfer/domain/model/transfer_draft_seed.dart';
 import 'features/profile/presentation/view/profile_view.dart';
 import 'l10n/app_localizations.dart';
 
@@ -131,7 +134,11 @@ class _HomePageState extends State<HomePage> {
       // CONTACTS
       // -------------------------------------------------------
       case 1:
-        return const BeneficiariesView();
+        return BeneficiariesView(
+          onBeneficiaryTap: (contact) {
+            _openTransferForBeneficiary(contact.id);
+          },
+        );
       // -------------------------------------------------------
       // REFERRAL
       // -------------------------------------------------------
@@ -370,19 +377,25 @@ class _HomePageState extends State<HomePage> {
   // =========================================================
 
   void _openTransfer() {
-    /*
-     * Plus tard :
-     *
-     * context.push(
-     *   AppRoutes.transfer,
-     *   extra: _selectedBeneficiary,
-     * );
-     *
-     * Si un bénéficiaire a été sélectionné depuis Home,
-     * il sera donc prérempli.
-     */
+    context.push(
+      AppRoutes.transfer,
+      extra: TransferDraftSeed(
+        beneficiaryId: _selectedBeneficiary?.id,
+        sentCurrency:
+            context.read<HomeViewModel>().home?.exchangeRate?.sourceCurrencyCode,
+      ),
+    );
+  }
 
-    _showComingSoon();
+  void _openTransferForBeneficiary(String beneficiaryId) {
+    context.push(
+      AppRoutes.transfer,
+      extra: TransferDraftSeed(
+        beneficiaryId: beneficiaryId,
+        sentCurrency:
+            context.read<HomeViewModel>().home?.exchangeRate?.sourceCurrencyCode,
+      ),
+    );
   }
 
   // =========================================================
@@ -427,4 +440,3 @@ class _ComingSoonPage extends StatelessWidget {
     );
   }
 }
-

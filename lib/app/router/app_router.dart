@@ -4,6 +4,13 @@ import '../../features/beneficiaries/domain/service/beneficiary_service.dart';
 import '../../features/beneficiaries/presentation/view_model/beneficiaries_view_model.dart';
 import '../../features/beneficiaries/presentation/view_model/beneficiary_form_view_model.dart';
 import '../../features/beneficiaries/presentation/view/beneficiary_form_view.dart';
+import '../../features/beneficiaries/presentation/view/beneficiaries_view.dart';
+import '../../features/transfer/data/repository/transfer_repository_impl.dart';
+import '../../features/transfer/data/service_api/transfer_api_service.dart';
+import '../../features/transfer/domain/model/transfer_draft_seed.dart';
+import '../../features/transfer/domain/service/transfer_service.dart';
+import '../../features/transfer/presentation/view/transfer_view.dart';
+import '../../features/transfer/presentation/view_model/transfer_view_model.dart';
 import '../../features/transfer_history/data/repository/transfer_history_repository_impl.dart';
 import '../../features/transfer_history/data/service_api/transfer_history_api_service_impl.dart';
 import '../../features/transfer_history/domain/service/transfer_history_service.dart';
@@ -133,6 +140,10 @@ final BeneficiaryService _beneficiaryService = BeneficiaryService(
   BeneficiaryRepositoryImpl(BeneficiaryApiService(_dioClient.dio)),
 );
 
+final TransferService _transferService = TransferService(
+  TransferRepositoryImpl(TransferApiService(_dioClient.dio)),
+);
+
 final AuthGuard _authGuard = AuthGuard(sessionService: _sessionService);
 final GuestGuard _guestGuard = GuestGuard(sessionService: _sessionService);
 
@@ -201,6 +212,7 @@ GoRouter _createRouter() {
           location == AppRoutes.home ||
               location == AppRoutes.exchangeRates ||
               location.startsWith('/transactions/') ||
+              location.startsWith('/transfer') ||
               location.startsWith('/profile') ||
               location.startsWith('/beneficiaries/');
 
@@ -211,6 +223,35 @@ GoRouter _createRouter() {
       return null;
     },
     routes: [
+      GoRoute(
+        path: AppRoutes.transfer,
+        builder: (context, state) {
+          final extra = state.extra;
+          final seed = extra is TransferDraftSeed
+              ? extra
+              : const TransferDraftSeed();
+          return ChangeNotifierProvider(
+            create: (_) => TransferViewModel(
+              transferService: _transferService,
+              beneficiaryService: _beneficiaryService,
+              seed: seed,
+            )..initialize(),
+            child: const TransferView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.transferBeneficiaryPicker,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => BeneficiariesViewModel(_beneficiaryService)..load(),
+          child: Builder(
+            builder: (context) => BeneficiariesView(
+              selectionMode: true,
+              onBeneficiaryTap: (contact) => context.pop(contact),
+            ),
+          ),
+        ),
+      ),
       GoRoute(path: AppRoutes.beneficiaryCreate,
         builder: (context, state) => ChangeNotifierProvider(
           create: (_) => BeneficiaryFormViewModel(_beneficiaryService)..load(),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../transfer/domain/model/transfer_draft_seed.dart';
 import '../view_model/transfer_detail_view_model.dart';
 import '../widget/transfer_detail_actions.dart';
 import '../widget/transfer_detail_header.dart';
@@ -54,6 +57,16 @@ class TransferDetailView extends StatelessWidget {
                 repeatAllowed: detail.repeatAllowed,
                 busy: vm.isExporting,
                 onReceipt: () => _receipt(context, vm),
+                onRepeat: detail.repeatAllowed
+                    ? () => context.push(
+                        AppRoutes.transfer,
+                        extra: TransferDraftSeed(
+                          beneficiaryId: detail.beneficiaryId,
+                          sentAmount: detail.sentAmount,
+                          sentCurrency: detail.sourceCurrencyCode,
+                        ),
+                      )
+                    : null,
               ),
               TransferDetailField(label: l10n.transferSent,
                 value: transferMoney(context, detail.sentAmount, detail.sourceCurrencyCode)),

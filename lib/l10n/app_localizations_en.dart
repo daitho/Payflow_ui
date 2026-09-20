@@ -844,4 +844,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get contactUnavailable =>
       'This destination cannot be edited in the Mobile Money form.';
+
+  @override
+  String get transferSendTitle => 'Send money';
+  @override
+  String get transferChooseBeneficiary => 'Choose a beneficiary';
+  @override
+  String get transferYouSend => 'You send';
+  @override
+  String get transferAmountReceived => 'Amount received';
+  @override
+  String get transferFundingLabel => 'Payment method';
+  @override
+  String get transferFundingCard => 'Bank card';
+  @override
+  String get transferCurrentRate => 'Exchange rate';
+  @override
+  String get transferChooseForQuote =>
+      'Choose a beneficiary to calculate the rate and fees.';
+  @override
+  String get transferContinue => 'Continue';
+  @override
+  String get transferReviewTitle => 'Review your transfer';
+  @override
+  String get transferTrustWarning =>
+      'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.';
+  @override
+  String get transferConfirm => 'Confirm transfer';
+  @override
+  String get transferInvalidError =>
+      'Check the beneficiary and the amount entered.';
+  @override
+  String get transferBeneficiaryUnavailable =>
+      'This beneficiary or destination is no longer available.';
+  @override
+  String get transferConflictError =>
+      'This transfer has already been confirmed or can no longer be used.';
+  @override
+  String get transferQuoteExpired =>
+      'The rate has expired. A new quote will be calculated.';
+  @override
+  String get transferUnavailableError =>
+      'This transfer is not available for this beneficiary or amount.';
 }

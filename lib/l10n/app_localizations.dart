@@ -1655,6 +1655,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This destination cannot be edited in the Mobile Money form.'**
   String get contactUnavailable;
+
+  String get transferSendTitle;
+  String get transferChooseBeneficiary;
+  String get transferYouSend;
+  String get transferAmountReceived;
+  String get transferFundingLabel;
+  String get transferFundingCard;
+  String get transferCurrentRate;
+  String get transferChooseForQuote;
+  String get transferContinue;
+  String get transferReviewTitle;
+  String get transferTrustWarning;
+  String get transferConfirm;
+  String get transferInvalidError;
+  String get transferBeneficiaryUnavailable;
+  String get transferConflictError;
+  String get transferQuoteExpired;
+  String get transferUnavailableError;
 }
 
 class _AppLocalizationsDelegate

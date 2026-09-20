@@ -28,6 +28,7 @@ abstract final class TransferHistoryMapper {
   static TransferDetailModel detail(TransferDetailDto dto) {
     return TransferDetailModel(
       id: dto.id, reference: dto.reference, status: dto.status,
+      beneficiaryId: dto.recipient.beneficiaryId,
       beneficiaryName: dto.recipient.beneficiaryName,
       operatorName: dto.recipient.operatorName,
       countryCode: dto.recipient.countryIsoCode2,

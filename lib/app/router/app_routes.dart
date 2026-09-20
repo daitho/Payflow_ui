@@ -9,6 +9,10 @@ abstract final class AppRoutes {
 
   static const String exchangeRates = '/exchange-rates';
 
+  static const String transfer = '/transfer';
+  static const String transferBeneficiaryPicker =
+      '/transfer/beneficiary';
+
   // =========================================================
   // TRANSACTIONS
   // =========================================================

@@ -12,7 +12,8 @@ class ReceiptRepository implements TransferHistoryRepository {
   @override
   Future<TransferDetailModel> getDetail(String transferId) async => TransferDetailModel(
     id: transferId, reference: 'PF-1', status: 'COMPLETED',
-    beneficiaryName: 'Alice', operatorName: 'MTN', countryCode: 'CM',
+    beneficiaryId: 'beneficiary-1', beneficiaryName: 'Alice',
+    operatorName: 'MTN', countryCode: 'CM',
     destination: '***1234', sourceCurrencyCode: 'EUR', targetCurrencyCode: 'XAF',
     sentAmount: 10, receivedAmount: 6500, fee: 1, totalChargedAmount: 11,
     appliedRate: 650, createdAt: DateTime.utc(2026), timeline: [],

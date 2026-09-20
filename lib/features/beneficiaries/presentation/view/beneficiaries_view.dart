@@ -9,7 +9,14 @@ import '../widget/beneficiary_avatar.dart';
 import '../widget/beneficiary_error.dart';
 
 class BeneficiariesView extends StatelessWidget {
-  const BeneficiariesView({super.key});
+  final ValueChanged<BeneficiaryContact>? onBeneficiaryTap;
+  final bool selectionMode;
+
+  const BeneficiariesView({
+    super.key,
+    this.onBeneficiaryTap,
+    this.selectionMode = false,
+  });
   Future<void> _open(BuildContext context, {String? id}) async {
     final vm = context.read<BeneficiariesViewModel>();
     final saved = await context.push<BeneficiaryContact>(id == null
@@ -24,7 +31,8 @@ class BeneficiariesView extends StatelessWidget {
     return ColoredBox(color: Colors.white, child: SafeArea(bottom: false, child: Column(
       crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(padding: const EdgeInsets.fromLTRB(12, 28, 12, 16),
-          child: Text(l10n.contactTitle, style: const TextStyle(fontSize: 24,
+          child: Text(selectionMode ? l10n.transferChooseBeneficiary : l10n.contactTitle,
+            style: const TextStyle(fontSize: 24,
             fontWeight: FontWeight.w700, color: Color(0xFF242327)))),
         Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: TextField(
           onChanged: vm.search,
@@ -59,7 +67,11 @@ class BeneficiariesView extends StatelessWidget {
               child: Text(vm.loading || vm.error != null ? '' : l10n.contactEmpty, textAlign: TextAlign.center));
             final contact = items[index];
             final currency = contact.currencyCode;
-            return Padding(padding: const EdgeInsets.fromLTRB(12, 12, 8, 12), child: Row(children: [
+            return InkWell(
+              onTap: onBeneficiaryTap == null
+                  ? null
+                  : () => onBeneficiaryTap!(contact),
+              child: Padding(padding: const EdgeInsets.fromLTRB(12, 12, 8, 12), child: Row(children: [
               BeneficiaryAvatar(contact: contact), const SizedBox(width: 14),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(contact.fullName, style: const TextStyle(fontWeight: FontWeight.w700,
@@ -77,10 +89,14 @@ class BeneficiariesView extends StatelessWidget {
                 decoration: BoxDecoration(color: const Color(0xFFF0ECE9), borderRadius: BorderRadius.circular(3)),
                 child: Text(currency == 'XAF' || currency == 'XOF' ? 'CFA' : currency,
                   style: const TextStyle(fontSize: 10, color: Color(0xFF896759), fontWeight: FontWeight.w700))),
-              IconButton(tooltip: '${l10n.contactEdit}: ${contact.fullName}',
-                onPressed: () => _open(context, id: contact.id),
-                icon: const Icon(Icons.edit, size: 20, color: Color(0xFF0C9F93))),
-            ]));
+              if (!selectionMode)
+                IconButton(tooltip: '${l10n.contactEdit}: ${contact.fullName}',
+                  onPressed: () => _open(context, id: contact.id),
+                  icon: const Icon(Icons.edit, size: 20, color: Color(0xFF0C9F93))),
+              if (selectionMode)
+                const Icon(Icons.chevron_right, color: Color(0xFF0C9F93)),
+            ])),
+            );
           },
         ))),
       ],

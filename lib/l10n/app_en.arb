@@ -306,5 +306,22 @@
   "contactInvalidError": "Check the phone, country and operator. A contact with multiple destinations cannot change country here.",
   "contactNotFoundError": "This beneficiary or operator is no longer available.",
   "contactServerError": "Unable to complete this action. Please try again.",
-  "contactUnavailable": "This destination cannot be edited in the Mobile Money form."
+  "contactUnavailable": "This destination cannot be edited in the Mobile Money form.",
+  "transferSendTitle": "Send money",
+  "transferChooseBeneficiary": "Choose a beneficiary",
+  "transferYouSend": "You send",
+  "transferAmountReceived": "Amount received",
+  "transferFundingLabel": "Payment method",
+  "transferFundingCard": "Bank card",
+  "transferCurrentRate": "Exchange rate",
+  "transferChooseForQuote": "Choose a beneficiary to calculate the rate and fees.",
+  "transferContinue": "Continue",
+  "transferReviewTitle": "Review your transfer",
+  "transferTrustWarning": "Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.",
+  "transferConfirm": "Confirm transfer",
+  "transferInvalidError": "Check the beneficiary and the amount entered.",
+  "transferBeneficiaryUnavailable": "This beneficiary or destination is no longer available.",
+  "transferConflictError": "This transfer has already been confirmed or can no longer be used.",
+  "transferQuoteExpired": "The rate has expired. A new quote will be calculated.",
+  "transferUnavailableError": "This transfer is not available for this beneficiary or amount."
 }
