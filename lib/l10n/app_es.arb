@@ -327,5 +327,22 @@
   "systemLanguage": "Idioma del dispositivo",
   "spanish": "Español",
   "mandarin": "Chino mandarín",
-  "hindi": "Hindi"
+  "hindi": "Hindi",
+  "currentPassword": "Contraseña actual",
+  "newPassword": "Nueva contraseña",
+  "confirmNewPassword": "Confirmar nueva contraseña",
+  "currentPasswordRequired": "Introduce tu contraseña actual",
+  "currentPasswordIncorrect": "La contraseña actual es incorrecta.",
+  "newPasswordRequired": "Introduce una nueva contraseña",
+  "newPasswordUnchanged": "La nueva contraseña debe ser diferente de la contraseña actual.",
+  "confirmNewPasswordRequired": "Confirma tu nueva contraseña",
+  "passwordChangeSessionInfo": "Por tu seguridad, se cerrará la sesión en todos los demás dispositivos. Este dispositivo seguirá conectado.",
+  "changePasswordAction": "Cambiar contraseña",
+  "passwordChangedTitle": "Contraseña cambiada",
+  "passwordChangedMessage": "Tu contraseña ha sido cambiada. Se ha cerrado la sesión en tus otros dispositivos.",
+  "continueAction": "Continuar",
+  "passwordLoginUnavailable": "Esta cuenta utiliza un proveedor de acceso externo y no tiene una contraseña de PayFlow.",
+  "changePasswordNetworkError": "No se puede cambiar la contraseña. Comprueba tu conexión.",
+  "changePasswordServerError": "El servicio de cambio de contraseña no está disponible temporalmente.",
+  "changePasswordUnexpectedError": "No se puede cambiar la contraseña en este momento."
 }
