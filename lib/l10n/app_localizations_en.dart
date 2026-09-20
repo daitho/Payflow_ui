@@ -902,4 +902,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transferUnavailableError =>
       'This transfer is not available for this beneficiary or amount.';
+  @override
+  String get systemLanguage => 'Device language';
+
+  @override
+  String get spanish => 'Spanish';
+
+  @override
+  String get mandarin => 'Mandarin Chinese';
+
+  @override
+  String get hindi => 'Hindi';
 }
