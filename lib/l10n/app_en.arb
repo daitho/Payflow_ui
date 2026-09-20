@@ -323,5 +323,9 @@
   "transferBeneficiaryUnavailable": "This beneficiary or destination is no longer available.",
   "transferConflictError": "This transfer has already been confirmed or can no longer be used.",
   "transferQuoteExpired": "The rate has expired. A new quote will be calculated.",
-  "transferUnavailableError": "This transfer is not available for this beneficiary or amount."
+  "transferUnavailableError": "This transfer is not available for this beneficiary or amount.",
+  "systemLanguage": "Device language",
+  "spanish": "Spanish",
+  "mandarin": "Mandarin Chinese",
+  "hindi": "Hindi"
 }
