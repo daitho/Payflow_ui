@@ -1284,41 +1284,6 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get transferStatusLabel;
 
-  String get transferYearLabel;
-
-  String get contactTitle;
-  String get contactSearch;
-  String get contactAdd;
-  String get contactSection;
-  String get contactNew;
-  String get contactEdit;
-  String get contactInformation;
-  String get contactFullName;
-  String get contactPhone;
-  String get contactCountry;
-  String get contactOperator;
-  String get contactGender;
-  String get contactMale;
-  String get contactFemale;
-  String get contactUnspecified;
-  String get contactSave;
-  String get contactEmpty;
-  String get contactNoPhone;
-  String get contactChoose;
-  String get contactRequired;
-  String get contactNameTooLong;
-  String get contactPhoneInvalid;
-  String get contactNoOperators;
-  String get contactNetworkError;
-  String get contactSessionError;
-  String get contactInvalidError;
-  String get contactNotFoundError;
-  String get contactServerError;
-  String get contactUnavailable;
-
-
-  String get transferAllYears;
-
   /// No description provided for @transferAllStatuses.
   ///
   /// In en, this message translates to:
@@ -1504,6 +1469,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The transfer is being processed. Receipt has not yet been confirmed.'**
   String get transferTrackingPending;
+
+  /// No description provided for @transferYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get transferYearLabel;
+
+  /// No description provided for @transferAllYears.
+  ///
+  /// In en, this message translates to:
+  /// **'All years'**
+  String get transferAllYears;
+
+  /// No description provided for @contactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Beneficiaries'**
+  String get contactTitle;
+
+  /// No description provided for @contactSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name to search…'**
+  String get contactSearch;
+
+  /// No description provided for @contactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a beneficiary'**
+  String get contactAdd;
+
+  /// No description provided for @contactSection.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR BENEFICIARIES'**
+  String get contactSection;
+
+  /// No description provided for @contactNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New Beneficiary'**
+  String get contactNew;
+
+  /// No description provided for @contactEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit beneficiary'**
+  String get contactEdit;
+
+  /// No description provided for @contactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact information'**
+  String get contactInformation;
+
+  /// No description provided for @contactFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get contactFullName;
+
+  /// No description provided for @contactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get contactPhone;
+
+  /// No description provided for @contactCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get contactCountry;
+
+  /// No description provided for @contactOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get contactOperator;
+
+  /// No description provided for @contactGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get contactGender;
+
+  /// No description provided for @contactMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get contactMale;
+
+  /// No description provided for @contactFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get contactFemale;
+
+  /// No description provided for @contactUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get contactUnspecified;
+
+  /// No description provided for @contactSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get contactSave;
+
+  /// No description provided for @contactEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No beneficiaries found.'**
+  String get contactEmpty;
+
+  /// No description provided for @contactNoPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'No phone number'**
+  String get contactNoPhone;
+
+  /// No description provided for @contactChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get contactChoose;
+
+  /// No description provided for @contactRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get contactRequired;
+
+  /// No description provided for @contactNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 120 characters'**
+  String get contactNameTooLong;
+
+  /// No description provided for @contactPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the number with its country code, e.g. +237…'**
+  String get contactPhoneInvalid;
+
+  /// No description provided for @contactNoOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'No Mobile Money operators available.'**
+  String get contactNoOperators;
+
+  /// No description provided for @contactNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection unavailable. Check your network.'**
+  String get contactNetworkError;
+
+  /// No description provided for @contactSessionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get contactSessionError;
+
+  /// No description provided for @contactInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the phone, country and operator. A contact with multiple destinations cannot change country here.'**
+  String get contactInvalidError;
+
+  /// No description provided for @contactNotFoundError.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or operator is no longer available.'**
+  String get contactNotFoundError;
+
+  /// No description provided for @contactServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to complete this action. Please try again.'**
+  String get contactServerError;
+
+  /// No description provided for @contactUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This destination cannot be edited in the Mobile Money form.'**
+  String get contactUnavailable;
 }
 
 class _AppLocalizationsDelegate
@@ -1539,4 +1690,3 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'that was used.',
   );
 }
-

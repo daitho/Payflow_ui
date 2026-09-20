@@ -744,97 +744,104 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transferTrackingPending =>
       'The transfer is being processed. Receipt has not yet been confirmed.';
+
   @override
   String get transferYearLabel => 'Year';
 
   @override
   String get transferAllYears => 'All years';
-  @override
-  String get contactTitle => "Beneficiaries";
 
   @override
-  String get contactSearch => "Enter a name to search…";
+  String get contactTitle => 'Beneficiaries';
 
   @override
-  String get contactAdd => "Add a beneficiary";
+  String get contactSearch => 'Enter a name to search…';
 
   @override
-  String get contactSection => "YOUR BENEFICIARIES";
+  String get contactAdd => 'Add a beneficiary';
 
   @override
-  String get contactNew => "New Beneficiary";
+  String get contactSection => 'YOUR BENEFICIARIES';
 
   @override
-  String get contactEdit => "Edit beneficiary";
+  String get contactNew => 'New Beneficiary';
 
   @override
-  String get contactInformation => "Contact information";
+  String get contactEdit => 'Edit beneficiary';
 
   @override
-  String get contactFullName => "Full name";
+  String get contactInformation => 'Contact information';
 
   @override
-  String get contactPhone => "Phone number";
+  String get contactFullName => 'Full name';
 
   @override
-  String get contactCountry => "Country";
+  String get contactPhone => 'Phone number';
 
   @override
-  String get contactOperator => "Operator";
+  String get contactCountry => 'Country';
 
   @override
-  String get contactGender => "Gender";
+  String get contactOperator => 'Operator';
 
   @override
-  String get contactMale => "Male";
+  String get contactGender => 'Gender';
 
   @override
-  String get contactFemale => "Female";
+  String get contactMale => 'Male';
 
   @override
-  String get contactUnspecified => "Not specified";
+  String get contactFemale => 'Female';
 
   @override
-  String get contactSave => "Save changes";
+  String get contactUnspecified => 'Not specified';
 
   @override
-  String get contactEmpty => "No beneficiaries found.";
+  String get contactSave => 'Save changes';
 
   @override
-  String get contactNoPhone => "No phone number";
+  String get contactEmpty => 'No beneficiaries found.';
 
   @override
-  String get contactChoose => "Choose";
+  String get contactNoPhone => 'No phone number';
 
   @override
-  String get contactRequired => "Required field";
+  String get contactChoose => 'Choose';
 
   @override
-  String get contactNameTooLong => "Maximum 120 characters";
+  String get contactRequired => 'Required field';
 
   @override
-  String get contactPhoneInvalid => "Enter the number with its country code, e.g. +237…";
+  String get contactNameTooLong => 'Maximum 120 characters';
 
   @override
-  String get contactNoOperators => "No Mobile Money operators available.";
+  String get contactPhoneInvalid =>
+      'Enter the number with its country code, e.g. +237…';
 
   @override
-  String get contactNetworkError => "Connection unavailable. Check your network.";
+  String get contactNoOperators => 'No Mobile Money operators available.';
 
   @override
-  String get contactSessionError => "Your session has expired. Please sign in again.";
+  String get contactNetworkError =>
+      'Connection unavailable. Check your network.';
 
   @override
-  String get contactInvalidError => "Check the phone, country and operator. A contact with multiple destinations cannot change country here.";
+  String get contactSessionError =>
+      'Your session has expired. Please sign in again.';
 
   @override
-  String get contactNotFoundError => "This beneficiary or operator is no longer available.";
+  String get contactInvalidError =>
+      'Check the phone, country and operator. A contact with multiple destinations cannot change country here.';
 
   @override
-  String get contactServerError => "Unable to complete this action. Please try again.";
+  String get contactNotFoundError =>
+      'This beneficiary or operator is no longer available.';
 
   @override
-  String get contactUnavailable => "This destination cannot be edited in the Mobile Money form.";
+  String get contactServerError =>
+      'Unable to complete this action. Please try again.';
 
+  @override
+  String get contactUnavailable =>
+      'This destination cannot be edited in the Mobile Money form.';
 }
-

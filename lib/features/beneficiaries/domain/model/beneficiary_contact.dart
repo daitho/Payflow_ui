@@ -5,10 +5,20 @@ class BeneficiaryContact {
   final String? destinationId, operatorId, operatorName, phoneE164, currencyCode;
   final BeneficiaryGender? gender;
   final bool favorite;
-  const BeneficiaryContact({required this.id, required this.fullName,
-    required this.countryId, required this.countryName, required this.countryCode,
-    this.destinationId, this.operatorId, this.operatorName, this.phoneE164,
-    this.currencyCode, this.gender, this.favorite = false});
+  const BeneficiaryContact({
+    required this.id,
+    required this.fullName,
+    required this.countryId,
+    required this.countryName,
+    required this.countryCode,
+    this.destinationId,
+    this.operatorId,
+    this.operatorName,
+    this.phoneE164,
+    this.currencyCode,
+    this.gender,
+    this.favorite = false
+  });
 }
 
 class BeneficiaryCountry {
