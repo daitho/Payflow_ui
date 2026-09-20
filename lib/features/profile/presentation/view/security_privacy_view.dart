@@ -110,7 +110,7 @@ class SecurityPrivacyView extends StatelessWidget {
                 subtitle: l10n.changePasswordSubtitle,
 
                 onTap: () {
-                  // Future feature.
+                  context.push(AppRoutes.changePassword);
                 },
               ),
             ],
