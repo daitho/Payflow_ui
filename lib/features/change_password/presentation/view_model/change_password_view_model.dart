@@ -104,6 +104,7 @@ class ChangePasswordViewModel extends ChangeNotifier {
     }
 
     _clearErrors();
+    _newPassword = newPassword;
 
     _currentPasswordError = currentPassword.isEmpty
         ? CurrentPasswordFieldError.required
