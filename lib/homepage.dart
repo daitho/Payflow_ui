@@ -406,9 +406,7 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) {
       return;
     }
-    await context.push(
-      AppRoutes.transactionDetailPath(transferId),
-    );
+    await context.push(AppRoutes.transactionDetailPath(transferId));
   }
 
   // =========================================================
