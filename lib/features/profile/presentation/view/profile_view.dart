@@ -203,22 +203,28 @@ Future<void> _showLanguagePicker(BuildContext context) async {
                 ),
               ),
               const SizedBox(height: 10),
-              for (final AppLanguage language in AppLanguage.values)
-                RadioListTile<AppLanguage>(
-                  value: language,
-                  groupValue: controller.language,
-                  activeColor: const Color(0xFF168C88),
-                  title: Text(_languageLabel(l10n, language)),
-                  onChanged: (AppLanguage? selected) async {
-                    if (selected == null) {
-                      return;
-                    }
-                    await controller.setLanguage(selected);
-                    if (sheetContext.mounted) {
-                      Navigator.of(sheetContext).pop();
-                    }
-                  },
+              RadioGroup<AppLanguage>(
+                groupValue: controller.language,
+                onChanged: (AppLanguage? selected) async {
+                  if (selected == null) {
+                    return;
+                  }
+                  await controller.setLanguage(selected);
+                  if (sheetContext.mounted) {
+                    Navigator.of(sheetContext).pop();
+                  }
+                },
+                child: Column(
+                  children: [
+                    for (final AppLanguage language in AppLanguage.values)
+                      RadioListTile<AppLanguage>(
+                        value: language,
+                        activeColor: const Color(0xFF168C88),
+                        title: Text(_languageLabel(l10n, language)),
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
