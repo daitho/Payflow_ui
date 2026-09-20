@@ -856,4 +856,55 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get hindi => 'Hindi';
 
+  @override
+  String get currentPassword => 'Contraseña actual';
+
+  @override
+  String get newPassword => 'Nueva contraseña';
+
+  @override
+  String get confirmNewPassword => 'Confirmar nueva contraseña';
+
+  @override
+  String get currentPasswordRequired => 'Introduce tu contraseña actual';
+
+  @override
+  String get currentPasswordIncorrect => 'La contraseña actual es incorrecta.';
+
+  @override
+  String get newPasswordRequired => 'Introduce una nueva contraseña';
+
+  @override
+  String get newPasswordUnchanged => 'La nueva contraseña debe ser diferente de la contraseña actual.';
+
+  @override
+  String get confirmNewPasswordRequired => 'Confirma tu nueva contraseña';
+
+  @override
+  String get passwordChangeSessionInfo => 'Por tu seguridad, se cerrará la sesión en todos los demás dispositivos. Este dispositivo seguirá conectado.';
+
+  @override
+  String get changePasswordAction => 'Cambiar contraseña';
+
+  @override
+  String get passwordChangedTitle => 'Contraseña cambiada';
+
+  @override
+  String get passwordChangedMessage => 'Tu contraseña ha sido cambiada. Se ha cerrado la sesión en tus otros dispositivos.';
+
+  @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String get passwordLoginUnavailable => 'Esta cuenta utiliza un proveedor de acceso externo y no tiene una contraseña de PayFlow.';
+
+  @override
+  String get changePasswordNetworkError => 'No se puede cambiar la contraseña. Comprueba tu conexión.';
+
+  @override
+  String get changePasswordServerError => 'El servicio de cambio de contraseña no está disponible temporalmente.';
+
+  @override
+  String get changePasswordUnexpectedError => 'No se puede cambiar la contraseña en este momento.';
+
 }
