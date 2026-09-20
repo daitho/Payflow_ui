@@ -327,5 +327,22 @@
   "systemLanguage": "跟随设备语言",
   "spanish": "西班牙语",
   "mandarin": "中文（普通话）",
-  "hindi": "印地语"
+  "hindi": "印地语",
+  "currentPassword": "当前密码",
+  "newPassword": "新密码",
+  "confirmNewPassword": "确认新密码",
+  "currentPasswordRequired": "请输入当前密码",
+  "currentPasswordIncorrect": "当前密码不正确。",
+  "newPasswordRequired": "请输入新密码",
+  "newPasswordUnchanged": "新密码必须与当前密码不同。",
+  "confirmNewPasswordRequired": "请确认新密码",
+  "passwordChangeSessionInfo": "为了您的安全，所有其他设备都将退出登录。此设备将保持登录状态。",
+  "changePasswordAction": "更改密码",
+  "passwordChangedTitle": "密码已更改",
+  "passwordChangedMessage": "您的密码已更改，其他设备均已退出登录。",
+  "continueAction": "继续",
+  "passwordLoginUnavailable": "此账户使用外部登录提供商，没有 PayFlow 密码。",
+  "changePasswordNetworkError": "无法更改密码，请检查网络连接。",
+  "changePasswordServerError": "密码服务暂时不可用。",
+  "changePasswordUnexpectedError": "目前无法更改密码。"
 }
