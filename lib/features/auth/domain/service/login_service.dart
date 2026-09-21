@@ -12,12 +12,14 @@ class LoginService {
     required String email,
     required String password,
   }) {
-    final credentials = LoginCredentials(
-      email: email.trim().toLowerCase(),
-
-      password: password,
+    final rawIdentifier = email.trim();
+    return _authRepository.login(
+      LoginCredentials(
+        identifier: rawIdentifier.contains('@')
+            ? rawIdentifier.toLowerCase()
+            : rawIdentifier.replaceAll(' ', ''),
+        password: password,
+      ),
     );
-
-    return _authRepository.login(credentials);
   }
 }

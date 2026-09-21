@@ -8,6 +8,10 @@ import '../dto/auth_session_dto.dart';
 import '../dto/login_request_dto.dart';
 import '../dto/refresh_request_dto.dart';
 import '../dto/register_request_dto.dart';
+import '../dto/verification_challenge_dto.dart';
+import '../dto/confirm_verification_request_dto.dart';
+import '../dto/resend_verification_request_dto.dart';
+import '../../domain/exception/verification_exception.dart';
 
 class AuthApiService {
   final Dio _dio;
@@ -74,7 +78,9 @@ class AuthApiService {
     }
   }
 
-  Future<AuthSessionDto> register(RegisterRequestDto request) async {
+  Future<VerificationChallengeDto> register(
+    RegisterRequestDto request,
+  ) async {
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.authRegister,
       data: request.toJson(),
@@ -86,7 +92,79 @@ class AuthApiService {
       throw StateError('Empty register response');
     }
 
-    return AuthSessionDto.fromJson(data);
+    return VerificationChallengeDto.fromJson(data);
+  }
+
+  Future<AuthSessionDto> confirmVerification(
+    ConfirmVerificationRequestDto request,
+  ) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.authVerificationConfirm,
+        data: request.toJson(),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return AuthSessionDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
+    }
+  }
+
+  Future<VerificationChallengeDto> resendVerification(
+    ResendVerificationRequestDto request,
+  ) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.authVerificationResend,
+        data: request.toJson(),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return VerificationChallengeDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
+    }
+  }
+
+  VerificationException _mapVerificationException(
+    DioException exception,
+  ) {
+    final data = exception.response?.data;
+    final code = data is Map<String, dynamic>
+        ? data['code'] as String?
+        : null;
+
+    return switch (code) {
+      'VERIFY_002' => const VerificationException(
+          VerificationErrorType.invalidCode,
+        ),
+      'VERIFY_003' => const VerificationException(
+          VerificationErrorType.expired,
+        ),
+      'VERIFY_004' => const VerificationException(
+          VerificationErrorType.tooManyAttempts,
+        ),
+      'VERIFY_005' => const VerificationException(
+          VerificationErrorType.resendTooSoon,
+        ),
+      'VERIFY_006' => const VerificationException(
+          VerificationErrorType.channelUnavailable,
+        ),
+      _ when exception.type == DioExceptionType.connectionError =>
+        const VerificationException(VerificationErrorType.network),
+      _ => const VerificationException(
+          VerificationErrorType.unexpected,
+        ),
+    };
   }
 
   // =========================================================

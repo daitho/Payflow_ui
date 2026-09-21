@@ -8,6 +8,8 @@ class UserAuthModel {
   final String role;
   final String status;
   final bool verified;
+  final bool emailVerified;
+  final bool phoneVerified;
 
   const UserAuthModel({
     required this.id,
@@ -19,5 +21,7 @@ class UserAuthModel {
     required this.role,
     required this.status,
     required this.verified,
+    required this.emailVerified,
+    required this.phoneVerified,
   });
 }

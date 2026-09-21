@@ -10,6 +10,8 @@ class UserAuthDto {
   final String role;
   final String status;
   final bool verified;
+  final bool emailVerified;
+  final bool phoneVerified;
 
   const UserAuthDto({
     required this.id,
@@ -21,6 +23,8 @@ class UserAuthDto {
     required this.role,
     required this.status,
     required this.verified,
+    required this.emailVerified,
+    required this.phoneVerified,
   });
 
   factory UserAuthDto.fromJson(Map<String, dynamic> json) {
@@ -30,24 +34,26 @@ class UserAuthDto {
       email: json['email'] as String,
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String,
-      phoneE164: json['phoneE164'] as String,
+      phoneE164: json['phoneE164'] as String?,
       role: json['role'] as String,
       status: json['status'] as String,
       verified: json['verified'] as bool,
+      emailVerified: json['emailVerified'] as bool? ?? false,
+      phoneVerified: json['phoneVerified'] as bool? ?? false,
     );
   }
 
-  UserAuthModel toModel() {
-    return UserAuthModel(
-      id: id,
-      publicId: publicId,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      phoneE164: phoneE164,
-      role: role,
-      status: status,
-      verified: verified,
-    );
-  }
+  UserAuthModel toModel() => UserAuthModel(
+    id: id,
+    publicId: publicId,
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    phoneE164: phoneE164,
+    role: role,
+    status: status,
+    verified: verified,
+    emailVerified: emailVerified,
+    phoneVerified: phoneVerified,
+  );
 }

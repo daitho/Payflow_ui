@@ -1,5 +1,6 @@
-import '../model/auth_session_model.dart';
 import '../model/register_command.dart';
+import '../model/verification_challenge_model.dart';
+import '../model/verification_channel.dart';
 import '../repository/auth_repository.dart';
 
 class RegisterService {
@@ -8,21 +9,22 @@ class RegisterService {
   const RegisterService({required AuthRepository authRepository})
     : _authRepository = authRepository;
 
-  Future<AuthSessionModel> register({
+  Future<VerificationChallengeModel> register({
     required String firstName,
     required String lastName,
     required String email,
     required String phoneE164,
     required String password,
   }) {
-    final command = RegisterCommand(
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      email: email.trim().toLowerCase(),
-      phoneE164: phoneE164.trim(),
-      password: password,
+    return _authRepository.register(
+      RegisterCommand(
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim().toLowerCase(),
+        phoneE164: phoneE164.trim(),
+        password: password,
+        verificationChannel: VerificationChannel.phone,
+      ),
     );
-
-    return _authRepository.register(command);
   }
 }
