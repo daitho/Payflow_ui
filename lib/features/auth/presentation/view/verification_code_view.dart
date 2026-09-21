@@ -51,7 +51,13 @@ class _VerificationCodeViewState
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => context.go(AppRoutes.login),
+          onPressed: () {
+            if (viewModel.isRegistration) {
+              context.go(AppRoutes.login);
+            } else {
+              context.pop(false);
+            }
+          },
           icon: const Icon(Icons.close_rounded),
         ),
       ),
@@ -273,7 +279,11 @@ class _VerificationCodeViewState
   ) async {
     final success = await viewModel.confirm();
     if (!mounted || !success) return;
-    context.go(AppRoutes.home);
+    if (viewModel.isRegistration) {
+      context.go(AppRoutes.home);
+    } else {
+      context.pop(true);
+    }
   }
 
   String _error(

@@ -11,6 +11,8 @@ import '../dto/register_request_dto.dart';
 import '../dto/verification_challenge_dto.dart';
 import '../dto/confirm_verification_request_dto.dart';
 import '../dto/resend_verification_request_dto.dart';
+import '../dto/identifier_verification_status_dto.dart';
+import '../../domain/model/verification_channel.dart';
 import '../../domain/exception/verification_exception.dart';
 
 class AuthApiService {
@@ -165,6 +167,62 @@ class AuthApiService {
           VerificationErrorType.unexpected,
         ),
     };
+  }
+
+  Future<IdentifierVerificationStatusDto>
+  identifierVerificationStatus() async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      ApiEndpoints.accountIdentifiers,
+    );
+    final data = response.data;
+    if (data == null) {
+      throw const VerificationException(
+        VerificationErrorType.unexpected,
+      );
+    }
+    return IdentifierVerificationStatusDto.fromJson(data);
+  }
+
+  Future<VerificationChallengeDto> startIdentifierVerification(
+    VerificationChannel channel,
+  ) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.accountIdentifierVerification(
+          channel.apiValue,
+        ),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return VerificationChallengeDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
+    }
+  }
+
+  Future<IdentifierVerificationStatusDto>
+  confirmIdentifierVerification(
+    ConfirmVerificationRequestDto request,
+  ) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.accountIdentifierVerificationConfirm,
+        data: request.toJson(),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return IdentifierVerificationStatusDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
+    }
   }
 
   // =========================================================

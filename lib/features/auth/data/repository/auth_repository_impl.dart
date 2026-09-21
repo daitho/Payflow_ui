@@ -4,6 +4,7 @@ import '../../domain/model/login_credentials.dart';
 import '../../domain/model/register_command.dart';
 import '../../domain/model/verification_challenge_model.dart';
 import '../../domain/model/verification_channel.dart';
+import '../../domain/model/identifier_verification_status_model.dart';
 import '../../domain/repository/auth_repository.dart';
 
 import '../dto/login_request_dto.dart';
@@ -94,6 +95,42 @@ class AuthRepositoryImpl implements AuthRepository {
       ResendVerificationRequestDto(
         challengeId: challengeId,
         channel: channel.apiValue,
+      ),
+    );
+    return response.toModel();
+  }
+
+  @override
+  Future<IdentifierVerificationStatusModel>
+  identifierVerificationStatus() async {
+    final response =
+        await _authApiService.identifierVerificationStatus();
+    return response.toModel();
+  }
+
+  @override
+  Future<VerificationChallengeModel>
+  startIdentifierVerification(
+    VerificationChannel channel,
+  ) async {
+    final response =
+        await _authApiService.startIdentifierVerification(
+      channel,
+    );
+    return response.toModel();
+  }
+
+  @override
+  Future<IdentifierVerificationStatusModel>
+  confirmIdentifierVerification({
+    required String challengeId,
+    required String code,
+  }) async {
+    final response =
+        await _authApiService.confirmIdentifierVerification(
+      ConfirmVerificationRequestDto(
+        challengeId: challengeId,
+        code: code,
       ),
     );
     return response.toModel();

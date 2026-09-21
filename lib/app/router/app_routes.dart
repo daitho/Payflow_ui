@@ -29,6 +29,10 @@ abstract final class AppRoutes {
   // =========================================================
   static const String profileSecurity = '/profile/security';
   static const String changePassword = '/profile/security/password';
+  static const String authenticationMethods =
+      '/profile/security/authentication-methods';
+  static const String verifyIdentifier =
+      '/profile/security/authentication-methods/verify';
   static const String activeSessions = '/profile/security/sessions';
   static const String currentDevice = '/profile/security/device';
 }

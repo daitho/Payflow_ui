@@ -113,6 +113,17 @@ class SecurityPrivacyView extends StatelessWidget {
                   context.push(AppRoutes.changePassword);
                 },
               ),
+              const _Divider(),
+              _SecurityTile(
+                icon: Icons.key_rounded,
+                iconColor: const Color(0xFF167C73),
+                iconBackground: const Color(0xFFE8F7F5),
+                title: _authenticationMethodsLabel(context),
+                subtitle: _authenticationMethodsSubtitle(context),
+                onTap: () {
+                  context.push(AppRoutes.authenticationMethods);
+                },
+              ),
             ],
           ),
 
@@ -466,4 +477,25 @@ class _Divider extends StatelessWidget {
       child: Divider(height: 1, color: Color(0xFFF1EFED)),
     );
   }
+}
+
+
+String _authenticationMethodsLabel(BuildContext context) {
+  return switch (Localizations.localeOf(context).languageCode) {
+    'en' => 'Sign-in methods',
+    'es' => 'Métodos de acceso',
+    'zh' => '登录方式',
+    'hi' => 'साइन-इन के तरीके',
+    _ => 'Moyens de connexion',
+  };
+}
+
+String _authenticationMethodsSubtitle(BuildContext context) {
+  return switch (Localizations.localeOf(context).languageCode) {
+    'en' => 'Verify identifiers and link your accounts',
+    'es' => 'Verifica identificadores y vincula tus cuentas',
+    'zh' => '验证登录信息并关联账户',
+    'hi' => 'पहचान सत्यापित करें और खाते जोड़ें',
+    _ => 'Vérifier vos identifiants et lier vos comptes',
+  };
 }

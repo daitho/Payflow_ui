@@ -64,6 +64,8 @@ import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/service/home_service.dart';
 import '../../features/home/presentation/view_model/home_view_model.dart';
 import '../../features/profile/presentation/view/security_privacy_view.dart';
+import '../../features/authentication_methods/presentation/view/authentication_methods_view.dart';
+import '../../features/authentication_methods/presentation/view_model/authentication_methods_view_model.dart';
 import '../../features/profile/presentation/view_model/profile_view_model.dart';
 import '../../features/profile/presentation/view_model/security_privacy_view_model.dart';
 import '../../homepage.dart';
@@ -398,6 +400,37 @@ GoRouter _createRouter() {
         },
       ),
       buildChangePasswordRoute(dio: _dioClient.dio),
+      GoRoute(
+        path: AppRoutes.authenticationMethods,
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => AuthenticationMethodsViewModel(
+              verificationService: _verificationService,
+              sessionService: _sessionService,
+            )..load(),
+            child: const AuthenticationMethodsView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.verifyIdentifier,
+        redirect: (context, state) =>
+            state.extra is VerificationChallengeModel
+            ? null
+            : AppRoutes.authenticationMethods,
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => VerificationViewModel(
+              initialChallenge:
+                  state.extra! as VerificationChallengeModel,
+              verificationService: _verificationService,
+              sessionService: _sessionService,
+              flow: VerificationFlow.additionalIdentifier,
+            ),
+            child: const VerificationCodeView(),
+          );
+        },
+      ),
       GoRoute(
         path: AppRoutes.profileSecurity,
         builder: (context, state) {

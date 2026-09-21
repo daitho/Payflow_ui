@@ -8,9 +8,15 @@ import '../../domain/model/verification_challenge_model.dart';
 import '../../domain/model/verification_channel.dart';
 import '../../domain/service/verification_service.dart';
 
+enum VerificationFlow {
+  registration,
+  additionalIdentifier,
+}
+
 class VerificationViewModel extends ChangeNotifier {
   final VerificationService _verificationService;
   final SessionService _sessionService;
+  final VerificationFlow flow;
 
   VerificationChallengeModel _challenge;
   Timer? _timer;
@@ -24,12 +30,15 @@ class VerificationViewModel extends ChangeNotifier {
     required VerificationChallengeModel initialChallenge,
     required VerificationService verificationService,
     required SessionService sessionService,
+    this.flow = VerificationFlow.registration,
   }) : _challenge = initialChallenge,
        _verificationService = verificationService,
        _sessionService = sessionService {
     _startCountdown();
   }
 
+  bool get isRegistration =>
+      flow == VerificationFlow.registration;
   VerificationChannel get channel => _challenge.channel;
   String get maskedDestination => _challenge.maskedDestination;
   String get code => _code;
@@ -56,11 +65,18 @@ class VerificationViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final session = await _verificationService.confirm(
-        challengeId: _challenge.challengeId,
-        code: _code,
-      );
-      await _sessionService.saveSession(session);
+      if (isRegistration) {
+        final session = await _verificationService.confirm(
+          challengeId: _challenge.challengeId,
+          code: _code,
+        );
+        await _sessionService.saveSession(session);
+      } else {
+        await _verificationService.confirmAdditional(
+          challengeId: _challenge.challengeId,
+          code: _code,
+        );
+      }
       return true;
     } on VerificationException catch (exception) {
       _error = exception.type;
@@ -80,10 +96,16 @@ class VerificationViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _challenge = await _verificationService.resend(
-        challengeId: _challenge.challengeId,
-        channel: channel ?? _challenge.channel,
-      );
+      final requestedChannel =
+          channel ?? _challenge.channel;
+      _challenge = isRegistration
+          ? await _verificationService.resend(
+              challengeId: _challenge.challengeId,
+              channel: requestedChannel,
+            )
+          : await _verificationService.startAdditional(
+              requestedChannel,
+            );
       _code = '';
       _startCountdown();
     } on VerificationException catch (exception) {

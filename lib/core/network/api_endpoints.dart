@@ -11,5 +11,13 @@ abstract final class ApiEndpoints {
   static const String authSessions = '/api/v1/auth/sessions';
   static const String authLogoutOthers = '/api/v1/auth/logout-others';
   static const String accountPassword = '/api/v1/account/password';
+  static const String accountIdentifiers =
+      '/api/v1/account/identifiers';
+  static const String accountIdentifierVerificationConfirm =
+      '/api/v1/account/identifiers/verification/confirm';
+
+  static String accountIdentifierVerification(
+    String channel,
+  ) => '/api/v1/account/identifiers/$channel/verification';
   static const String home = '/api/v1/home';
 }
