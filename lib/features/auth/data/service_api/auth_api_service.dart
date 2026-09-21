@@ -171,16 +171,20 @@ class AuthApiService {
 
   Future<IdentifierVerificationStatusDto>
   identifierVerificationStatus() async {
-    final response = await _dio.get<Map<String, dynamic>>(
-      ApiEndpoints.accountIdentifiers,
-    );
-    final data = response.data;
-    if (data == null) {
-      throw const VerificationException(
-        VerificationErrorType.unexpected,
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        ApiEndpoints.accountIdentifiers,
       );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return IdentifierVerificationStatusDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
     }
-    return IdentifierVerificationStatusDto.fromJson(data);
   }
 
   Future<VerificationChallengeDto> startIdentifierVerification(
