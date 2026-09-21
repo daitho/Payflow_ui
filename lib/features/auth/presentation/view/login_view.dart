@@ -8,6 +8,7 @@ import '../../../../app/router/app_routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../view_model/login_error_type.dart';
 import '../view_model/login_view_model.dart';
+import '../../domain/model/verification_challenge_model.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -607,7 +608,9 @@ class _LoginViewState extends State<LoginView> {
     if (!success) {
       final LoginErrorType? error = viewModel.loginError;
 
-      if (error != null) {
+      if (error == LoginErrorType.identifierNotVerified) {
+        await _offerVerificationRecovery(viewModel);
+      } else if (error != null) {
         _showMessage(_loginErrorMessage(error));
       }
       return;
@@ -624,6 +627,8 @@ class _LoginViewState extends State<LoginView> {
     switch (error) {
       case LoginErrorType.invalidCredentials:
         return l10n.invalidCredentials;
+      case LoginErrorType.identifierNotVerified:
+        return _verificationRequiredMessage();
       case LoginErrorType.network:
         return l10n.loginNetworkError;
       case LoginErrorType.timeout:
@@ -633,6 +638,89 @@ class _LoginViewState extends State<LoginView> {
       case LoginErrorType.unexpected:
         return l10n.loginUnexpectedError;
     }
+  }
+
+  Future<void> _offerVerificationRecovery(
+    LoginViewModel viewModel,
+  ) async {
+    final bool? resume = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(_verificationRequiredTitle()),
+        content: Text(_verificationRequiredMessage()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(_cancelLabel()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(_resumeLabel()),
+          ),
+        ],
+      ),
+    );
+
+    if (resume != true || !mounted) return;
+
+    final VerificationChallengeModel? challenge =
+        await viewModel.recoverVerification(
+      identifier: _identifierController.text,
+      password: _passwordController.text,
+    );
+
+    if (!mounted) return;
+    if (challenge == null) {
+      _showMessage(_loginErrorMessage(
+        viewModel.loginError ?? LoginErrorType.unexpected,
+      ));
+      return;
+    }
+
+    context.push(
+      AppRoutes.verifyRegistration,
+      extra: challenge,
+    );
+  }
+
+  String _verificationRequiredTitle() {
+    return switch (Localizations.localeOf(context).languageCode) {
+      'en' => 'Verification required',
+      'es' => 'Verificación necesaria',
+      'zh' => '需要验证',
+      'hi' => 'सत्यापन आवश्यक है',
+      _ => 'Vérification nécessaire',
+    };
+  }
+
+  String _verificationRequiredMessage() {
+    return switch (Localizations.localeOf(context).languageCode) {
+      'en' => 'This identifier has not been verified. Resume verification to sign in.',
+      'es' => 'Este identificador no está verificado. Reanuda la verificación para iniciar sesión.',
+      'zh' => '此登录标识尚未验证。请继续验证后登录。',
+      'hi' => 'यह पहचानकर्ता सत्यापित नहीं है। साइन इन करने के लिए सत्यापन जारी रखें।',
+      _ => "Cet identifiant n'est pas encore vérifié. Reprenez la vérification pour vous connecter.",
+    };
+  }
+
+  String _resumeLabel() {
+    return switch (Localizations.localeOf(context).languageCode) {
+      'en' => 'Resume verification',
+      'es' => 'Reanudar',
+      'zh' => '继续验证',
+      'hi' => 'सत्यापन जारी रखें',
+      _ => 'Reprendre la vérification',
+    };
+  }
+
+  String _cancelLabel() {
+    return switch (Localizations.localeOf(context).languageCode) {
+      'en' => 'Cancel',
+      'es' => 'Cancelar',
+      'zh' => '取消',
+      'hi' => 'रद्द करें',
+      _ => 'Annuler',
+    };
   }
 
   // =========================================================

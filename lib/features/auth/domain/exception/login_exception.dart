@@ -21,3 +21,7 @@ final class LoginServerException extends LoginException {
 final class LoginUnexpectedException extends LoginException {
   const LoginUnexpectedException();
 }
+
+final class IdentifierNotVerifiedException extends LoginException {
+  const IdentifierNotVerifiedException();
+}

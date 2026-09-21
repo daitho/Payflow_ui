@@ -4,6 +4,8 @@ abstract final class ApiEndpoints {
       '/api/v1/auth/verification/confirm';
   static const String authVerificationResend =
       '/api/v1/auth/verification/resend';
+  static const String authVerificationRecover =
+      '/api/v1/auth/verification/recover';
   static const String authLogin = '/api/v1/auth/login';
   static const String authRefresh = '/api/v1/auth/refresh';
   static const String authLogout = '/api/v1/auth/logout';

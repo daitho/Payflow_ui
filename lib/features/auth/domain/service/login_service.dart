@@ -1,5 +1,7 @@
 import '../model/auth_session_model.dart';
 import '../model/login_credentials.dart';
+import '../model/verification_challenge_model.dart';
+import '../model/verification_channel.dart';
 import '../repository/auth_repository.dart';
 
 class LoginService {
@@ -20,6 +22,22 @@ class LoginService {
             : rawIdentifier.replaceAll(' ', ''),
         password: password,
       ),
+    );
+  }
+  Future<VerificationChallengeModel> recoverVerification({
+    required String identifier,
+    required String password,
+  }) {
+    final String normalized = identifier.trim().contains('@')
+        ? identifier.trim().toLowerCase()
+        : identifier.replaceAll(' ', '');
+
+    return _authRepository.recoverVerification(
+      identifier: normalized,
+      password: password,
+      channel: normalized.contains('@')
+          ? VerificationChannel.email
+          : VerificationChannel.phone,
     );
   }
 }

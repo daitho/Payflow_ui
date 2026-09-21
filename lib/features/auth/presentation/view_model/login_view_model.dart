@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../../../../core/service/session_service.dart';
 import '../../domain/exception/login_exception.dart';
 import '../../domain/service/login_service.dart';
+import '../../domain/model/verification_challenge_model.dart';
+import '../../domain/exception/verification_exception.dart';
 import 'login_error_type.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -157,6 +159,10 @@ class LoginViewModel extends ChangeNotifier {
     // =========================================================
     // INVALID CREDENTIALS
     // =========================================================
+    on IdentifierNotVerifiedException {
+      _loginError = LoginErrorType.identifierNotVerified;
+      return false;
+    }
     on InvalidCredentialsException {
       _loginError = LoginErrorType.invalidCredentials;
       return false;
@@ -204,6 +210,30 @@ class LoginViewModel extends ChangeNotifier {
       _loginError = LoginErrorType.unexpected;
 
       return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<VerificationChallengeModel?> recoverVerification({
+    required String identifier,
+    required String password,
+  }) async {
+    if (_isLoading) return null;
+
+    _isLoading = true;
+    _loginError = null;
+    notifyListeners();
+
+    try {
+      return await _loginService.recoverVerification(
+        identifier: identifier,
+        password: password,
+      );
+    } on VerificationException {
+      _loginError = LoginErrorType.unexpected;
+      return null;
     } finally {
       _isLoading = false;
       notifyListeners();

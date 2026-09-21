@@ -8,6 +8,7 @@ import '../../domain/model/identifier_verification_status_model.dart';
 import '../../domain/repository/auth_repository.dart';
 
 import '../dto/login_request_dto.dart';
+import '../dto/recover_verification_request_dto.dart';
 import '../dto/refresh_request_dto.dart';
 import '../dto/register_request_dto.dart';
 import '../dto/confirm_verification_request_dto.dart';
@@ -40,6 +41,22 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final response = await _authApiService.login(request);
 
+    return response.toModel();
+  }
+
+  @override
+  Future<VerificationChallengeModel> recoverVerification({
+    required String identifier,
+    required String password,
+    required VerificationChannel channel,
+  }) async {
+    final response = await _authApiService.recoverVerification(
+      RecoverVerificationRequestDto(
+        identifier: identifier,
+        password: password,
+        channel: channel,
+      ),
+    );
     return response.toModel();
   }
 

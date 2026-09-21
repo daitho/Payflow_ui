@@ -9,6 +9,12 @@ abstract interface class AuthRepository {
   Future<AuthSessionModel> login(LoginCredentials credentials);
   Future<VerificationChallengeModel> register(RegisterCommand command);
 
+  Future<VerificationChallengeModel> recoverVerification({
+    required String identifier,
+    required String password,
+    required VerificationChannel channel,
+  });
+
   Future<AuthSessionModel> confirmVerification({
     required String challengeId,
     required String code,

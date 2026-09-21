@@ -289,6 +289,9 @@ class AuthInterceptor extends Interceptor {
 
     return path.endsWith(ApiEndpoints.authLogin) ||
         path.endsWith(ApiEndpoints.authRegister) ||
+        path.endsWith(ApiEndpoints.authVerificationConfirm) ||
+        path.endsWith(ApiEndpoints.authVerificationResend) ||
+        path.endsWith(ApiEndpoints.authVerificationRecover) ||
         path.endsWith(ApiEndpoints.authRefresh);
   }
 }

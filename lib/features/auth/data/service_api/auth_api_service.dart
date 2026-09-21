@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_endpoints.dart';
+import '../../../../core/network/api_error_codes.dart';
 
 import '../../domain/exception/login_exception.dart';
 import '../../domain/exception/session_expired_exception.dart';
 import '../dto/auth_session_dto.dart';
 import '../dto/login_request_dto.dart';
+import '../dto/recover_verification_request_dto.dart';
 import '../dto/refresh_request_dto.dart';
 import '../dto/register_request_dto.dart';
 import '../dto/verification_challenge_dto.dart';
@@ -33,6 +35,17 @@ class AuthApiService {
       return AuthSessionDto.fromJson(data);
     } on DioException catch (exception) {
       final int? statusCode = exception.response?.statusCode;
+      final Object? responseData = exception.response?.data;
+      final String? errorCode = responseData is Map
+          ? responseData['code']?.toString()
+          : null;
+
+      if (statusCode == 403 &&
+          (errorCode == ApiErrorCodes.identifierNotVerified ||
+              errorCode ==
+                  ApiErrorCodes.accountVerificationRequired)) {
+        throw const IdentifierNotVerifiedException();
+      }
 
       // =======================================================
       // 401 - EMAIL / PASSWORD INCORRECT
@@ -97,6 +110,26 @@ class AuthApiService {
     return VerificationChallengeDto.fromJson(data);
   }
 
+  Future<VerificationChallengeDto> recoverVerification(
+    RecoverVerificationRequestDto request,
+  ) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.authVerificationRecover,
+        data: request.toJson(),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const VerificationException(
+          VerificationErrorType.unexpected,
+        );
+      }
+      return VerificationChallengeDto.fromJson(data);
+    } on DioException catch (exception) {
+      throw _mapVerificationException(exception);
+    }
+  }
+
   Future<AuthSessionDto> confirmVerification(
     ConfirmVerificationRequestDto request,
   ) async {
@@ -146,19 +179,24 @@ class AuthApiService {
         : null;
 
     return switch (code) {
-      'VERIFY_002' => const VerificationException(
+      ApiErrorCodes.invalidVerificationCode =>
+        const VerificationException(
           VerificationErrorType.invalidCode,
         ),
-      'VERIFY_003' => const VerificationException(
+      ApiErrorCodes.verificationExpired =>
+        const VerificationException(
           VerificationErrorType.expired,
         ),
-      'VERIFY_004' => const VerificationException(
+      ApiErrorCodes.verificationAttemptsExceeded =>
+        const VerificationException(
           VerificationErrorType.tooManyAttempts,
         ),
-      'VERIFY_005' => const VerificationException(
+      ApiErrorCodes.verificationResendTooSoon =>
+        const VerificationException(
           VerificationErrorType.resendTooSoon,
         ),
-      'VERIFY_006' => const VerificationException(
+      ApiErrorCodes.verificationChannelUnavailable =>
+        const VerificationException(
           VerificationErrorType.channelUnavailable,
         ),
       _ when exception.type == DioExceptionType.connectionError =>
