@@ -23,7 +23,7 @@ class RegisterService {
         email: email.trim().toLowerCase(),
         phoneE164: phoneE164.trim(),
         password: password,
-        verificationChannel: VerificationChannel.phone,
+        verificationChannel: VerificationChannel.email,
       ),
     );
   }
