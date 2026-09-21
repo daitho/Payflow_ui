@@ -1033,7 +1033,14 @@ class _RegisterViewState extends State<RegisterView> {
     if (!mounted || !valid) {
       return;
     }
-    _showMessage(AppLocalizations.of(context).creatingAccount);
+    final challenge = viewModel.challenge;
+    if (challenge == null) {
+      return;
+    }
+    context.push(
+      AppRoutes.verifyRegistration,
+      extra: challenge,
+    );
   }
 
   // =========================================================

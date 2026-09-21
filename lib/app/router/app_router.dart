@@ -44,6 +44,10 @@ import '../../features/auth/domain/service/register_service.dart';
 import '../../features/active_sessions/presentation/view/active_sessions_view.dart';
 import '../../features/auth/presentation/view/login_view.dart';
 import '../../features/auth/presentation/view/register_view.dart';
+import '../../features/auth/presentation/view/verification_code_view.dart';
+import '../../features/auth/presentation/view_model/verification_view_model.dart';
+import '../../features/auth/domain/model/verification_challenge_model.dart';
+import '../../features/auth/domain/service/verification_service.dart';
 import '../../features/auth/presentation/view/splash_view.dart';
 import '../../features/active_sessions/presentation/view_model/active_sessions_view_model.dart';
 import '../../features/auth/presentation/view_model/login_view_model.dart';
@@ -94,6 +98,9 @@ final RegisterService _registerService = RegisterService(
   authRepository: _authRepository,
 );
 final RefreshService _refreshService = RefreshService(
+  authRepository: _authRepository,
+);
+final VerificationService _verificationService = VerificationService(
   authRepository: _authRepository,
 );
 // ===========================================================
@@ -200,7 +207,9 @@ GoRouter _createRouter() {
       // =====================================================
       // GUEST ROUTES
       // =====================================================
-      if (location == AppRoutes.login || location == AppRoutes.register) {
+      if (location == AppRoutes.login ||
+          location == AppRoutes.register ||
+          location == AppRoutes.verifyRegistration) {
         return _guestGuard.redirect();
       }
 
@@ -327,9 +336,28 @@ GoRouter _createRouter() {
           return ChangeNotifierProvider(
             create: (_) => RegisterViewModel(
               registerService: _registerService,
-              sessionService: _sessionService,
             ),
             child: const RegisterView(),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.verifyRegistration,
+        redirect: (context, state) =>
+            state.extra is VerificationChallengeModel
+            ? null
+            : AppRoutes.register,
+        builder: (context, state) {
+          final challenge =
+              state.extra! as VerificationChallengeModel;
+          return ChangeNotifierProvider(
+            create: (_) => VerificationViewModel(
+              initialChallenge: challenge,
+              verificationService: _verificationService,
+              sessionService: _sessionService,
+            ),
+            child: const VerificationCodeView(),
           );
         },
       ),

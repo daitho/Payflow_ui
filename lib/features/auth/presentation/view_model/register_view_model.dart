@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/service/session_service.dart';
+import '../../domain/model/verification_challenge_model.dart';
 import '../../domain/service/register_service.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final RegisterService _registerService;
-  final SessionService _sessionService;
-
   RegisterViewModel({
     required RegisterService registerService,
-    required SessionService sessionService,
-  }) : _registerService = registerService,
-       _sessionService = sessionService;
+  }) : _registerService = registerService;
+
+  VerificationChallengeModel? _challenge;
+
+  VerificationChallengeModel? get challenge => _challenge;
 
   // =========================================================
   // PASSWORD STATE
@@ -277,15 +277,13 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final session = await _registerService.register(
+      _challenge = await _registerService.register(
         firstName: cleanFirstName,
         lastName: cleanLastName,
         email: cleanEmail,
         phoneE164: cleanPhoneE164,
         password: password,
       );
-      await _sessionService.saveSession(session);
-
       return true;
     } finally {
       _isLoading = false;

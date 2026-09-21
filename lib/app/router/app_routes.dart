@@ -2,6 +2,7 @@ abstract final class AppRoutes {
   static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
+  static const String verifyRegistration = '/register/verify';
   static const String home = '/home';
   static const beneficiaryCreate = '/beneficiaries/new';
   static const beneficiaryEdit = '/beneficiaries/:beneficiaryId/edit';
