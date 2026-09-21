@@ -10,6 +10,7 @@ enum BiometricAuthResult {
   lockedOut,
   technicalError,
 }
+
 class BiometricService {
   // =========================================================
   // STORAGE KEY
@@ -28,20 +29,17 @@ class BiometricService {
   }) : _secureStorage = secureStorage,
        _localAuthentication = localAuthentication ?? LocalAuthentication();
 
-  Future<BiometricAuthResult>
-  authenticateForAppUnlock({
+  Future<BiometricAuthResult> authenticateForAppUnlock({
     required String localizedReason,
   }) async {
     try {
-      final bool available =
-      await isBiometricsAvailable();
+      final bool available = await isBiometricsAvailable();
 
       if (!available) {
         return BiometricAuthResult.unavailable;
       }
 
-      final bool authenticated =
-      await _localAuthentication.authenticate(
+      final bool authenticated = await _localAuthentication.authenticate(
         localizedReason: localizedReason,
         biometricOnly: true,
         persistAcrossBackgrounding: true,
@@ -51,41 +49,29 @@ class BiometricService {
           ? BiometricAuthResult.success
           : BiometricAuthResult.failed;
     } on LocalAuthException catch (error) {
-      debugPrint(
-        '[BIOMETRIC] LocalAuthException: ${error.code}',
-      );
+      debugPrint('[BIOMETRIC] LocalAuthException: ${error.code}');
 
-      if (error.code ==
-          LocalAuthExceptionCode.userCanceled ||
-          error.code ==
-              LocalAuthExceptionCode.userRequestedFallback) {
+      if (error.code == LocalAuthExceptionCode.userCanceled ||
+          error.code == LocalAuthExceptionCode.userRequestedFallback) {
         return BiometricAuthResult.canceled;
       }
 
-      if (error.code ==
-          LocalAuthExceptionCode.temporaryLockout ||
-          error.code ==
-              LocalAuthExceptionCode.biometricLockout) {
+      if (error.code == LocalAuthExceptionCode.temporaryLockout ||
+          error.code == LocalAuthExceptionCode.biometricLockout) {
         return BiometricAuthResult.lockedOut;
       }
 
-      if (error.code ==
-          LocalAuthExceptionCode.noBiometricHardware ||
+      if (error.code == LocalAuthExceptionCode.noBiometricHardware ||
+          error.code == LocalAuthExceptionCode.noBiometricsEnrolled ||
+          error.code == LocalAuthExceptionCode.noCredentialsSet ||
           error.code ==
-              LocalAuthExceptionCode.noBiometricsEnrolled ||
-          error.code ==
-              LocalAuthExceptionCode.noCredentialsSet ||
-          error.code ==
-              LocalAuthExceptionCode
-                  .biometricHardwareTemporarilyUnavailable) {
+              LocalAuthExceptionCode.biometricHardwareTemporarilyUnavailable) {
         return BiometricAuthResult.unavailable;
       }
 
       return BiometricAuthResult.technicalError;
     } catch (error) {
-      debugPrint(
-        '[BIOMETRIC] Unexpected error: $error',
-      );
+      debugPrint('[BIOMETRIC] Unexpected error: $error');
 
       return BiometricAuthResult.technicalError;
     }
@@ -123,6 +109,7 @@ class BiometricService {
     final String? value = await _secureStorage.read(key: _biometricsEnabledKey);
     return value == 'true';
   }
+
   // =========================================================
   // AUTHENTICATE
   // =========================================================
@@ -165,6 +152,7 @@ class BiometricService {
     await _secureStorage.write(key: _biometricsEnabledKey, value: 'true');
     return true;
   }
+
   // =========================================================
   // DISABLE
   // =========================================================

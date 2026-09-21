@@ -19,53 +19,32 @@ class HomeDto {
     required this.recentTransactions,
   });
 
-  factory HomeDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
-    final dynamic rawExchangeRate =
-    json['exchangeRate'];
+  factory HomeDto.fromJson(Map<String, dynamic> json) {
+    final dynamic rawExchangeRate = json['exchangeRate'];
 
     final List<dynamic> rawBeneficiaries =
-        json['recentBeneficiaries']
-        as List<dynamic>? ??
-            const [];
+        json['recentBeneficiaries'] as List<dynamic>? ?? const [];
 
     final List<dynamic> rawTransactions =
-        json['recentTransactions']
-        as List<dynamic>? ??
-            const [];
+        json['recentTransactions'] as List<dynamic>? ?? const [];
 
     return HomeDto(
-      user: HomeUserDto.fromJson(
-        json['user'] as Map<String, dynamic>,
-      ),
+      user: HomeUserDto.fromJson(json['user'] as Map<String, dynamic>),
 
-      exchangeRate:
-      rawExchangeRate == null
+      exchangeRate: rawExchangeRate == null
           ? null
           : HomeExchangeRateDto.fromJson(
-        rawExchangeRate
-        as Map<String, dynamic>,
-      ),
-
-      recentBeneficiaries:
-      rawBeneficiaries
-          .map(
-            (item) =>
-            HomeBeneficiaryDto.fromJson(
-              item as Map<String, dynamic>,
+              rawExchangeRate as Map<String, dynamic>,
             ),
-      )
+
+      recentBeneficiaries: rawBeneficiaries
+          .map(
+            (item) => HomeBeneficiaryDto.fromJson(item as Map<String, dynamic>),
+          )
           .toList(),
 
-      recentTransactions:
-      rawTransactions
-          .map(
-            (item) =>
-            HomeTransferDto.fromJson(
-              item as Map<String, dynamic>,
-            ),
-      )
+      recentTransactions: rawTransactions
+          .map((item) => HomeTransferDto.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }

@@ -1,15 +1,7 @@
-enum ActiveSessionsErrorType {
-  network,
-  unauthorized,
-  server,
-  unexpected,
-}
+enum ActiveSessionsErrorType { network, unauthorized, server, unexpected }
 
-class ActiveSessionsException
-    implements Exception {
+class ActiveSessionsException implements Exception {
   final ActiveSessionsErrorType type;
 
-  const ActiveSessionsException(
-      this.type,
-      );
+  const ActiveSessionsException(this.type);
 }

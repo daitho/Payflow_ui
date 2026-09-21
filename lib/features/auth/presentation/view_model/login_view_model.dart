@@ -96,18 +96,12 @@ class LoginViewModel extends ChangeNotifier {
   // SUBMIT
   // =========================================================
 
-  Future<bool> submit({
-    required String email,
-    required String password,
-  }) async {
-    final String cleanEmail =
-    email.trim();
+  Future<bool> submit({required String email, required String password}) async {
+    final String cleanEmail = email.trim();
 
-    final bool emailEmpty =
-        cleanEmail.isEmpty;
+    final bool emailEmpty = cleanEmail.isEmpty;
 
-    final bool passwordEmpty =
-        password.isEmpty;
+    final bool passwordEmpty = password.isEmpty;
 
     // =========================================================
     // RESET SERVER ERROR
@@ -119,14 +113,11 @@ class LoginViewModel extends ChangeNotifier {
     // LOCAL VALIDATION
     // =========================================================
 
-    _identifierHasError =
-        emailEmpty;
+    _identifierHasError = emailEmpty;
 
-    _passwordHasError =
-        passwordEmpty;
+    _passwordHasError = passwordEmpty;
 
-    if (emailEmpty ||
-        passwordEmpty) {
+    if (emailEmpty || passwordEmpty) {
       notifyListeners();
 
       return false;
@@ -149,81 +140,55 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      debugPrint(
-        '[AUTH] Login started',
-      );
+      debugPrint('[AUTH] Login started');
 
-      final session =
-      await _loginService.login(
+      final session = await _loginService.login(
         email: cleanEmail,
         password: password,
       );
 
-      debugPrint(
-        '[AUTH] Backend login successful',
-      );
+      debugPrint('[AUTH] Backend login successful');
 
-      await _sessionService.saveSession(
-        session,
-      );
+      await _sessionService.saveSession(session);
 
-      debugPrint(
-        '[AUTH] Session saved successfully',
-      );
+      debugPrint('[AUTH] Session saved successfully');
       return true;
     }
-
     // =========================================================
     // INVALID CREDENTIALS
     // =========================================================
-
     on InvalidCredentialsException {
-      _loginError =
-          LoginErrorType.invalidCredentials;
+      _loginError = LoginErrorType.invalidCredentials;
       return false;
     }
-
     // =========================================================
     // NETWORK
     // =========================================================
-
     on LoginNetworkException {
-      _loginError =
-          LoginErrorType.network;
+      _loginError = LoginErrorType.network;
       return false;
     }
-
     // =========================================================
     // TIMEOUT
     // =========================================================
-
     on LoginTimeoutException {
-      _loginError =
-          LoginErrorType.timeout;
+      _loginError = LoginErrorType.timeout;
       return false;
     }
-
     // =========================================================
     // SERVER
     // =========================================================
-
     on LoginServerException {
-      _loginError =
-          LoginErrorType.server;
+      _loginError = LoginErrorType.server;
       return false;
     }
-
     // =========================================================
     // UNEXPECTED
     // =========================================================
-
     on LoginUnexpectedException {
-      _loginError =
-          LoginErrorType.unexpected;
+      _loginError = LoginErrorType.unexpected;
       return false;
-    }
-
-    catch (error, stackTrace) {
+    } catch (error, stackTrace) {
       /*
      * Filet de sécurité.
      *
@@ -232,14 +197,11 @@ class LoginViewModel extends ChangeNotifier {
      */
       debugPrint(
         '[AUTH] Unexpected login failure: '
-            '${error.runtimeType}',
+        '${error.runtimeType}',
       );
 
-      debugPrintStack(
-        stackTrace: stackTrace,
-      );
-      _loginError =
-          LoginErrorType.unexpected;
+      debugPrintStack(stackTrace: stackTrace);
+      _loginError = LoginErrorType.unexpected;
 
       return false;
     } finally {

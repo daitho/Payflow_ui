@@ -15,6 +15,7 @@ final class TransferHistoryResponseDto {
 
   final List<TransferHistoryBeneficiaryDto> beneficiaries;
   final List<String> availableStatuses;
+  final List<int> availableYears;
 
   // ===========================================================
   // PAGINATION
@@ -40,6 +41,7 @@ final class TransferHistoryResponseDto {
     required this.items,
     required this.beneficiaries,
     required this.availableStatuses,
+    this.availableYears = const [],
     required this.page,
     required this.size,
     required this.totalElements,
@@ -52,9 +54,7 @@ final class TransferHistoryResponseDto {
   // JSON
   // ===========================================================
 
-  factory TransferHistoryResponseDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory TransferHistoryResponseDto.fromJson(Map<String, dynamic> json) {
     return TransferHistoryResponseDto(
       // -------------------------------------------------------
       // HISTORY ITEMS
@@ -62,58 +62,49 @@ final class TransferHistoryResponseDto {
 
       items: (json['items'] as List<dynamic>)
           .map(
-            (item) => TransferHistoryItemDto.fromJson(
-          item as Map<String, dynamic>,
-        ),
-      )
+            (item) =>
+                TransferHistoryItemDto.fromJson(item as Map<String, dynamic>),
+          )
           .toList(growable: false),
 
       // -------------------------------------------------------
       // BENEFICIARIES
       // -------------------------------------------------------
-
-      beneficiaries:
-      (json['beneficiaries'] as List<dynamic>)
+      beneficiaries: (json['beneficiaries'] as List<dynamic>)
           .map(
-            (item) =>
-            TransferHistoryBeneficiaryDto.fromJson(
+            (item) => TransferHistoryBeneficiaryDto.fromJson(
               item as Map<String, dynamic>,
             ),
-      )
+          )
           .toList(growable: false),
 
       // -------------------------------------------------------
       // AVAILABLE STATUSES
       // -------------------------------------------------------
-
-      availableStatuses:
-      (json['availableStatuses'] as List<dynamic>)
-          .map(
-            (status) => status as String,
-      )
+      availableStatuses: (json['availableStatuses'] as List<dynamic>)
+          .map((status) => status as String)
           .toList(growable: false),
 
       // -------------------------------------------------------
       // PAGINATION
       // -------------------------------------------------------
+      availableYears: (json['availableYears'] as List<dynamic>? ?? const [])
+          .map((year) => year as int)
+          .toList(growable: false),
 
       page: json['page'] as int,
 
       size: json['size'] as int,
 
-      totalElements:
-      json['totalElements'] as int,
+      totalElements: json['totalElements'] as int,
 
-      totalPages:
-      json['totalPages'] as int,
+      totalPages: json['totalPages'] as int,
 
-      hasNext:
-      json['hasNext'] as bool,
+      hasNext: json['hasNext'] as bool,
 
       // -------------------------------------------------------
       // SUMMARY
       // -------------------------------------------------------
-
       summary: TransferHistorySummaryDto.fromJson(
         json['summary'] as Map<String, dynamic>,
       ),

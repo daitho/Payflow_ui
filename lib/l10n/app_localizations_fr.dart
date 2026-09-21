@@ -611,4 +611,378 @@ class AppLocalizationsFr extends AppLocalizations {
   ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
+
+  @override
+  String get transferHistoryTitle => 'Transactions';
+
+  @override
+  String get transferDetailTitle => 'Détail du transfert';
+
+  @override
+  String get transferNotFound => 'Ce transfert est introuvable.';
+
+  @override
+  String get transferStatusCreated => 'Créé';
+
+  @override
+  String get transferStatusPending => 'En attente';
+
+  @override
+  String get transferStatusProcessing => 'En cours';
+
+  @override
+  String get transferStatusCompleted => 'Terminé';
+
+  @override
+  String get transferStatusFailed => 'Échoué';
+
+  @override
+  String get transferStatusCancelled => 'Annulé';
+
+  @override
+  String get transferStatusRefunded => 'Remboursé';
+
+  @override
+  String get transferStatusUnknown => 'Statut inconnu';
+
+  @override
+  String get transferBeneficiary => 'Bénéficiaire';
+
+  @override
+  String get transferAllBeneficiaries => 'Tous les bénéficiaires';
+
+  @override
+  String get transferStatusLabel => 'Statut';
+
+  @override
+  String get transferAllStatuses => 'Tous les statuts';
+
+  @override
+  String get transferResetFilters => 'Réinitialiser les filtres';
+
+  @override
+  String get transferCountLabel => 'Total des transactions';
+
+  @override
+  String get transferSentTotalLabel => 'Total envoyé par devise';
+
+  @override
+  String get transferHistoryEmpty =>
+      'Aucun transfert ne correspond à votre recherche.';
+
+  @override
+  String get transferLoadMore => 'Charger la suite';
+
+  @override
+  String get transferRecipientName => 'Nom';
+
+  @override
+  String get transferCountry => 'Pays';
+
+  @override
+  String get transferOperator => 'Opérateur';
+
+  @override
+  String get transferDestination => 'Destination';
+
+  @override
+  String get transferAmounts => 'Montants';
+
+  @override
+  String get transferSent => 'Montant envoyé';
+
+  @override
+  String transferSentTo(String amount, String beneficiary) {
+    return 'Vous avez envoyé $amount à $beneficiary';
+  }
+
+  @override
+  String get transferFee => 'Frais';
+
+  @override
+  String get transferTotalCharged => 'Total débité';
+
+  @override
+  String get transferRate => 'Taux appliqué';
+
+  @override
+  String get transferReceived => 'Montant à recevoir';
+
+  @override
+  String get transferTracking => 'Suivi du transfert';
+
+  @override
+  String get transferReference => 'Référence';
+
+  @override
+  String get transferCreatedAt => 'Créé le';
+
+  @override
+  String get transferExport => 'Exporter';
+
+  @override
+  String get transferReceiptAction => 'Voir / exporter le reçu';
+
+  @override
+  String get transferRepeatAction => 'Répéter le transfert';
+
+  @override
+  String get transferProviderReference => 'Confirmation opérateur';
+
+  @override
+  String get transferTotalAmount => 'Montant total';
+
+  @override
+  String get transferTimelineUnavailable =>
+      'Le suivi détaillé est indisponible pour ce transfert.';
+
+  @override
+  String get transferTrackingCompleted =>
+      'Les fonds ont été remis au bénéficiaire.';
+
+  @override
+  String get transferTrackingFailed =>
+      'Le transfert a échoué. Le suivi disponible ne précise pas la situation du débit ou du remboursement.';
+
+  @override
+  String get transferTrackingCancelled =>
+      'Le transfert est annulé. Le suivi disponible ne précise pas la situation du débit ou du remboursement.';
+
+  @override
+  String get transferTrackingRefunded =>
+      'Le transfert est indiqué comme remboursé.';
+
+  @override
+  String get transferTrackingPending =>
+      'Le transfert est en cours de traitement. Sa réception n’est pas encore confirmée.';
+
+  @override
+  String get transferYearLabel => 'Année';
+
+  @override
+  String get transferAllYears => 'Toutes les années';
+
+  @override
+  String get contactTitle => 'Bénéficiaire';
+
+  @override
+  String get contactSearch => 'Entrer le nom à rechercher…';
+
+  @override
+  String get contactAdd => 'Ajouter un bénéficiaire';
+
+  @override
+  String get contactSection => 'VOS BÉNÉFICIAIRES';
+
+  @override
+  String get contactNew => 'Nouveau Bénéficiaire';
+
+  @override
+  String get contactEdit => 'Modifier le bénéficiaire';
+
+  @override
+  String get contactInformation => 'Informations du contact';
+
+  @override
+  String get contactFullName => 'Nom complet';
+
+  @override
+  String get contactPhone => 'Numéro de téléphone';
+
+  @override
+  String get contactCountry => 'Pays';
+
+  @override
+  String get contactOperator => 'Opérateur';
+
+  @override
+  String get contactGender => 'Genre';
+
+  @override
+  String get contactMale => 'Homme';
+
+  @override
+  String get contactFemale => 'Femme';
+
+  @override
+  String get contactUnspecified => 'Non renseigné';
+
+  @override
+  String get contactSave => 'Enregistrer les modifications';
+
+  @override
+  String get contactEmpty => 'Aucun bénéficiaire trouvé.';
+
+  @override
+  String get contactNoPhone => 'Numéro non renseigné';
+
+  @override
+  String get contactChoose => 'Choisir';
+
+  @override
+  String get contactRequired => 'Champ obligatoire';
+
+  @override
+  String get contactNameTooLong => '120 caractères maximum';
+
+  @override
+  String get contactPhoneInvalid =>
+      'Saisissez le numéro avec son indicatif, par exemple +237…';
+
+  @override
+  String get contactNoOperators => 'Aucun opérateur Mobile Money disponible.';
+
+  @override
+  String get contactNetworkError =>
+      'Connexion indisponible. Vérifiez votre réseau.';
+
+  @override
+  String get contactSessionError => 'Votre session a expiré. Reconnectez-vous.';
+
+  @override
+  String get contactInvalidError =>
+      'Vérifiez le numéro, le pays et l’opérateur. Un contact avec plusieurs destinations ne peut pas changer de pays ici.';
+
+  @override
+  String get contactNotFoundError =>
+      'Ce bénéficiaire ou cet opérateur n’est plus disponible.';
+
+  @override
+  String get contactServerError =>
+      'Impossible de terminer cette action. Réessayez.';
+
+  @override
+  String get contactUnavailable =>
+      'Cette destination n’est pas modifiable dans le formulaire Mobile Money.';
+
+  @override
+  String get transferSendTitle => 'Envoyer de l\'argent';
+
+  @override
+  String get transferChooseBeneficiary => 'Choisir un bénéficiaire';
+
+  @override
+  String get transferYouSend => 'Vous envoyez';
+
+  @override
+  String get transferAmountReceived => 'Montant reçu';
+
+  @override
+  String get transferFundingLabel => 'Mode d\'envoi';
+
+  @override
+  String get transferFundingCard => 'Carte bancaire';
+
+  @override
+  String get transferCurrentRate => 'Taux de change';
+
+  @override
+  String get transferChooseForQuote =>
+      'Choisissez un bénéficiaire pour calculer le taux et les frais.';
+
+  @override
+  String get transferContinue => 'Continuer à envoyer';
+
+  @override
+  String get transferReviewTitle => 'Vérifiez votre transfert';
+
+  @override
+  String get transferTrustWarning =>
+      'Connaissez-vous cette personne ? Assurez-vous d\'envoyer de l\'argent à une personne de confiance et que ses informations sont exactes.';
+
+  @override
+  String get transferConfirm => 'Confirmer le transfert';
+
+  @override
+  String get transferInvalidError =>
+      'Vérifiez le bénéficiaire et le montant saisi.';
+
+  @override
+  String get transferBeneficiaryUnavailable =>
+      'Ce bénéficiaire ou sa destination n’est plus disponible.';
+
+  @override
+  String get transferConflictError =>
+      'Ce transfert a déjà été confirmé ou ne peut plus être utilisé.';
+
+  @override
+  String get transferQuoteExpired =>
+      'Le taux a expiré. Une nouvelle cotation va être calculée.';
+
+  @override
+  String get transferUnavailableError =>
+      'Ce transfert n’est pas disponible pour ce bénéficiaire ou ce montant.';
+
+  @override
+  String get systemLanguage => 'Langue du téléphone';
+
+  @override
+  String get spanish => 'Espagnol';
+
+  @override
+  String get mandarin => 'Chinois mandarin';
+
+  @override
+  String get hindi => 'Hindi';
+
+  @override
+  String get currentPassword => 'Mot de passe actuel';
+
+  @override
+  String get newPassword => 'Nouveau mot de passe';
+
+  @override
+  String get confirmNewPassword => 'Confirmer le nouveau mot de passe';
+
+  @override
+  String get currentPasswordRequired =>
+      'Veuillez saisir votre mot de passe actuel';
+
+  @override
+  String get currentPasswordIncorrect =>
+      'Le mot de passe actuel est incorrect.';
+
+  @override
+  String get newPasswordRequired => 'Veuillez saisir un nouveau mot de passe';
+
+  @override
+  String get newPasswordUnchanged =>
+      'Le nouveau mot de passe doit être différent du mot de passe actuel.';
+
+  @override
+  String get confirmNewPasswordRequired =>
+      'Veuillez confirmer votre nouveau mot de passe';
+
+  @override
+  String get passwordChangeSessionInfo =>
+      'Pour votre sécurité, tous les autres appareils seront déconnectés. Cet appareil restera connecté.';
+
+  @override
+  String get changePasswordAction => 'Changer le mot de passe';
+
+  @override
+  String get passwordChangedTitle => 'Mot de passe modifié';
+
+  @override
+  String get passwordChangedMessage =>
+      'Votre mot de passe a été modifié. Vos autres appareils ont été déconnectés.';
+
+  @override
+  String get continueAction => 'Continuer';
+
+  @override
+  String get passwordLoginUnavailable =>
+      'Ce compte utilise un fournisseur de connexion externe et ne possède pas de mot de passe PayFlow.';
+
+  @override
+  String get changePasswordNetworkError =>
+      'Impossible de modifier le mot de passe. Vérifiez votre connexion.';
+
+  @override
+  String get changePasswordServerError =>
+      'Le service de changement de mot de passe est temporairement indisponible.';
+
+  @override
+  String get changePasswordUnexpectedError =>
+      'Impossible de modifier le mot de passe pour le moment.';
 }

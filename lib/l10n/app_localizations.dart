@@ -6,7 +6,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +99,9 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('fr'),
     Locale('en'),
+    Locale('es'),
+    Locale('zh'),
+    Locale('hi'),
   ];
 
   /// No description provided for @appName.
@@ -1199,6 +1205,690 @@ abstract class AppLocalizations {
     String rate,
     String targetCurrency,
   );
+
+  /// No description provided for @transferHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transferHistoryTitle;
+
+  /// No description provided for @transferDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer details'**
+  String get transferDetailTitle;
+
+  /// No description provided for @transferNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer could not be found.'**
+  String get transferNotFound;
+
+  /// No description provided for @transferStatusCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get transferStatusCreated;
+
+  /// No description provided for @transferStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get transferStatusPending;
+
+  /// No description provided for @transferStatusProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get transferStatusProcessing;
+
+  /// No description provided for @transferStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get transferStatusCompleted;
+
+  /// No description provided for @transferStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get transferStatusFailed;
+
+  /// No description provided for @transferStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get transferStatusCancelled;
+
+  /// No description provided for @transferStatusRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get transferStatusRefunded;
+
+  /// No description provided for @transferStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown status'**
+  String get transferStatusUnknown;
+
+  /// No description provided for @transferBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get transferBeneficiary;
+
+  /// No description provided for @transferAllBeneficiaries.
+  ///
+  /// In en, this message translates to:
+  /// **'All recipients'**
+  String get transferAllBeneficiaries;
+
+  /// No description provided for @transferStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get transferStatusLabel;
+
+  /// No description provided for @transferAllStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'All statuses'**
+  String get transferAllStatuses;
+
+  /// No description provided for @transferResetFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filters'**
+  String get transferResetFilters;
+
+  /// No description provided for @transferCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total transactions'**
+  String get transferCountLabel;
+
+  /// No description provided for @transferSentTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total sent by currency'**
+  String get transferSentTotalLabel;
+
+  /// No description provided for @transferHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No transfers match your search.'**
+  String get transferHistoryEmpty;
+
+  /// No description provided for @transferLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get transferLoadMore;
+
+  /// No description provided for @transferRecipientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get transferRecipientName;
+
+  /// No description provided for @transferCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get transferCountry;
+
+  /// No description provided for @transferOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get transferOperator;
+
+  /// No description provided for @transferDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get transferDestination;
+
+  /// No description provided for @transferAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts'**
+  String get transferAmounts;
+
+  /// No description provided for @transferSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount sent'**
+  String get transferSent;
+
+  /// No description provided for @transferSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'You sent {amount} to {beneficiary}'**
+  String transferSentTo(String amount, String beneficiary);
+
+  /// No description provided for @transferFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Fees'**
+  String get transferFee;
+
+  /// No description provided for @transferTotalCharged.
+  ///
+  /// In en, this message translates to:
+  /// **'Total charged'**
+  String get transferTotalCharged;
+
+  /// No description provided for @transferRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied rate'**
+  String get transferRate;
+
+  /// No description provided for @transferReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount to receive'**
+  String get transferReceived;
+
+  /// No description provided for @transferTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer tracking'**
+  String get transferTracking;
+
+  /// No description provided for @transferReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get transferReference;
+
+  /// No description provided for @transferCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created on'**
+  String get transferCreatedAt;
+
+  /// No description provided for @transferExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get transferExport;
+
+  /// No description provided for @transferReceiptAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View / export receipt'**
+  String get transferReceiptAction;
+
+  /// No description provided for @transferRepeatAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat transfer'**
+  String get transferRepeatAction;
+
+  /// No description provided for @transferProviderReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator confirmation'**
+  String get transferProviderReference;
+
+  /// No description provided for @transferTotalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total amount'**
+  String get transferTotalAmount;
+
+  /// No description provided for @transferTimelineUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed tracking is unavailable for this transfer.'**
+  String get transferTimelineUnavailable;
+
+  /// No description provided for @transferTrackingCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The funds have been delivered to the recipient.'**
+  String get transferTrackingCompleted;
+
+  /// No description provided for @transferTrackingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer failed. The available tracking does not specify the debit or refund situation.'**
+  String get transferTrackingFailed;
+
+  /// No description provided for @transferTrackingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is cancelled. The available tracking does not specify the debit or refund situation.'**
+  String get transferTrackingCancelled;
+
+  /// No description provided for @transferTrackingRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is marked as refunded.'**
+  String get transferTrackingRefunded;
+
+  /// No description provided for @transferTrackingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer is being processed. Receipt has not yet been confirmed.'**
+  String get transferTrackingPending;
+
+  /// No description provided for @transferYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get transferYearLabel;
+
+  /// No description provided for @transferAllYears.
+  ///
+  /// In en, this message translates to:
+  /// **'All years'**
+  String get transferAllYears;
+
+  /// No description provided for @contactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Beneficiaries'**
+  String get contactTitle;
+
+  /// No description provided for @contactSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name to search…'**
+  String get contactSearch;
+
+  /// No description provided for @contactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a beneficiary'**
+  String get contactAdd;
+
+  /// No description provided for @contactSection.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR BENEFICIARIES'**
+  String get contactSection;
+
+  /// No description provided for @contactNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New Beneficiary'**
+  String get contactNew;
+
+  /// No description provided for @contactEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit beneficiary'**
+  String get contactEdit;
+
+  /// No description provided for @contactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact information'**
+  String get contactInformation;
+
+  /// No description provided for @contactFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get contactFullName;
+
+  /// No description provided for @contactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get contactPhone;
+
+  /// No description provided for @contactCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get contactCountry;
+
+  /// No description provided for @contactOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get contactOperator;
+
+  /// No description provided for @contactGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get contactGender;
+
+  /// No description provided for @contactMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get contactMale;
+
+  /// No description provided for @contactFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get contactFemale;
+
+  /// No description provided for @contactUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get contactUnspecified;
+
+  /// No description provided for @contactSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get contactSave;
+
+  /// No description provided for @contactEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No beneficiaries found.'**
+  String get contactEmpty;
+
+  /// No description provided for @contactNoPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'No phone number'**
+  String get contactNoPhone;
+
+  /// No description provided for @contactChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get contactChoose;
+
+  /// No description provided for @contactRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get contactRequired;
+
+  /// No description provided for @contactNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 120 characters'**
+  String get contactNameTooLong;
+
+  /// No description provided for @contactPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the number with its country code, e.g. +237…'**
+  String get contactPhoneInvalid;
+
+  /// No description provided for @contactNoOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'No Mobile Money operators available.'**
+  String get contactNoOperators;
+
+  /// No description provided for @contactNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection unavailable. Check your network.'**
+  String get contactNetworkError;
+
+  /// No description provided for @contactSessionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get contactSessionError;
+
+  /// No description provided for @contactInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the phone, country and operator. A contact with multiple destinations cannot change country here.'**
+  String get contactInvalidError;
+
+  /// No description provided for @contactNotFoundError.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or operator is no longer available.'**
+  String get contactNotFoundError;
+
+  /// No description provided for @contactServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to complete this action. Please try again.'**
+  String get contactServerError;
+
+  /// No description provided for @contactUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This destination cannot be edited in the Mobile Money form.'**
+  String get contactUnavailable;
+
+  /// No description provided for @transferSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send money'**
+  String get transferSendTitle;
+
+  /// No description provided for @transferChooseBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary'**
+  String get transferChooseBeneficiary;
+
+  /// No description provided for @transferYouSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You send'**
+  String get transferYouSend;
+
+  /// No description provided for @transferAmountReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount received'**
+  String get transferAmountReceived;
+
+  /// No description provided for @transferFundingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get transferFundingLabel;
+
+  /// No description provided for @transferFundingCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
+  String get transferFundingCard;
+
+  /// No description provided for @transferCurrentRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rate'**
+  String get transferCurrentRate;
+
+  /// No description provided for @transferChooseForQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a beneficiary to calculate the rate and fees.'**
+  String get transferChooseForQuote;
+
+  /// No description provided for @transferContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get transferContinue;
+
+  /// No description provided for @transferReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your transfer'**
+  String get transferReviewTitle;
+
+  /// No description provided for @transferTrustWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.'**
+  String get transferTrustWarning;
+
+  /// No description provided for @transferConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm transfer'**
+  String get transferConfirm;
+
+  /// No description provided for @transferInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the beneficiary and the amount entered.'**
+  String get transferInvalidError;
+
+  /// No description provided for @transferBeneficiaryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This beneficiary or destination is no longer available.'**
+  String get transferBeneficiaryUnavailable;
+
+  /// No description provided for @transferConflictError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer has already been confirmed or can no longer be used.'**
+  String get transferConflictError;
+
+  /// No description provided for @transferQuoteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The rate has expired. A new quote will be calculated.'**
+  String get transferQuoteExpired;
+
+  /// No description provided for @transferUnavailableError.
+  ///
+  /// In en, this message translates to:
+  /// **'This transfer is not available for this beneficiary or amount.'**
+  String get transferUnavailableError;
+
+  /// No description provided for @systemLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Device language'**
+  String get systemLanguage;
+
+  /// No description provided for @spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get spanish;
+
+  /// No description provided for @mandarin.
+  ///
+  /// In en, this message translates to:
+  /// **'Mandarin Chinese'**
+  String get mandarin;
+
+  /// No description provided for @hindi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindi'**
+  String get hindi;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @currentPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current password'**
+  String get currentPasswordRequired;
+
+  /// No description provided for @currentPasswordIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'The current password is incorrect.'**
+  String get currentPasswordIncorrect;
+
+  /// No description provided for @newPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a new password'**
+  String get newPasswordRequired;
+
+  /// No description provided for @newPasswordUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The new password must be different from the current password.'**
+  String get newPasswordUnchanged;
+
+  /// No description provided for @confirmNewPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your new password'**
+  String get confirmNewPasswordRequired;
+
+  /// No description provided for @passwordChangeSessionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'For your security, all other devices will be signed out. This device will remain signed in.'**
+  String get passwordChangeSessionInfo;
+
+  /// No description provided for @changePasswordAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePasswordAction;
+
+  /// No description provided for @passwordChangedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed'**
+  String get passwordChangedTitle;
+
+  /// No description provided for @passwordChangedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been changed. Your other devices have been signed out.'**
+  String get passwordChangedMessage;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @passwordLoginUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This account uses an external sign-in provider and does not have a PayFlow password.'**
+  String get passwordLoginUnavailable;
+
+  /// No description provided for @changePasswordNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to change the password. Check your connection.'**
+  String get changePasswordNetworkError;
+
+  /// No description provided for @changePasswordServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'The password service is temporarily unavailable.'**
+  String get changePasswordServerError;
+
+  /// No description provided for @changePasswordUnexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to change the password right now.'**
+  String get changePasswordUnexpectedError;
 }
 
 class _AppLocalizationsDelegate
@@ -1212,7 +1902,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['en', 'es', 'fr', 'hi', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1223,8 +1913,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

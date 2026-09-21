@@ -1,7 +1,1 @@
-enum LoginErrorType {
-  invalidCredentials,
-  network,
-  timeout,
-  server,
-  unexpected,
-}
+enum LoginErrorType { invalidCredentials, network, timeout, server, unexpected }

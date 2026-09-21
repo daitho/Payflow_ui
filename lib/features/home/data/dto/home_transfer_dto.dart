@@ -39,56 +39,38 @@ class HomeTransferDto {
     required this.finalizedAt,
   });
 
-  factory HomeTransferDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory HomeTransferDto.fromJson(Map<String, dynamic> json) {
     return HomeTransferDto(
       id: json['id'] as String,
       reference: json['reference'] as String,
 
-      beneficiaryId:
-      json['beneficiaryId'] as String,
+      beneficiaryId: json['beneficiaryId'] as String,
 
-      beneficiaryName:
-      json['beneficiaryName'] as String?,
+      beneficiaryName: json['beneficiaryName'] as String?,
 
-      sentAmount:
-      json['sentAmount'] as num,
+      sentAmount: json['sentAmount'] as num,
 
-      receivedAmount:
-      json['receivedAmount'] as num,
+      receivedAmount: json['receivedAmount'] as num,
 
-      sourceCurrencyId:
-      json['sourceCurrencyId'] as String,
+      sourceCurrencyId: json['sourceCurrencyId'] as String,
 
-      sourceCurrencyCode:
-      json['sourceCurrencyCode'] as String,
+      sourceCurrencyCode: json['sourceCurrencyCode'] as String,
 
-      sourceCurrencySymbol:
-      json['sourceCurrencySymbol'] as String?,
+      sourceCurrencySymbol: json['sourceCurrencySymbol'] as String?,
 
-      targetCurrencyId:
-      json['targetCurrencyId'] as String,
+      targetCurrencyId: json['targetCurrencyId'] as String,
 
-      targetCurrencyCode:
-      json['targetCurrencyCode'] as String,
+      targetCurrencyCode: json['targetCurrencyCode'] as String,
 
-      targetCurrencySymbol:
-      json['targetCurrencySymbol'] as String?,
+      targetCurrencySymbol: json['targetCurrencySymbol'] as String?,
 
-      status:
-      json['status'] as String,
+      status: json['status'] as String,
 
-      createdAt: DateTime.parse(
-        json['createdAt'] as String,
-      ),
+      createdAt: DateTime.parse(json['createdAt'] as String),
 
-      finalizedAt:
-      json['finalizedAt'] == null
+      finalizedAt: json['finalizedAt'] == null
           ? null
-          : DateTime.parse(
-        json['finalizedAt'] as String,
-      ),
+          : DateTime.parse(json['finalizedAt'] as String),
     );
   }
 }

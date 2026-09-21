@@ -30,6 +30,7 @@ class BeneficiaryAvatarUtil {
      */
     return _colors[code % _colors.length];
   }
+
   static Color backgroundForName(String displayName) {
     return colorForName(displayName).withValues(alpha: 0.16);
   }

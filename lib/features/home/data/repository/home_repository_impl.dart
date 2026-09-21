@@ -9,9 +9,8 @@ import '../service_api/home_repository_impl.dart';
 class HomeRepositoryImpl implements HomeRepository {
   final HomeApiService _apiService;
 
-  const HomeRepositoryImpl({
-    required HomeApiService apiService,
-  }) : _apiService = apiService;
+  const HomeRepositoryImpl({required HomeApiService apiService})
+    : _apiService = apiService;
 
   // ============================================================
   // GET HOME
@@ -26,19 +25,13 @@ class HomeRepositoryImpl implements HomeRepository {
     } on DioException catch (error) {
       throw _mapDioException(error);
     } on FormatException catch (error) {
-      throw HomeInvalidResponseException(
-        cause: error,
-      );
+      throw HomeInvalidResponseException(cause: error);
     } on TypeError catch (error) {
-      throw HomeInvalidResponseException(
-        cause: error,
-      );
+      throw HomeInvalidResponseException(cause: error);
     } on HomeException {
       rethrow;
     } catch (error) {
-      throw HomeUnexpectedException(
-        cause: error,
-      );
+      throw HomeUnexpectedException(cause: error);
     }
   }
 
@@ -46,47 +39,39 @@ class HomeRepositoryImpl implements HomeRepository {
   // DIO ERROR MAPPING
   // ============================================================
 
-  HomeException _mapDioException(
-      DioException error,
-      ) {
+  HomeException _mapDioException(DioException error) {
     switch (error.type) {
-    // --------------------------------------------------------
-    // TIMEOUTS
-    // --------------------------------------------------------
+      // --------------------------------------------------------
+      // TIMEOUTS
+      // --------------------------------------------------------
 
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return HomeTimeoutException(
-          cause: error,
-        );
+        return HomeTimeoutException(cause: error);
 
-    // --------------------------------------------------------
-    // NO NETWORK / SERVER UNREACHABLE
-    // --------------------------------------------------------
+      // --------------------------------------------------------
+      // NO NETWORK / SERVER UNREACHABLE
+      // --------------------------------------------------------
 
       case DioExceptionType.connectionError:
-        return HomeNetworkException(
-          cause: error,
-        );
+        return HomeNetworkException(cause: error);
 
-    // --------------------------------------------------------
-    // HTTP RESPONSE RECEIVED
-    // --------------------------------------------------------
+      // --------------------------------------------------------
+      // HTTP RESPONSE RECEIVED
+      // --------------------------------------------------------
 
       case DioExceptionType.badResponse:
         return _mapBadResponse(error);
 
-    // --------------------------------------------------------
-    // OTHER TECHNICAL ERRORS
-    // --------------------------------------------------------
+      // --------------------------------------------------------
+      // OTHER TECHNICAL ERRORS
+      // --------------------------------------------------------
 
       case DioExceptionType.badCertificate:
       case DioExceptionType.cancel:
       case DioExceptionType.unknown:
-        return HomeUnexpectedException(
-          cause: error,
-        );
+        return HomeUnexpectedException(cause: error);
       case DioExceptionType.transformTimeout:
         // TODO: Handle this case.
         throw UnimplementedError();
@@ -97,11 +82,8 @@ class HomeRepositoryImpl implements HomeRepository {
   // HTTP ERROR MAPPING
   // ============================================================
 
-  HomeException _mapBadResponse(
-      DioException error,
-      ) {
-    final int? statusCode =
-        error.response?.statusCode;
+  HomeException _mapBadResponse(DioException error) {
+    final int? statusCode = error.response?.statusCode;
 
     /*
      * Le AuthInterceptor est normalement responsable :
@@ -118,20 +100,14 @@ class HomeRepositoryImpl implements HomeRepository {
      * Le Repository ne fait aucune navigation et
      * ne supprime pas lui-même la session.
      */
-    if (statusCode == 401 ||
-        statusCode == 403) {
-      return HomeSessionExpiredException(
-        cause: error,
-      );
+    if (statusCode == 401 || statusCode == 403) {
+      return HomeSessionExpiredException(cause: error);
     }
 
     /*
      * Le serveur a répondu mais la requête Home
      * n'a pas abouti correctement.
      */
-    return HomeServerException(
-      statusCode: statusCode,
-      cause: error,
-    );
+    return HomeServerException(statusCode: statusCode, cause: error);
   }
 }

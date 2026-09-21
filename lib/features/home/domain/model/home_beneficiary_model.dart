@@ -23,13 +23,10 @@ class HomeBeneficiaryModel {
   });
 
   String get firstName {
-    final List<String> parts =
-    displayName
+    final List<String> parts = displayName
         .trim()
         .split(RegExp(r'\s+'))
-        .where(
-          (part) => part.isNotEmpty,
-    )
+        .where((part) => part.isNotEmpty)
         .toList();
 
     if (parts.isEmpty) {

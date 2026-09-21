@@ -38,10 +38,8 @@ class HomeExchangeRateModel {
   });
 
   bool get comesFromLastTransaction =>
-      source ==
-          HomeExchangeRateSource.lastTransaction;
+      source == HomeExchangeRateSource.lastTransaction;
 
   bool get isDefaultAvailable =>
-      source ==
-          HomeExchangeRateSource.defaultAvailable;
+      source == HomeExchangeRateSource.defaultAvailable;
 }

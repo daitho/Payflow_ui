@@ -19,15 +19,11 @@ final class TransferHistoryCurrencyTotalDto {
   // JSON
   // ===========================================================
 
-  factory TransferHistoryCurrencyTotalDto.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory TransferHistoryCurrencyTotalDto.fromJson(Map<String, dynamic> json) {
     return TransferHistoryCurrencyTotalDto(
-      currencyCode:
-      json['currencyCode'] as String,
+      currencyCode: json['currencyCode'] as String,
 
-      amount:
-      json['amount'] as num,
+      amount: json['amount'] as num,
     );
   }
 }

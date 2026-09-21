@@ -24,11 +24,11 @@ class RecentBeneficiariesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
-    final List<HomeBeneficiaryModel> displayedBeneficiaries =
-    beneficiaries.take(4).toList();
+    final List<HomeBeneficiaryModel> displayedBeneficiaries = beneficiaries
+        .take(4)
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,17 +51,13 @@ class RecentBeneficiariesSection extends StatelessWidget {
         // =====================================================
         // SELECTED BENEFICIARY
         // =====================================================
-
-        _SelectedBeneficiaryCard(
-          beneficiary: selectedBeneficiary,
-        ),
+        _SelectedBeneficiaryCard(beneficiary: selectedBeneficiary),
 
         const SizedBox(height: 18),
 
         // =====================================================
         // QUICK BENEFICIARIES
         // =====================================================
-
         if (displayedBeneficiaries.isEmpty)
           _EmptyBeneficiaries(
             message: l10n.homeNoRecentBeneficiaries,
@@ -73,36 +69,28 @@ class RecentBeneficiariesSection extends StatelessWidget {
             child: Row(
               children: [
                 for (
-                int index = 0;
-                index < displayedBeneficiaries.length;
-                index++
+                  int index = 0;
+                  index < displayedBeneficiaries.length;
+                  index++
                 )
                   Expanded(
                     child: _BeneficiaryItem(
-                      beneficiary:
-                      displayedBeneficiaries[index],
+                      beneficiary: displayedBeneficiaries[index],
                       selected:
-                      selectedBeneficiary?.id ==
+                          selectedBeneficiary?.id ==
                           displayedBeneficiaries[index].id,
                       onTap: onBeneficiaryTap == null
                           ? null
                           : () {
-                        onBeneficiaryTap!(
-                          displayedBeneficiaries[index],
-                        );
-                      },
+                              onBeneficiaryTap!(displayedBeneficiaries[index]);
+                            },
                     ),
                   ),
 
                 // =================================================
                 // PLUS
                 // =================================================
-
-                Expanded(
-                  child: _MoreBeneficiariesItem(
-                    onTap: onSeeAll,
-                  ),
-                ),
+                Expanded(child: _MoreBeneficiariesItem(onTap: onSeeAll)),
               ],
             ),
           ),
@@ -118,14 +106,11 @@ class RecentBeneficiariesSection extends StatelessWidget {
 class _SelectedBeneficiaryCard extends StatelessWidget {
   final HomeBeneficiaryModel? beneficiary;
 
-  const _SelectedBeneficiaryCard({
-    required this.beneficiary,
-  });
+  const _SelectedBeneficiaryCard({required this.beneficiary});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     // =========================================================
     // NOTHING SELECTED
@@ -138,9 +123,7 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: const Color(0xFFFFC77D),
-          ),
+          border: Border.all(color: const Color(0xFFFFC77D)),
         ),
         child: Row(
           children: [
@@ -171,8 +154,7 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
     // SELECTED
     // =========================================================
 
-    final String flag =
-    CountryFlagUtil.fromIsoCode2(
+    final String flag = CountryFlagUtil.fromIsoCode2(
       beneficiary!.countryIsoCode2,
     );
 
@@ -192,9 +174,7 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFFDCD7D4),
-        ),
+        border: Border.all(color: const Color(0xFFDCD7D4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,16 +197,10 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
           // =====================================================
           // FLAG + NAME
           // =====================================================
-
           Row(
             children: [
               if (flag.isNotEmpty) ...[
-                Text(
-                  flag,
-                  style: const TextStyle(
-                    fontSize: 21,
-                  ),
-                ),
+                Text(flag, style: const TextStyle(fontSize: 21)),
 
                 const SizedBox(width: 8),
               ],
@@ -249,7 +223,6 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
           // =====================================================
           // PHONE + OPERATOR
           // =====================================================
-
           if (details.isNotEmpty) ...[
             const SizedBox(height: 5),
 
@@ -289,13 +262,11 @@ class _BeneficiaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color avatarColor =
-    BeneficiaryAvatarUtil.colorForName(
+    final Color avatarColor = BeneficiaryAvatarUtil.colorForName(
       beneficiary.displayName,
     );
 
-    final String flag =
-    CountryFlagUtil.fromIsoCode2(
+    final String flag = CountryFlagUtil.fromIsoCode2(
       beneficiary.countryIsoCode2,
     );
 
@@ -314,9 +285,7 @@ class _BeneficiaryItem extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: selected
-                    ? const Color(0xFFFF8A00)
-                    : Colors.transparent,
+                color: selected ? const Color(0xFFFF8A00) : Colors.transparent,
                 width: 2,
               ),
             ),
@@ -325,10 +294,7 @@ class _BeneficiaryItem extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundColor:
-                  avatarColor.withValues(
-                    alpha: 0.18,
-                  ),
+                  backgroundColor: avatarColor.withValues(alpha: 0.18),
                   child: Icon(
                     Icons.person_rounded,
                     color: avatarColor,
@@ -339,7 +305,6 @@ class _BeneficiaryItem extends StatelessWidget {
                 // =================================================
                 // COUNTRY FLAG
                 // =================================================
-
                 if (flag.isNotEmpty)
                   Positioned(
                     right: -5,
@@ -351,20 +316,13 @@ class _BeneficiaryItem extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(
-                              alpha: 0.10,
-                            ),
+                            color: Colors.black.withValues(alpha: 0.10),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: Text(
-                        flag,
-                        style: const TextStyle(
-                          fontSize: 13,
-                        ),
-                      ),
+                      child: Text(flag, style: const TextStyle(fontSize: 13)),
                     ),
                   ),
               ],
@@ -376,11 +334,8 @@ class _BeneficiaryItem extends StatelessWidget {
           // =====================================================
           // FIRST NAME
           // =====================================================
-
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 2,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
             child: Text(
               beneficiary.firstName,
               maxLines: 1,
@@ -391,9 +346,7 @@ class _BeneficiaryItem extends StatelessWidget {
                     ? const Color(0xFFFF8A00)
                     : const Color(0xFF4B4542),
                 fontSize: 12,
-                fontWeight: selected
-                    ? FontWeight.w700
-                    : FontWeight.w500,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),
@@ -410,14 +363,11 @@ class _BeneficiaryItem extends StatelessWidget {
 class _MoreBeneficiariesItem extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const _MoreBeneficiariesItem({
-    this.onTap,
-  });
+  const _MoreBeneficiariesItem({this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     return InkWell(
       onTap: onTap,
@@ -465,15 +415,11 @@ class _EmptyBeneficiaries extends StatelessWidget {
 
   final VoidCallback? onSeeAll;
 
-  const _EmptyBeneficiaries({
-    required this.message,
-    this.onSeeAll,
-  });
+  const _EmptyBeneficiaries({required this.message, this.onSeeAll});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n =
-    AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
 
     return Column(
       children: [
@@ -483,16 +429,11 @@ class _EmptyBeneficiaries extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: const Color(0xFFEAE5E2),
-            ),
+            border: Border.all(color: const Color(0xFFEAE5E2)),
           ),
           child: Text(
             message,
-            style: const TextStyle(
-              color: Color(0xFF847C78),
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: Color(0xFF847C78), fontSize: 13),
           ),
         ),
 
@@ -501,12 +442,8 @@ class _EmptyBeneficiaries extends StatelessWidget {
 
           TextButton.icon(
             onPressed: onSeeAll,
-            icon: const Icon(
-              Icons.add_rounded,
-            ),
-            label: Text(
-              l10n.homeSeeMore,
-            ),
+            icon: const Icon(Icons.add_rounded),
+            label: Text(l10n.homeSeeMore),
           ),
         ],
       ],

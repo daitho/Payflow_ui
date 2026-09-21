@@ -110,7 +110,7 @@ class SecurityPrivacyView extends StatelessWidget {
                 subtitle: l10n.changePasswordSubtitle,
 
                 onTap: () {
-                  // Future feature.
+                  context.push(AppRoutes.changePassword);
                 },
               ),
             ],
@@ -131,9 +131,7 @@ class SecurityPrivacyView extends StatelessWidget {
                 title: l10n.thisDevice,
                 subtitle: l10n.thisDeviceSubtitle,
                 onTap: () {
-                  context.push(
-                    AppRoutes.currentDevice,
-                  );
+                  context.push(AppRoutes.currentDevice);
                 },
               ),
               const _Divider(),

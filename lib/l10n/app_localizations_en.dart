@@ -602,4 +602,374 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
+
+  @override
+  String get transferHistoryTitle => 'Transactions';
+
+  @override
+  String get transferDetailTitle => 'Transfer details';
+
+  @override
+  String get transferNotFound => 'This transfer could not be found.';
+
+  @override
+  String get transferStatusCreated => 'Created';
+
+  @override
+  String get transferStatusPending => 'Pending';
+
+  @override
+  String get transferStatusProcessing => 'Processing';
+
+  @override
+  String get transferStatusCompleted => 'Completed';
+
+  @override
+  String get transferStatusFailed => 'Failed';
+
+  @override
+  String get transferStatusCancelled => 'Cancelled';
+
+  @override
+  String get transferStatusRefunded => 'Refunded';
+
+  @override
+  String get transferStatusUnknown => 'Unknown status';
+
+  @override
+  String get transferBeneficiary => 'Recipient';
+
+  @override
+  String get transferAllBeneficiaries => 'All recipients';
+
+  @override
+  String get transferStatusLabel => 'Status';
+
+  @override
+  String get transferAllStatuses => 'All statuses';
+
+  @override
+  String get transferResetFilters => 'Reset filters';
+
+  @override
+  String get transferCountLabel => 'Total transactions';
+
+  @override
+  String get transferSentTotalLabel => 'Total sent by currency';
+
+  @override
+  String get transferHistoryEmpty => 'No transfers match your search.';
+
+  @override
+  String get transferLoadMore => 'Load more';
+
+  @override
+  String get transferRecipientName => 'Name';
+
+  @override
+  String get transferCountry => 'Country';
+
+  @override
+  String get transferOperator => 'Operator';
+
+  @override
+  String get transferDestination => 'Destination';
+
+  @override
+  String get transferAmounts => 'Amounts';
+
+  @override
+  String get transferSent => 'Amount sent';
+
+  @override
+  String transferSentTo(String amount, String beneficiary) {
+    return 'You sent $amount to $beneficiary';
+  }
+
+  @override
+  String get transferFee => 'Fees';
+
+  @override
+  String get transferTotalCharged => 'Total charged';
+
+  @override
+  String get transferRate => 'Applied rate';
+
+  @override
+  String get transferReceived => 'Amount to receive';
+
+  @override
+  String get transferTracking => 'Transfer tracking';
+
+  @override
+  String get transferReference => 'Reference';
+
+  @override
+  String get transferCreatedAt => 'Created on';
+
+  @override
+  String get transferExport => 'Export';
+
+  @override
+  String get transferReceiptAction => 'View / export receipt';
+
+  @override
+  String get transferRepeatAction => 'Repeat transfer';
+
+  @override
+  String get transferProviderReference => 'Operator confirmation';
+
+  @override
+  String get transferTotalAmount => 'Total amount';
+
+  @override
+  String get transferTimelineUnavailable =>
+      'Detailed tracking is unavailable for this transfer.';
+
+  @override
+  String get transferTrackingCompleted =>
+      'The funds have been delivered to the recipient.';
+
+  @override
+  String get transferTrackingFailed =>
+      'The transfer failed. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingCancelled =>
+      'The transfer is cancelled. The available tracking does not specify the debit or refund situation.';
+
+  @override
+  String get transferTrackingRefunded => 'The transfer is marked as refunded.';
+
+  @override
+  String get transferTrackingPending =>
+      'The transfer is being processed. Receipt has not yet been confirmed.';
+
+  @override
+  String get transferYearLabel => 'Year';
+
+  @override
+  String get transferAllYears => 'All years';
+
+  @override
+  String get contactTitle => 'Beneficiaries';
+
+  @override
+  String get contactSearch => 'Enter a name to search…';
+
+  @override
+  String get contactAdd => 'Add a beneficiary';
+
+  @override
+  String get contactSection => 'YOUR BENEFICIARIES';
+
+  @override
+  String get contactNew => 'New Beneficiary';
+
+  @override
+  String get contactEdit => 'Edit beneficiary';
+
+  @override
+  String get contactInformation => 'Contact information';
+
+  @override
+  String get contactFullName => 'Full name';
+
+  @override
+  String get contactPhone => 'Phone number';
+
+  @override
+  String get contactCountry => 'Country';
+
+  @override
+  String get contactOperator => 'Operator';
+
+  @override
+  String get contactGender => 'Gender';
+
+  @override
+  String get contactMale => 'Male';
+
+  @override
+  String get contactFemale => 'Female';
+
+  @override
+  String get contactUnspecified => 'Not specified';
+
+  @override
+  String get contactSave => 'Save changes';
+
+  @override
+  String get contactEmpty => 'No beneficiaries found.';
+
+  @override
+  String get contactNoPhone => 'No phone number';
+
+  @override
+  String get contactChoose => 'Choose';
+
+  @override
+  String get contactRequired => 'Required field';
+
+  @override
+  String get contactNameTooLong => 'Maximum 120 characters';
+
+  @override
+  String get contactPhoneInvalid =>
+      'Enter the number with its country code, e.g. +237…';
+
+  @override
+  String get contactNoOperators => 'No Mobile Money operators available.';
+
+  @override
+  String get contactNetworkError =>
+      'Connection unavailable. Check your network.';
+
+  @override
+  String get contactSessionError =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get contactInvalidError =>
+      'Check the phone, country and operator. A contact with multiple destinations cannot change country here.';
+
+  @override
+  String get contactNotFoundError =>
+      'This beneficiary or operator is no longer available.';
+
+  @override
+  String get contactServerError =>
+      'Unable to complete this action. Please try again.';
+
+  @override
+  String get contactUnavailable =>
+      'This destination cannot be edited in the Mobile Money form.';
+
+  @override
+  String get transferSendTitle => 'Send money';
+
+  @override
+  String get transferChooseBeneficiary => 'Choose a beneficiary';
+
+  @override
+  String get transferYouSend => 'You send';
+
+  @override
+  String get transferAmountReceived => 'Amount received';
+
+  @override
+  String get transferFundingLabel => 'Payment method';
+
+  @override
+  String get transferFundingCard => 'Bank card';
+
+  @override
+  String get transferCurrentRate => 'Exchange rate';
+
+  @override
+  String get transferChooseForQuote =>
+      'Choose a beneficiary to calculate the rate and fees.';
+
+  @override
+  String get transferContinue => 'Continue';
+
+  @override
+  String get transferReviewTitle => 'Review your transfer';
+
+  @override
+  String get transferTrustWarning =>
+      'Do you know this person? Make sure you are sending money to someone you trust and that their details are correct.';
+
+  @override
+  String get transferConfirm => 'Confirm transfer';
+
+  @override
+  String get transferInvalidError =>
+      'Check the beneficiary and the amount entered.';
+
+  @override
+  String get transferBeneficiaryUnavailable =>
+      'This beneficiary or destination is no longer available.';
+
+  @override
+  String get transferConflictError =>
+      'This transfer has already been confirmed or can no longer be used.';
+
+  @override
+  String get transferQuoteExpired =>
+      'The rate has expired. A new quote will be calculated.';
+
+  @override
+  String get transferUnavailableError =>
+      'This transfer is not available for this beneficiary or amount.';
+
+  @override
+  String get systemLanguage => 'Device language';
+
+  @override
+  String get spanish => 'Spanish';
+
+  @override
+  String get mandarin => 'Mandarin Chinese';
+
+  @override
+  String get hindi => 'Hindi';
+
+  @override
+  String get currentPassword => 'Current password';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get confirmNewPassword => 'Confirm new password';
+
+  @override
+  String get currentPasswordRequired => 'Please enter your current password';
+
+  @override
+  String get currentPasswordIncorrect => 'The current password is incorrect.';
+
+  @override
+  String get newPasswordRequired => 'Please enter a new password';
+
+  @override
+  String get newPasswordUnchanged =>
+      'The new password must be different from the current password.';
+
+  @override
+  String get confirmNewPasswordRequired => 'Please confirm your new password';
+
+  @override
+  String get passwordChangeSessionInfo =>
+      'For your security, all other devices will be signed out. This device will remain signed in.';
+
+  @override
+  String get changePasswordAction => 'Change password';
+
+  @override
+  String get passwordChangedTitle => 'Password changed';
+
+  @override
+  String get passwordChangedMessage =>
+      'Your password has been changed. Your other devices have been signed out.';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get passwordLoginUnavailable =>
+      'This account uses an external sign-in provider and does not have a PayFlow password.';
+
+  @override
+  String get changePasswordNetworkError =>
+      'Unable to change the password. Check your connection.';
+
+  @override
+  String get changePasswordServerError =>
+      'The password service is temporarily unavailable.';
+
+  @override
+  String get changePasswordUnexpectedError =>
+      'Unable to change the password right now.';
 }

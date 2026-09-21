@@ -6,6 +6,14 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>fr</string>
+		<string>en</string>
+		<string>es</string>
+		<string>zh</string>
+		<string>hi</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Pay Flow Ui</string>
 	<key>CFBundleExecutable</key>

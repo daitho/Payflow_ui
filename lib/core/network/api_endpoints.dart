@@ -6,5 +6,6 @@ abstract final class ApiEndpoints {
   static const String authLogoutAll = '/api/v1/auth/logout-all';
   static const String authSessions = '/api/v1/auth/sessions';
   static const String authLogoutOthers = '/api/v1/auth/logout-others';
+  static const String accountPassword = '/api/v1/account/password';
   static const String home = '/api/v1/home';
 }

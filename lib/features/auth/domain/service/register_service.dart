@@ -5,9 +5,8 @@ import '../repository/auth_repository.dart';
 class RegisterService {
   final AuthRepository _authRepository;
 
-  const RegisterService({
-    required AuthRepository authRepository,
-  }) : _authRepository = authRepository;
+  const RegisterService({required AuthRepository authRepository})
+    : _authRepository = authRepository;
 
   Future<AuthSessionModel> register({
     required String firstName,
@@ -24,8 +23,6 @@ class RegisterService {
       password: password,
     );
 
-    return _authRepository.register(
-      command,
-    );
+    return _authRepository.register(command);
   }
 }

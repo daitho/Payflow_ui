@@ -39,7 +39,7 @@ final class TransferHistoryItemDto {
       id: json['id'] as String,
       reference: json['reference'] as String,
       beneficiaryId: json['beneficiaryId'] as String,
-      beneficiaryName: json['beneficiaryName'] as String,
+      beneficiaryName: json['beneficiaryName'] as String? ?? '',
       sentAmount: json['sentAmount'] as num,
       sourceCurrencyCode: json['sourceCurrencyCode'] as String,
       receivedAmount: json['receivedAmount'] as num,

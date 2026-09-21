@@ -8,6 +8,7 @@ abstract interface class TransferHistoryApiService {
   Future<TransferHistoryResponseDto> getHistory({
     String? beneficiaryId,
     String? status,
+    int? year,
     required int page,
     required int size,
   });
@@ -15,9 +16,7 @@ abstract interface class TransferHistoryApiService {
   // ===========================================================
   // DETAIL
   // ===========================================================
-  Future<TransferDetailDto> getDetail({
-    required String transferId,
-  });
+  Future<TransferDetailDto> getDetail({required String transferId});
 
   // ===========================================================
   // RECEIPT
@@ -26,5 +25,11 @@ abstract interface class TransferHistoryApiService {
     required String transferId,
     bool download = false,
     String? locale,
+  });
+  Future<List<int>> getStatement({
+    String? beneficiaryId,
+    String? status,
+    int? year,
+    required String locale,
   });
 }

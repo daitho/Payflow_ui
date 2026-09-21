@@ -360,6 +360,7 @@ class _DeviceInformationCard extends StatelessWidget {
     final String locale = Localizations.localeOf(context).toLanguageTag();
     return DateFormat('dd MMM yyyy • HH:mm', locale).format(date.toLocal());
   }
+
   static String _maskDeviceId(String deviceId) {
     final String value = deviceId.trim();
 
