@@ -2,6 +2,8 @@ import '../../../../core/service/device_service.dart';
 import '../../domain/model/auth_session_model.dart';
 import '../../domain/model/login_credentials.dart';
 import '../../domain/model/register_command.dart';
+import '../../domain/model/verification_challenge_model.dart';
+import '../../domain/model/verification_channel.dart';
 import '../../domain/repository/auth_repository.dart';
 
 import '../dto/login_request_dto.dart';
