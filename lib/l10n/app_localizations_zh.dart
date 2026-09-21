@@ -1,8 +1,10 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Mandarin Chinese (`zh`).
+/// The translations for Chinese (`zh`).
 class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
@@ -368,7 +370,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get disconnectOtherDevicesConfirmTitle => '要断开其他设备吗？';
 
   @override
-  String get disconnectOtherDevicesConfirmMessage => '您的所有其他 PayFlow 会话都将退出，此设备将保持登录。';
+  String get disconnectOtherDevicesConfirmMessage =>
+      '您的所有其他 PayFlow 会话都将退出，此设备将保持登录。';
 
   @override
   String get disconnectOtherDevicesSuccess => '其他设备已断开连接。';
@@ -559,7 +562,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String exchangeRateEquation(String sourceCurrency, String rate, String targetCurrency) {
+  String exchangeRateEquation(
+    String sourceCurrency,
+    String rate,
+    String targetCurrency,
+  ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
 
@@ -906,5 +913,4 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get changePasswordUnexpectedError => '目前无法更改密码。';
-
 }

@@ -912,6 +912,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get transferUnavailableError =>
       'Ce transfert n’est pas disponible pour ce bénéficiaire ou ce montant.';
+
   @override
   String get systemLanguage => 'Langue du téléphone';
 
@@ -923,6 +924,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hindi => 'Hindi';
+
   @override
   String get currentPassword => 'Mot de passe actuel';
 
@@ -933,22 +935,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmNewPassword => 'Confirmer le nouveau mot de passe';
 
   @override
-  String get currentPasswordRequired => 'Veuillez saisir votre mot de passe actuel';
+  String get currentPasswordRequired =>
+      'Veuillez saisir votre mot de passe actuel';
 
   @override
-  String get currentPasswordIncorrect => 'Le mot de passe actuel est incorrect.';
+  String get currentPasswordIncorrect =>
+      'Le mot de passe actuel est incorrect.';
 
   @override
   String get newPasswordRequired => 'Veuillez saisir un nouveau mot de passe';
 
   @override
-  String get newPasswordUnchanged => 'Le nouveau mot de passe doit être différent du mot de passe actuel.';
+  String get newPasswordUnchanged =>
+      'Le nouveau mot de passe doit être différent du mot de passe actuel.';
 
   @override
-  String get confirmNewPasswordRequired => 'Veuillez confirmer votre nouveau mot de passe';
+  String get confirmNewPasswordRequired =>
+      'Veuillez confirmer votre nouveau mot de passe';
 
   @override
-  String get passwordChangeSessionInfo => 'Pour votre sécurité, tous les autres appareils seront déconnectés. Cet appareil restera connecté.';
+  String get passwordChangeSessionInfo =>
+      'Pour votre sécurité, tous les autres appareils seront déconnectés. Cet appareil restera connecté.';
 
   @override
   String get changePasswordAction => 'Changer le mot de passe';
@@ -957,21 +964,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get passwordChangedTitle => 'Mot de passe modifié';
 
   @override
-  String get passwordChangedMessage => 'Votre mot de passe a été modifié. Vos autres appareils ont été déconnectés.';
+  String get passwordChangedMessage =>
+      'Votre mot de passe a été modifié. Vos autres appareils ont été déconnectés.';
 
   @override
   String get continueAction => 'Continuer';
 
   @override
-  String get passwordLoginUnavailable => 'Ce compte utilise un fournisseur de connexion externe et ne possède pas de mot de passe PayFlow.';
+  String get passwordLoginUnavailable =>
+      'Ce compte utilise un fournisseur de connexion externe et ne possède pas de mot de passe PayFlow.';
 
   @override
-  String get changePasswordNetworkError => 'Impossible de modifier le mot de passe. Vérifiez votre connexion.';
+  String get changePasswordNetworkError =>
+      'Impossible de modifier le mot de passe. Vérifiez votre connexion.';
 
   @override
-  String get changePasswordServerError => 'Le service de changement de mot de passe est temporairement indisponible.';
+  String get changePasswordServerError =>
+      'Le service de changement de mot de passe est temporairement indisponible.';
 
   @override
-  String get changePasswordUnexpectedError => 'Impossible de modifier le mot de passe pour le moment.';
-
+  String get changePasswordUnexpectedError =>
+      'Impossible de modifier le mot de passe pour le moment.';
 }

@@ -1,8 +1,10 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Spanish (`es`).
+/// The translations for Spanish Castilian (`es`).
 class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
@@ -10,7 +12,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appName => 'PayFlow';
 
   @override
-  String get loginTagline => 'Transferencias de dinero\nrápidas, sencillas y seguras';
+  String get loginTagline =>
+      'Transferencias de dinero\nrápidas, sencillas y seguras';
 
   @override
   String get emailOrPhone => 'Correo electrónico';
@@ -58,7 +61,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signingIn => 'Iniciando sesión...';
 
   @override
-  String get signingInError => 'Error de inicio de sesión: comprueba tu correo electrónico o contraseña...';
+  String get signingInError =>
+      'Error de inicio de sesión: comprueba tu correo electrónico o contraseña...';
 
   @override
   String get forgotPasswordMessage => 'Recuperación de contraseña';
@@ -147,31 +151,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get passwordSpecial => 'Un carácter especial';
 
   @override
-  String get passwordInvalid => 'La contraseña no cumple los requisitos de seguridad';
+  String get passwordInvalid =>
+      'La contraseña no cumple los requisitos de seguridad';
 
   @override
   String get selectCountry => 'Seleccionar un país';
 
   @override
-  String get startupConnectionError => 'No se puede conectar con PayFlow. Comprueba tu conexión e inténtalo de nuevo.';
+  String get startupConnectionError =>
+      'No se puede conectar con PayFlow. Comprueba tu conexión e inténtalo de nuevo.';
 
   @override
   String get retry => 'Intentar de nuevo';
 
   @override
-  String get invalidCredentials => 'Correo electrónico o contraseña incorrectos.';
+  String get invalidCredentials =>
+      'Correo electrónico o contraseña incorrectos.';
 
   @override
-  String get loginNetworkError => 'No se puede conectar con PayFlow. Comprueba tu conexión a Internet.';
+  String get loginNetworkError =>
+      'No se puede conectar con PayFlow. Comprueba tu conexión a Internet.';
 
   @override
-  String get loginTimeoutError => 'PayFlow tarda demasiado en responder. Inténtalo de nuevo.';
+  String get loginTimeoutError =>
+      'PayFlow tarda demasiado en responder. Inténtalo de nuevo.';
 
   @override
-  String get loginServerError => 'PayFlow no está disponible temporalmente. Inténtalo de nuevo en breve.';
+  String get loginServerError =>
+      'PayFlow no está disponible temporalmente. Inténtalo de nuevo en breve.';
 
   @override
-  String get loginUnexpectedError => 'Se produjo un error inesperado. Inténtalo de nuevo.';
+  String get loginUnexpectedError =>
+      'Se produjo un error inesperado. Inténtalo de nuevo.';
 
   @override
   String get profile => 'Perfil';
@@ -198,7 +209,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get verificationAndLimits => 'Verificación y límites';
 
   @override
-  String get verificationAndLimitsSubtitle => 'Consulta tu nivel de verificación y tus límites';
+  String get verificationAndLimitsSubtitle =>
+      'Consulta tu nivel de verificación y tus límites';
 
   @override
   String get security => 'Seguridad';
@@ -216,7 +228,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notificationPreferences => 'Preferencias de notificaciones';
 
   @override
-  String get notificationPreferencesSubtitle => 'Gestiona tus alertas y mensajes';
+  String get notificationPreferencesSubtitle =>
+      'Gestiona tus alertas y mensajes';
 
   @override
   String get language => 'Idioma';
@@ -237,7 +250,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get about => 'Acerca de';
 
   @override
-  String get aboutSubtitle => 'Condiciones, privacidad e información de PayFlow';
+  String get aboutSubtitle =>
+      'Condiciones, privacidad e información de PayFlow';
 
   @override
   String get signOut => 'Cerrar sesión';
@@ -267,43 +281,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get activeSessions => 'Sesiones activas';
 
   @override
-  String get activeSessionsSubtitle => 'Consulta los dispositivos conectados a tu cuenta';
+  String get activeSessionsSubtitle =>
+      'Consulta los dispositivos conectados a tu cuenta';
 
   @override
   String get disconnectOtherDevices => 'Desconectar otros dispositivos';
 
   @override
-  String get disconnectOtherDevicesSubtitle => 'Revocar todas las demás sesiones';
+  String get disconnectOtherDevicesSubtitle =>
+      'Revocar todas las demás sesiones';
 
   @override
-  String get biometricPrivacyInfo => 'Tus datos biométricos permanecen en tu dispositivo. PayFlow nunca recibe tu rostro ni tu huella digital.';
+  String get biometricPrivacyInfo =>
+      'Tus datos biométricos permanecen en tu dispositivo. PayFlow nunca recibe tu rostro ni tu huella digital.';
 
   @override
   String get checkingBiometrics => 'Comprobando la autenticación biométrica...';
 
   @override
-  String get biometricsUnavailable => 'No hay autenticación biométrica configurada en este dispositivo.';
+  String get biometricsUnavailable =>
+      'No hay autenticación biométrica configurada en este dispositivo.';
 
   @override
-  String get enableBiometricsReason => 'Autentícate para activar la biometría de PayFlow.';
+  String get enableBiometricsReason =>
+      'Autentícate para activar la biometría de PayFlow.';
 
   @override
-  String get disableBiometricsReason => 'Autentícate para desactivar la biometría de PayFlow.';
+  String get disableBiometricsReason =>
+      'Autentícate para desactivar la biometría de PayFlow.';
 
   @override
-  String get biometricAuthenticationFailed => 'La autenticación biométrica no se completó.';
+  String get biometricAuthenticationFailed =>
+      'La autenticación biométrica no se completó.';
 
   @override
-  String get biometricTechnicalError => 'La configuración biométrica no se puede cambiar ahora.';
+  String get biometricTechnicalError =>
+      'La configuración biométrica no se puede cambiar ahora.';
 
   @override
-  String get unlockPayFlowBiometricReason => 'Autentícate para acceder a PayFlow.';
+  String get unlockPayFlowBiometricReason =>
+      'Autentícate para acceder a PayFlow.';
 
   @override
-  String get biometricUnlockFailed => 'La autenticación biométrica no se completó.';
+  String get biometricUnlockFailed =>
+      'La autenticación biométrica no se completó.';
 
   @override
-  String get biometricUnlockUnavailable => 'La biometría activada para PayFlow ya no está disponible en este dispositivo.';
+  String get biometricUnlockUnavailable =>
+      'La biometría activada para PayFlow ya no está disponible en este dispositivo.';
 
   @override
   String get retryBiometric => 'Intentar de nuevo';
@@ -353,31 +378,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sessionRevokedSuccess => 'El dispositivo se ha desconectado.';
 
   @override
-  String get activeSessionsNetworkError => 'No se pueden cargar las sesiones. Comprueba tu conexión.';
+  String get activeSessionsNetworkError =>
+      'No se pueden cargar las sesiones. Comprueba tu conexión.';
 
   @override
-  String get activeSessionsUnauthorized => 'Tu sesión ya no es válida. Inicia sesión de nuevo.';
+  String get activeSessionsUnauthorized =>
+      'Tu sesión ya no es válida. Inicia sesión de nuevo.';
 
   @override
-  String get activeSessionsServerError => 'El servicio no está disponible temporalmente.';
+  String get activeSessionsServerError =>
+      'El servicio no está disponible temporalmente.';
 
   @override
-  String get activeSessionsUnexpectedError => 'No se pueden gestionar las sesiones ahora.';
+  String get activeSessionsUnexpectedError =>
+      'No se pueden gestionar las sesiones ahora.';
 
   @override
-  String get disconnectOtherDevicesConfirmTitle => '¿Desconectar los demás dispositivos?';
+  String get disconnectOtherDevicesConfirmTitle =>
+      '¿Desconectar los demás dispositivos?';
 
   @override
-  String get disconnectOtherDevicesConfirmMessage => 'Todas tus demás sesiones de PayFlow se cerrarán. Este dispositivo seguirá conectado.';
+  String get disconnectOtherDevicesConfirmMessage =>
+      'Todas tus demás sesiones de PayFlow se cerrarán. Este dispositivo seguirá conectado.';
 
   @override
-  String get disconnectOtherDevicesSuccess => 'Los demás dispositivos se han desconectado.';
+  String get disconnectOtherDevicesSuccess =>
+      'Los demás dispositivos se han desconectado.';
 
   @override
   String get currentDeviceTitle => 'Este dispositivo';
 
   @override
-  String get currentDeviceLoadError => 'No se puede cargar la información de este dispositivo.';
+  String get currentDeviceLoadError =>
+      'No se puede cargar la información de este dispositivo.';
 
   @override
   String get deviceStatus => 'Estado';
@@ -395,22 +428,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get logoutCurrentDevice => 'Cerrar sesión en este dispositivo';
 
   @override
-  String get logoutCurrentDeviceSubtitle => 'Tu sesión de PayFlow se cerrará en este dispositivo.';
+  String get logoutCurrentDeviceSubtitle =>
+      'Tu sesión de PayFlow se cerrará en este dispositivo.';
 
   @override
   String get logoutCurrentDeviceConfirmTitle => '¿Cerrar sesión?';
 
   @override
-  String get logoutCurrentDeviceConfirmMessage => 'Tendrás que iniciar sesión de nuevo para acceder a PayFlow en este dispositivo.';
+  String get logoutCurrentDeviceConfirmMessage =>
+      'Tendrás que iniciar sesión de nuevo para acceder a PayFlow en este dispositivo.';
 
   @override
-  String get logoutCurrentDeviceNetworkError => 'No se puede cerrar la sesión. Comprueba tu conexión e inténtalo de nuevo.';
+  String get logoutCurrentDeviceNetworkError =>
+      'No se puede cerrar la sesión. Comprueba tu conexión e inténtalo de nuevo.';
 
   @override
-  String get logoutCurrentDeviceServerError => 'El servicio de cierre de sesión no está disponible temporalmente.';
+  String get logoutCurrentDeviceServerError =>
+      'El servicio de cierre de sesión no está disponible temporalmente.';
 
   @override
-  String get logoutCurrentDeviceUnexpectedError => 'No se puede cerrar la sesión ahora.';
+  String get logoutCurrentDeviceUnexpectedError =>
+      'No se puede cerrar la sesión ahora.';
 
   @override
   String get homeWelcome => 'Bienvenido/a,';
@@ -425,7 +463,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeExchangeRate => 'Tipo de cambio';
 
   @override
-  String get homeNoRateAvailable => 'No hay ningún tipo de cambio disponible actualmente';
+  String get homeNoRateAvailable =>
+      'No hay ningún tipo de cambio disponible actualmente';
 
   @override
   String get homeMainCurrency => 'Moneda principal';
@@ -458,13 +497,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeRetry => 'Reintentar';
 
   @override
-  String get homeNetworkError => 'Comprueba tu conexión a Internet e inténtalo de nuevo.';
+  String get homeNetworkError =>
+      'Comprueba tu conexión a Internet e inténtalo de nuevo.';
 
   @override
-  String get homeTimeoutError => 'El servidor tarda demasiado en responder. Inténtalo de nuevo.';
+  String get homeTimeoutError =>
+      'El servidor tarda demasiado en responder. Inténtalo de nuevo.';
 
   @override
-  String get homeServerError => 'Se produjo un error del servidor. Inténtalo de nuevo en unos instantes.';
+  String get homeServerError =>
+      'Se produjo un error del servidor. Inténtalo de nuevo en unos instantes.';
 
   @override
   String get homeSessionExpiredError => 'Tu sesión ha caducado.';
@@ -515,7 +557,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferAction => 'Transferir';
 
   @override
-  String get homeSelectBeneficiaryHint => 'Selecciona un beneficiario a continuación o inicia una transferencia.';
+  String get homeSelectBeneficiaryHint =>
+      'Selecciona un beneficiario a continuación o inicia una transferencia.';
 
   @override
   String get homeSelectedBeneficiary => 'Beneficiario seleccionado';
@@ -539,16 +582,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exchangeRatesSearchHint => 'Buscar por país o moneda';
 
   @override
-  String get exchangeRatesEmpty => 'Actualmente no hay tipos de cambio disponibles.';
+  String get exchangeRatesEmpty =>
+      'Actualmente no hay tipos de cambio disponibles.';
 
   @override
-  String get exchangeRatesNoSearchResult => 'Ningún tipo de cambio coincide con tu búsqueda.';
+  String get exchangeRatesNoSearchResult =>
+      'Ningún tipo de cambio coincide con tu búsqueda.';
 
   @override
-  String get exchangeRatesLoadError => 'No se pueden cargar los tipos de cambio.';
+  String get exchangeRatesLoadError =>
+      'No se pueden cargar los tipos de cambio.';
 
   @override
-  String get exchangeRatesRefreshError => 'No se pueden actualizar los tipos de cambio.';
+  String get exchangeRatesRefreshError =>
+      'No se pueden actualizar los tipos de cambio.';
 
   @override
   String get exchangeRatesRetry => 'Intentar de nuevo';
@@ -559,7 +606,11 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String exchangeRateEquation(String sourceCurrency, String rate, String targetCurrency) {
+  String exchangeRateEquation(
+    String sourceCurrency,
+    String rate,
+    String targetCurrency,
+  ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
 
@@ -618,7 +669,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferSentTotalLabel => 'Total enviado por moneda';
 
   @override
-  String get transferHistoryEmpty => 'Ninguna transferencia coincide con tu búsqueda.';
+  String get transferHistoryEmpty =>
+      'Ninguna transferencia coincide con tu búsqueda.';
 
   @override
   String get transferLoadMore => 'Cargar más';
@@ -683,22 +735,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferTotalAmount => 'Importe total';
 
   @override
-  String get transferTimelineUnavailable => 'El seguimiento detallado no está disponible para esta transferencia.';
+  String get transferTimelineUnavailable =>
+      'El seguimiento detallado no está disponible para esta transferencia.';
 
   @override
-  String get transferTrackingCompleted => 'Los fondos se han entregado al beneficiario.';
+  String get transferTrackingCompleted =>
+      'Los fondos se han entregado al beneficiario.';
 
   @override
-  String get transferTrackingFailed => 'La transferencia ha fallado. El seguimiento disponible no especifica la situación del débito o del reembolso.';
+  String get transferTrackingFailed =>
+      'La transferencia ha fallado. El seguimiento disponible no especifica la situación del débito o del reembolso.';
 
   @override
-  String get transferTrackingCancelled => 'La transferencia está cancelada. El seguimiento disponible no especifica la situación del débito o del reembolso.';
+  String get transferTrackingCancelled =>
+      'La transferencia está cancelada. El seguimiento disponible no especifica la situación del débito o del reembolso.';
 
   @override
-  String get transferTrackingRefunded => 'La transferencia aparece como reembolsada.';
+  String get transferTrackingRefunded =>
+      'La transferencia aparece como reembolsada.';
 
   @override
-  String get transferTrackingPending => 'La transferencia se está procesando. La recepción aún no se ha confirmado.';
+  String get transferTrackingPending =>
+      'La transferencia se está procesando. La recepción aún no se ha confirmado.';
 
   @override
   String get transferYearLabel => 'Año';
@@ -770,28 +828,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get contactNameTooLong => 'Máximo 120 caracteres';
 
   @override
-  String get contactPhoneInvalid => 'Introduce el número con su prefijo internacional, p. ej., +237…';
+  String get contactPhoneInvalid =>
+      'Introduce el número con su prefijo internacional, p. ej., +237…';
 
   @override
-  String get contactNoOperators => 'No hay operadores de dinero móvil disponibles.';
+  String get contactNoOperators =>
+      'No hay operadores de dinero móvil disponibles.';
 
   @override
   String get contactNetworkError => 'Conexión no disponible. Comprueba tu red.';
 
   @override
-  String get contactSessionError => 'Tu sesión ha caducado. Inicia sesión de nuevo.';
+  String get contactSessionError =>
+      'Tu sesión ha caducado. Inicia sesión de nuevo.';
 
   @override
-  String get contactInvalidError => 'Comprueba el teléfono, el país y el operador. Un contacto con varios destinos no puede cambiar de país aquí.';
+  String get contactInvalidError =>
+      'Comprueba el teléfono, el país y el operador. Un contacto con varios destinos no puede cambiar de país aquí.';
 
   @override
-  String get contactNotFoundError => 'Este beneficiario u operador ya no está disponible.';
+  String get contactNotFoundError =>
+      'Este beneficiario u operador ya no está disponible.';
 
   @override
-  String get contactServerError => 'No se puede completar esta acción. Inténtalo de nuevo.';
+  String get contactServerError =>
+      'No se puede completar esta acción. Inténtalo de nuevo.';
 
   @override
-  String get contactUnavailable => 'Este destino no se puede editar en el formulario de dinero móvil.';
+  String get contactUnavailable =>
+      'Este destino no se puede editar en el formulario de dinero móvil.';
 
   @override
   String get transferSendTitle => 'Enviar dinero';
@@ -815,7 +880,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferCurrentRate => 'Tipo de cambio';
 
   @override
-  String get transferChooseForQuote => 'Elige un beneficiario para calcular el tipo y las comisiones.';
+  String get transferChooseForQuote =>
+      'Elige un beneficiario para calcular el tipo y las comisiones.';
 
   @override
   String get transferContinue => 'Continuar';
@@ -824,25 +890,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferReviewTitle => 'Revisa tu transferencia';
 
   @override
-  String get transferTrustWarning => '¿Conoces a esta persona? Asegúrate de enviar dinero a alguien de confianza y de que sus datos sean correctos.';
+  String get transferTrustWarning =>
+      '¿Conoces a esta persona? Asegúrate de enviar dinero a alguien de confianza y de que sus datos sean correctos.';
 
   @override
   String get transferConfirm => 'Confirmar transferencia';
 
   @override
-  String get transferInvalidError => 'Comprueba el beneficiario y el importe introducido.';
+  String get transferInvalidError =>
+      'Comprueba el beneficiario y el importe introducido.';
 
   @override
-  String get transferBeneficiaryUnavailable => 'Este beneficiario o destino ya no está disponible.';
+  String get transferBeneficiaryUnavailable =>
+      'Este beneficiario o destino ya no está disponible.';
 
   @override
-  String get transferConflictError => 'Esta transferencia ya se ha confirmado o ya no puede utilizarse.';
+  String get transferConflictError =>
+      'Esta transferencia ya se ha confirmado o ya no puede utilizarse.';
 
   @override
-  String get transferQuoteExpired => 'El tipo ha caducado. Se calculará una nueva cotización.';
+  String get transferQuoteExpired =>
+      'El tipo ha caducado. Se calculará una nueva cotización.';
 
   @override
-  String get transferUnavailableError => 'Esta transferencia no está disponible para este beneficiario o importe.';
+  String get transferUnavailableError =>
+      'Esta transferencia no está disponible para este beneficiario o importe.';
 
   @override
   String get systemLanguage => 'Idioma del dispositivo';
@@ -875,13 +947,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newPasswordRequired => 'Introduce una nueva contraseña';
 
   @override
-  String get newPasswordUnchanged => 'La nueva contraseña debe ser diferente de la contraseña actual.';
+  String get newPasswordUnchanged =>
+      'La nueva contraseña debe ser diferente de la contraseña actual.';
 
   @override
   String get confirmNewPasswordRequired => 'Confirma tu nueva contraseña';
 
   @override
-  String get passwordChangeSessionInfo => 'Por tu seguridad, se cerrará la sesión en todos los demás dispositivos. Este dispositivo seguirá conectado.';
+  String get passwordChangeSessionInfo =>
+      'Por tu seguridad, se cerrará la sesión en todos los demás dispositivos. Este dispositivo seguirá conectado.';
 
   @override
   String get changePasswordAction => 'Cambiar contraseña';
@@ -890,21 +964,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get passwordChangedTitle => 'Contraseña cambiada';
 
   @override
-  String get passwordChangedMessage => 'Tu contraseña ha sido cambiada. Se ha cerrado la sesión en tus otros dispositivos.';
+  String get passwordChangedMessage =>
+      'Tu contraseña ha sido cambiada. Se ha cerrado la sesión en tus otros dispositivos.';
 
   @override
   String get continueAction => 'Continuar';
 
   @override
-  String get passwordLoginUnavailable => 'Esta cuenta utiliza un proveedor de acceso externo y no tiene una contraseña de PayFlow.';
+  String get passwordLoginUnavailable =>
+      'Esta cuenta utiliza un proveedor de acceso externo y no tiene una contraseña de PayFlow.';
 
   @override
-  String get changePasswordNetworkError => 'No se puede cambiar la contraseña. Comprueba tu conexión.';
+  String get changePasswordNetworkError =>
+      'No se puede cambiar la contraseña. Comprueba tu conexión.';
 
   @override
-  String get changePasswordServerError => 'El servicio de cambio de contraseña no está disponible temporalmente.';
+  String get changePasswordServerError =>
+      'El servicio de cambio de contraseña no está disponible temporalmente.';
 
   @override
-  String get changePasswordUnexpectedError => 'No se puede cambiar la contraseña en este momento.';
-
+  String get changePasswordUnexpectedError =>
+      'No se puede cambiar la contraseña en este momento.';
 }

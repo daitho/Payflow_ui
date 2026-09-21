@@ -1764,35 +1764,131 @@ abstract class AppLocalizations {
   /// **'This transfer is not available for this beneficiary or amount.'**
   String get transferUnavailableError;
 
-  /// Uses the language configured by the device.
+  /// No description provided for @systemLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Device language'**
   String get systemLanguage;
 
-  /// The Spanish language label.
+  /// No description provided for @spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
   String get spanish;
 
-  /// The Mandarin Chinese language label.
+  /// No description provided for @mandarin.
+  ///
+  /// In en, this message translates to:
+  /// **'Mandarin Chinese'**
   String get mandarin;
 
-  /// The Hindi language label.
+  /// No description provided for @hindi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindi'**
   String get hindi;
-  String get currentPassword;
-  String get newPassword;
-  String get confirmNewPassword;
-  String get currentPasswordRequired;
-  String get currentPasswordIncorrect;
-  String get newPasswordRequired;
-  String get newPasswordUnchanged;
-  String get confirmNewPasswordRequired;
-  String get passwordChangeSessionInfo;
-  String get changePasswordAction;
-  String get passwordChangedTitle;
-  String get passwordChangedMessage;
-  String get continueAction;
-  String get passwordLoginUnavailable;
-  String get changePasswordNetworkError;
-  String get changePasswordServerError;
-  String get changePasswordUnexpectedError;
 
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @currentPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current password'**
+  String get currentPasswordRequired;
+
+  /// No description provided for @currentPasswordIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'The current password is incorrect.'**
+  String get currentPasswordIncorrect;
+
+  /// No description provided for @newPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a new password'**
+  String get newPasswordRequired;
+
+  /// No description provided for @newPasswordUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The new password must be different from the current password.'**
+  String get newPasswordUnchanged;
+
+  /// No description provided for @confirmNewPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your new password'**
+  String get confirmNewPasswordRequired;
+
+  /// No description provided for @passwordChangeSessionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'For your security, all other devices will be signed out. This device will remain signed in.'**
+  String get passwordChangeSessionInfo;
+
+  /// No description provided for @changePasswordAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePasswordAction;
+
+  /// No description provided for @passwordChangedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed'**
+  String get passwordChangedTitle;
+
+  /// No description provided for @passwordChangedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been changed. Your other devices have been signed out.'**
+  String get passwordChangedMessage;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @passwordLoginUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This account uses an external sign-in provider and does not have a PayFlow password.'**
+  String get passwordLoginUnavailable;
+
+  /// No description provided for @changePasswordNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to change the password. Check your connection.'**
+  String get changePasswordNetworkError;
+
+  /// No description provided for @changePasswordServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'The password service is temporarily unavailable.'**
+  String get changePasswordServerError;
+
+  /// No description provided for @changePasswordUnexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to change the password right now.'**
+  String get changePasswordUnexpectedError;
 }
 
 class _AppLocalizationsDelegate

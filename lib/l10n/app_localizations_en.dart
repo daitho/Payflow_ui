@@ -902,6 +902,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transferUnavailableError =>
       'This transfer is not available for this beneficiary or amount.';
+
   @override
   String get systemLanguage => 'Device language';
 
@@ -913,6 +914,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hindi => 'Hindi';
+
   @override
   String get currentPassword => 'Current password';
 
@@ -932,13 +934,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newPasswordRequired => 'Please enter a new password';
 
   @override
-  String get newPasswordUnchanged => 'The new password must be different from the current password.';
+  String get newPasswordUnchanged =>
+      'The new password must be different from the current password.';
 
   @override
   String get confirmNewPasswordRequired => 'Please confirm your new password';
 
   @override
-  String get passwordChangeSessionInfo => 'For your security, all other devices will be signed out. This device will remain signed in.';
+  String get passwordChangeSessionInfo =>
+      'For your security, all other devices will be signed out. This device will remain signed in.';
 
   @override
   String get changePasswordAction => 'Change password';
@@ -947,21 +951,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordChangedTitle => 'Password changed';
 
   @override
-  String get passwordChangedMessage => 'Your password has been changed. Your other devices have been signed out.';
+  String get passwordChangedMessage =>
+      'Your password has been changed. Your other devices have been signed out.';
 
   @override
   String get continueAction => 'Continue';
 
   @override
-  String get passwordLoginUnavailable => 'This account uses an external sign-in provider and does not have a PayFlow password.';
+  String get passwordLoginUnavailable =>
+      'This account uses an external sign-in provider and does not have a PayFlow password.';
 
   @override
-  String get changePasswordNetworkError => 'Unable to change the password. Check your connection.';
+  String get changePasswordNetworkError =>
+      'Unable to change the password. Check your connection.';
 
   @override
-  String get changePasswordServerError => 'The password service is temporarily unavailable.';
+  String get changePasswordServerError =>
+      'The password service is temporarily unavailable.';
 
   @override
-  String get changePasswordUnexpectedError => 'Unable to change the password right now.';
-
+  String get changePasswordUnexpectedError =>
+      'Unable to change the password right now.';
 }
