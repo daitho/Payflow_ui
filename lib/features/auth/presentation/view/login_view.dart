@@ -9,6 +9,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../view_model/login_error_type.dart';
 import '../view_model/login_view_model.dart';
 import '../../domain/model/verification_challenge_model.dart';
+import 'verification_copy.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -628,7 +629,7 @@ class _LoginViewState extends State<LoginView> {
       case LoginErrorType.invalidCredentials:
         return l10n.invalidCredentials;
       case LoginErrorType.identifierNotVerified:
-        return _verificationRequiredMessage();
+        return VerificationCopy.of(context).recoveryMessage;
       case LoginErrorType.network:
         return l10n.loginNetworkError;
       case LoginErrorType.timeout:
@@ -643,19 +644,20 @@ class _LoginViewState extends State<LoginView> {
   Future<void> _offerVerificationRecovery(
     LoginViewModel viewModel,
   ) async {
+    final copy = VerificationCopy.of(context);
     final bool? resume = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(_verificationRequiredTitle()),
-        content: Text(_verificationRequiredMessage()),
+        title: Text(copy.recoveryTitle),
+        content: Text(copy.recoveryMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(_cancelLabel()),
+            child: Text(copy.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(_resumeLabel()),
+            child: Text(copy.recoveryAction),
           ),
         ],
       ),
@@ -681,46 +683,6 @@ class _LoginViewState extends State<LoginView> {
       AppRoutes.verifyRegistration,
       extra: challenge,
     );
-  }
-
-  String _verificationRequiredTitle() {
-    return switch (Localizations.localeOf(context).languageCode) {
-      'en' => 'Verification required',
-      'es' => 'Verificación necesaria',
-      'zh' => '需要验证',
-      'hi' => 'सत्यापन आवश्यक है',
-      _ => 'Vérification nécessaire',
-    };
-  }
-
-  String _verificationRequiredMessage() {
-    return switch (Localizations.localeOf(context).languageCode) {
-      'en' => 'This identifier has not been verified. Resume verification to sign in.',
-      'es' => 'Este identificador no está verificado. Reanuda la verificación para iniciar sesión.',
-      'zh' => '此登录标识尚未验证。请继续验证后登录。',
-      'hi' => 'यह पहचानकर्ता सत्यापित नहीं है। साइन इन करने के लिए सत्यापन जारी रखें।',
-      _ => "Cet identifiant n'est pas encore vérifié. Reprenez la vérification pour vous connecter.",
-    };
-  }
-
-  String _resumeLabel() {
-    return switch (Localizations.localeOf(context).languageCode) {
-      'en' => 'Resume verification',
-      'es' => 'Reanudar',
-      'zh' => '继续验证',
-      'hi' => 'सत्यापन जारी रखें',
-      _ => 'Reprendre la vérification',
-    };
-  }
-
-  String _cancelLabel() {
-    return switch (Localizations.localeOf(context).languageCode) {
-      'en' => 'Cancel',
-      'es' => 'Cancelar',
-      'zh' => '取消',
-      'hi' => 'रद्द करें',
-      _ => 'Annuler',
-    };
   }
 
   // =========================================================

@@ -16,6 +16,10 @@ class VerificationCopy {
   final String networkError;
   final String unexpectedError;
   final String securityNote;
+  final String recoveryTitle;
+  final String recoveryMessage;
+  final String recoveryAction;
+  final String cancel;
 
   const VerificationCopy({
     required this.emailTitle,
@@ -33,6 +37,10 @@ class VerificationCopy {
     required this.networkError,
     required this.unexpectedError,
     required this.securityNote,
+    required this.recoveryTitle,
+    required this.recoveryMessage,
+    required this.recoveryAction,
+    required this.cancel,
   });
 
   static VerificationCopy of(BuildContext context) {
@@ -59,6 +67,10 @@ class VerificationCopy {
       networkError: 'Vérifiez votre connexion internet.',
       unexpectedError: 'Une erreur est survenue. Réessayez.',
       securityNote: 'Ne communiquez jamais ce code, même à un conseiller PayFlow.',
+      recoveryTitle: 'Vérification nécessaire',
+      recoveryMessage: "Cet identifiant n'est pas encore vérifié. Reprenez la vérification pour vous connecter.",
+      recoveryAction: 'Reprendre la vérification',
+      cancel: 'Annuler',
     ),
     'en': VerificationCopy(
       emailTitle: 'Verify your email address',
@@ -76,6 +88,10 @@ class VerificationCopy {
       networkError: 'Check your internet connection.',
       unexpectedError: 'Something went wrong. Try again.',
       securityNote: 'Never share this code, even with a PayFlow adviser.',
+      recoveryTitle: 'Verification required',
+      recoveryMessage: 'This identifier has not been verified. Resume verification to sign in.',
+      recoveryAction: 'Resume verification',
+      cancel: 'Cancel',
     ),
     'es': VerificationCopy(
       emailTitle: 'Verifica tu correo electrónico',
@@ -93,6 +109,10 @@ class VerificationCopy {
       networkError: 'Comprueba tu conexión a internet.',
       unexpectedError: 'Se produjo un error. Inténtalo de nuevo.',
       securityNote: 'Nunca compartas este código, ni siquiera con PayFlow.',
+      recoveryTitle: 'Verificación necesaria',
+      recoveryMessage: 'Este identificador no está verificado. Reanuda la verificación para iniciar sesión.',
+      recoveryAction: 'Reanudar',
+      cancel: 'Cancelar',
     ),
     'zh': VerificationCopy(
       emailTitle: '验证电子邮箱',
@@ -110,6 +130,10 @@ class VerificationCopy {
       networkError: '请检查您的网络连接。',
       unexpectedError: '发生错误，请重试。',
       securityNote: '切勿向任何人透露此验证码，包括PayFlow工作人员。',
+      recoveryTitle: '需要验证',
+      recoveryMessage: '此登录标识尚未验证。请继续验证后登录。',
+      recoveryAction: '继续验证',
+      cancel: '取消',
     ),
     'hi': VerificationCopy(
       emailTitle: 'अपना ईमेल सत्यापित करें',
@@ -127,6 +151,10 @@ class VerificationCopy {
       networkError: 'अपना इंटरनेट कनेक्शन जाँचें।',
       unexpectedError: 'एक त्रुटि हुई। फिर प्रयास करें।',
       securityNote: 'यह कोड किसी से साझा न करें, PayFlow सलाहकार से भी नहीं।',
+      recoveryTitle: 'सत्यापन आवश्यक है',
+      recoveryMessage: 'यह पहचानकर्ता सत्यापित नहीं है। साइन इन करने के लिए सत्यापन जारी रखें।',
+      recoveryAction: 'सत्यापन जारी रखें',
+      cancel: 'रद्द करें',
     ),
   };
 }
