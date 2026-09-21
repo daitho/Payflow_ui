@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -58,7 +60,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get signingIn => 'साइन इन हो रहा है…';
 
   @override
-  String get signingInError => 'लॉगिन त्रुटि: कृपया अपना ईमेल या पासवर्ड जाँचें…';
+  String get signingInError =>
+      'लॉगिन त्रुटि: कृपया अपना ईमेल या पासवर्ड जाँचें…';
 
   @override
   String get forgotPasswordMessage => 'पासवर्ड पुनर्प्राप्ति';
@@ -153,7 +156,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get selectCountry => 'देश चुनें';
 
   @override
-  String get startupConnectionError => 'PayFlow से कनेक्ट नहीं हो सका। अपना कनेक्शन जाँचें और फिर प्रयास करें।';
+  String get startupConnectionError =>
+      'PayFlow से कनेक्ट नहीं हो सका। अपना कनेक्शन जाँचें और फिर प्रयास करें।';
 
   @override
   String get retry => 'फिर प्रयास करें';
@@ -162,16 +166,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String get invalidCredentials => 'ईमेल या पासवर्ड गलत है।';
 
   @override
-  String get loginNetworkError => 'PayFlow से कनेक्ट नहीं हो सका। अपना इंटरनेट कनेक्शन जाँचें।';
+  String get loginNetworkError =>
+      'PayFlow से कनेक्ट नहीं हो सका। अपना इंटरनेट कनेक्शन जाँचें।';
 
   @override
-  String get loginTimeoutError => 'PayFlow को उत्तर देने में बहुत समय लग रहा है। फिर प्रयास करें।';
+  String get loginTimeoutError =>
+      'PayFlow को उत्तर देने में बहुत समय लग रहा है। फिर प्रयास करें।';
 
   @override
-  String get loginServerError => 'PayFlow अस्थायी रूप से उपलब्ध नहीं है। थोड़ी देर बाद फिर प्रयास करें।';
+  String get loginServerError =>
+      'PayFlow अस्थायी रूप से उपलब्ध नहीं है। थोड़ी देर बाद फिर प्रयास करें।';
 
   @override
-  String get loginUnexpectedError => 'एक अनपेक्षित त्रुटि हुई। फिर प्रयास करें।';
+  String get loginUnexpectedError =>
+      'एक अनपेक्षित त्रुटि हुई। फिर प्रयास करें।';
 
   @override
   String get profile => 'प्रोफ़ाइल';
@@ -192,13 +200,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get accountInformation => 'खाता जानकारी';
 
   @override
-  String get accountInformationSubtitle => 'अपनी व्यक्तिगत जानकारी प्रबंधित करें';
+  String get accountInformationSubtitle =>
+      'अपनी व्यक्तिगत जानकारी प्रबंधित करें';
 
   @override
   String get verificationAndLimits => 'सत्यापन और सीमाएँ';
 
   @override
-  String get verificationAndLimitsSubtitle => 'अपना सत्यापन स्तर और सीमाएँ देखें';
+  String get verificationAndLimitsSubtitle =>
+      'अपना सत्यापन स्तर और सीमाएँ देखें';
 
   @override
   String get security => 'सुरक्षा';
@@ -216,7 +226,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get notificationPreferences => 'सूचना प्राथमिकताएँ';
 
   @override
-  String get notificationPreferencesSubtitle => 'अपने अलर्ट और संदेश प्रबंधित करें';
+  String get notificationPreferencesSubtitle =>
+      'अपने अलर्ट और संदेश प्रबंधित करें';
 
   @override
   String get language => 'भाषा';
@@ -276,34 +287,42 @@ class AppLocalizationsHi extends AppLocalizations {
   String get disconnectOtherDevicesSubtitle => 'अन्य सभी सत्र निरस्त करें';
 
   @override
-  String get biometricPrivacyInfo => 'आपका बायोमेट्रिक डेटा आपके डिवाइस पर ही रहता है। PayFlow को आपका चेहरा या फ़िंगरप्रिंट कभी प्राप्त नहीं होता।';
+  String get biometricPrivacyInfo =>
+      'आपका बायोमेट्रिक डेटा आपके डिवाइस पर ही रहता है। PayFlow को आपका चेहरा या फ़िंगरप्रिंट कभी प्राप्त नहीं होता।';
 
   @override
   String get checkingBiometrics => 'बायोमेट्रिक प्रमाणीकरण जाँचा जा रहा है…';
 
   @override
-  String get biometricsUnavailable => 'इस डिवाइस पर कोई बायोमेट्रिक प्रमाणीकरण कॉन्फ़िगर नहीं है।';
+  String get biometricsUnavailable =>
+      'इस डिवाइस पर कोई बायोमेट्रिक प्रमाणीकरण कॉन्फ़िगर नहीं है।';
 
   @override
-  String get enableBiometricsReason => 'PayFlow बायोमेट्रिक्स चालू करने के लिए प्रमाणित करें।';
+  String get enableBiometricsReason =>
+      'PayFlow बायोमेट्रिक्स चालू करने के लिए प्रमाणित करें।';
 
   @override
-  String get disableBiometricsReason => 'PayFlow बायोमेट्रिक्स बंद करने के लिए प्रमाणित करें।';
+  String get disableBiometricsReason =>
+      'PayFlow बायोमेट्रिक्स बंद करने के लिए प्रमाणित करें।';
 
   @override
-  String get biometricAuthenticationFailed => 'बायोमेट्रिक प्रमाणीकरण पूरा नहीं हुआ।';
+  String get biometricAuthenticationFailed =>
+      'बायोमेट्रिक प्रमाणीकरण पूरा नहीं हुआ।';
 
   @override
-  String get biometricTechnicalError => 'अभी बायोमेट्रिक सेटिंग बदली नहीं जा सकती।';
+  String get biometricTechnicalError =>
+      'अभी बायोमेट्रिक सेटिंग बदली नहीं जा सकती।';
 
   @override
-  String get unlockPayFlowBiometricReason => 'PayFlow खोलने के लिए प्रमाणित करें।';
+  String get unlockPayFlowBiometricReason =>
+      'PayFlow खोलने के लिए प्रमाणित करें।';
 
   @override
   String get biometricUnlockFailed => 'बायोमेट्रिक प्रमाणीकरण पूरा नहीं हुआ।';
 
   @override
-  String get biometricUnlockUnavailable => 'PayFlow के लिए चालू बायोमेट्रिक्स अब इस डिवाइस पर उपलब्ध नहीं है।';
+  String get biometricUnlockUnavailable =>
+      'PayFlow के लिए चालू बायोमेट्रिक्स अब इस डिवाइस पर उपलब्ध नहीं है।';
 
   @override
   String get retryBiometric => 'फिर प्रयास करें';
@@ -353,25 +372,31 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sessionRevokedSuccess => 'डिवाइस डिस्कनेक्ट कर दिया गया है।';
 
   @override
-  String get activeSessionsNetworkError => 'सत्र लोड नहीं हो सके। अपना कनेक्शन जाँचें।';
+  String get activeSessionsNetworkError =>
+      'सत्र लोड नहीं हो सके। अपना कनेक्शन जाँचें।';
 
   @override
-  String get activeSessionsUnauthorized => 'आपका सत्र अब मान्य नहीं है। कृपया फिर से साइन इन करें।';
+  String get activeSessionsUnauthorized =>
+      'आपका सत्र अब मान्य नहीं है। कृपया फिर से साइन इन करें।';
 
   @override
   String get activeSessionsServerError => 'सेवा अस्थायी रूप से उपलब्ध नहीं है।';
 
   @override
-  String get activeSessionsUnexpectedError => 'अभी सत्र प्रबंधित नहीं किए जा सकते।';
+  String get activeSessionsUnexpectedError =>
+      'अभी सत्र प्रबंधित नहीं किए जा सकते।';
 
   @override
-  String get disconnectOtherDevicesConfirmTitle => 'अन्य डिवाइस डिस्कनेक्ट करें?';
+  String get disconnectOtherDevicesConfirmTitle =>
+      'अन्य डिवाइस डिस्कनेक्ट करें?';
 
   @override
-  String get disconnectOtherDevicesConfirmMessage => 'आपके अन्य सभी PayFlow सत्र बंद हो जाएँगे। यह डिवाइस साइन इन रहेगा।';
+  String get disconnectOtherDevicesConfirmMessage =>
+      'आपके अन्य सभी PayFlow सत्र बंद हो जाएँगे। यह डिवाइस साइन इन रहेगा।';
 
   @override
-  String get disconnectOtherDevicesSuccess => 'अन्य डिवाइस डिस्कनेक्ट कर दिए गए हैं।';
+  String get disconnectOtherDevicesSuccess =>
+      'अन्य डिवाइस डिस्कनेक्ट कर दिए गए हैं।';
 
   @override
   String get currentDeviceTitle => 'यह डिवाइस';
@@ -395,19 +420,23 @@ class AppLocalizationsHi extends AppLocalizations {
   String get logoutCurrentDevice => 'इस डिवाइस से साइन आउट करें';
 
   @override
-  String get logoutCurrentDeviceSubtitle => 'इस डिवाइस पर आपका PayFlow सत्र बंद हो जाएगा।';
+  String get logoutCurrentDeviceSubtitle =>
+      'इस डिवाइस पर आपका PayFlow सत्र बंद हो जाएगा।';
 
   @override
   String get logoutCurrentDeviceConfirmTitle => 'साइन आउट करें?';
 
   @override
-  String get logoutCurrentDeviceConfirmMessage => 'इस डिवाइस पर PayFlow खोलने के लिए आपको फिर से साइन इन करना होगा।';
+  String get logoutCurrentDeviceConfirmMessage =>
+      'इस डिवाइस पर PayFlow खोलने के लिए आपको फिर से साइन इन करना होगा।';
 
   @override
-  String get logoutCurrentDeviceNetworkError => 'साइन आउट नहीं हो सका। अपना कनेक्शन जाँचें और फिर प्रयास करें।';
+  String get logoutCurrentDeviceNetworkError =>
+      'साइन आउट नहीं हो सका। अपना कनेक्शन जाँचें और फिर प्रयास करें।';
 
   @override
-  String get logoutCurrentDeviceServerError => 'साइन-आउट सेवा अस्थायी रूप से उपलब्ध नहीं है।';
+  String get logoutCurrentDeviceServerError =>
+      'साइन-आउट सेवा अस्थायी रूप से उपलब्ध नहीं है।';
 
   @override
   String get logoutCurrentDeviceUnexpectedError => 'अभी साइन आउट नहीं हो सकता।';
@@ -458,13 +487,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get homeRetry => 'फिर प्रयास करें';
 
   @override
-  String get homeNetworkError => 'अपना इंटरनेट कनेक्शन जाँचें और फिर प्रयास करें।';
+  String get homeNetworkError =>
+      'अपना इंटरनेट कनेक्शन जाँचें और फिर प्रयास करें।';
 
   @override
-  String get homeTimeoutError => 'सर्वर को उत्तर देने में बहुत समय लग रहा है। फिर प्रयास करें।';
+  String get homeTimeoutError =>
+      'सर्वर को उत्तर देने में बहुत समय लग रहा है। फिर प्रयास करें।';
 
   @override
-  String get homeServerError => 'सर्वर में त्रुटि हुई। कुछ देर बाद फिर प्रयास करें।';
+  String get homeServerError =>
+      'सर्वर में त्रुटि हुई। कुछ देर बाद फिर प्रयास करें।';
 
   @override
   String get homeSessionExpiredError => 'आपका सत्र समाप्त हो गया है।';
@@ -515,7 +547,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferAction => 'हस्तांतरण';
 
   @override
-  String get homeSelectBeneficiaryHint => 'नीचे किसी लाभार्थी को चुनें या नया हस्तांतरण शुरू करें।';
+  String get homeSelectBeneficiaryHint =>
+      'नीचे किसी लाभार्थी को चुनें या नया हस्तांतरण शुरू करें।';
 
   @override
   String get homeSelectedBeneficiary => 'चयनित लाभार्थी';
@@ -542,7 +575,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get exchangeRatesEmpty => 'अभी कोई विनिमय दर उपलब्ध नहीं है।';
 
   @override
-  String get exchangeRatesNoSearchResult => 'आपकी खोज से कोई विनिमय दर मेल नहीं खाती।';
+  String get exchangeRatesNoSearchResult =>
+      'आपकी खोज से कोई विनिमय दर मेल नहीं खाती।';
 
   @override
   String get exchangeRatesLoadError => 'विनिमय दरें लोड नहीं हो सकीं।';
@@ -559,7 +593,11 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String exchangeRateEquation(String sourceCurrency, String rate, String targetCurrency) {
+  String exchangeRateEquation(
+    String sourceCurrency,
+    String rate,
+    String targetCurrency,
+  ) {
     return '1 $sourceCurrency = $rate $targetCurrency';
   }
 
@@ -683,22 +721,27 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferTotalAmount => 'कुल राशि';
 
   @override
-  String get transferTimelineUnavailable => 'इस हस्तांतरण के लिए विस्तृत ट्रैकिंग उपलब्ध नहीं है।';
+  String get transferTimelineUnavailable =>
+      'इस हस्तांतरण के लिए विस्तृत ट्रैकिंग उपलब्ध नहीं है।';
 
   @override
   String get transferTrackingCompleted => 'राशि लाभार्थी को पहुँचा दी गई है।';
 
   @override
-  String get transferTrackingFailed => 'हस्तांतरण विफल रहा। उपलब्ध ट्रैकिंग डेबिट या धनवापसी की स्थिति नहीं बताती।';
+  String get transferTrackingFailed =>
+      'हस्तांतरण विफल रहा। उपलब्ध ट्रैकिंग डेबिट या धनवापसी की स्थिति नहीं बताती।';
 
   @override
-  String get transferTrackingCancelled => 'हस्तांतरण रद्द है। उपलब्ध ट्रैकिंग डेबिट या धनवापसी की स्थिति नहीं बताती।';
+  String get transferTrackingCancelled =>
+      'हस्तांतरण रद्द है। उपलब्ध ट्रैकिंग डेबिट या धनवापसी की स्थिति नहीं बताती।';
 
   @override
-  String get transferTrackingRefunded => 'हस्तांतरण को धनवापसी किया हुआ चिह्नित किया गया है।';
+  String get transferTrackingRefunded =>
+      'हस्तांतरण को धनवापसी किया हुआ चिह्नित किया गया है।';
 
   @override
-  String get transferTrackingPending => 'हस्तांतरण प्रक्रिया में है। राशि की प्राप्ति की अभी पुष्टि नहीं हुई है।';
+  String get transferTrackingPending =>
+      'हस्तांतरण प्रक्रिया में है। राशि की प्राप्ति की अभी पुष्टि नहीं हुई है।';
 
   @override
   String get transferYearLabel => 'वर्ष';
@@ -776,22 +819,27 @@ class AppLocalizationsHi extends AppLocalizations {
   String get contactNoOperators => 'कोई मोबाइल मनी ऑपरेटर उपलब्ध नहीं है।';
 
   @override
-  String get contactNetworkError => 'कनेक्शन उपलब्ध नहीं है। अपना नेटवर्क जाँचें।';
+  String get contactNetworkError =>
+      'कनेक्शन उपलब्ध नहीं है। अपना नेटवर्क जाँचें।';
 
   @override
-  String get contactSessionError => 'आपका सत्र समाप्त हो गया है। कृपया फिर से साइन इन करें।';
+  String get contactSessionError =>
+      'आपका सत्र समाप्त हो गया है। कृपया फिर से साइन इन करें।';
 
   @override
-  String get contactInvalidError => 'फ़ोन, देश और ऑपरेटर जाँचें। कई गंतव्यों वाला संपर्क यहाँ देश नहीं बदल सकता।';
+  String get contactInvalidError =>
+      'फ़ोन, देश और ऑपरेटर जाँचें। कई गंतव्यों वाला संपर्क यहाँ देश नहीं बदल सकता।';
 
   @override
   String get contactNotFoundError => 'यह लाभार्थी या ऑपरेटर अब उपलब्ध नहीं है।';
 
   @override
-  String get contactServerError => 'यह कार्रवाई पूरी नहीं हो सकी। फिर प्रयास करें।';
+  String get contactServerError =>
+      'यह कार्रवाई पूरी नहीं हो सकी। फिर प्रयास करें।';
 
   @override
-  String get contactUnavailable => 'इस गंतव्य को मोबाइल मनी फ़ॉर्म में संपादित नहीं किया जा सकता।';
+  String get contactUnavailable =>
+      'इस गंतव्य को मोबाइल मनी फ़ॉर्म में संपादित नहीं किया जा सकता।';
 
   @override
   String get transferSendTitle => 'पैसे भेजें';
@@ -815,7 +863,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferCurrentRate => 'विनिमय दर';
 
   @override
-  String get transferChooseForQuote => 'दर और शुल्क की गणना के लिए लाभार्थी चुनें।';
+  String get transferChooseForQuote =>
+      'दर और शुल्क की गणना के लिए लाभार्थी चुनें।';
 
   @override
   String get transferContinue => 'जारी रखें';
@@ -824,7 +873,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferReviewTitle => 'अपने हस्तांतरण की समीक्षा करें';
 
   @override
-  String get transferTrustWarning => 'क्या आप इस व्यक्ति को जानते हैं? सुनिश्चित करें कि आप किसी विश्वसनीय व्यक्ति को पैसे भेज रहे हैं और उसकी जानकारी सही है।';
+  String get transferTrustWarning =>
+      'क्या आप इस व्यक्ति को जानते हैं? सुनिश्चित करें कि आप किसी विश्वसनीय व्यक्ति को पैसे भेज रहे हैं और उसकी जानकारी सही है।';
 
   @override
   String get transferConfirm => 'हस्तांतरण की पुष्टि करें';
@@ -833,16 +883,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferInvalidError => 'लाभार्थी और दर्ज की गई राशि जाँचें।';
 
   @override
-  String get transferBeneficiaryUnavailable => 'यह लाभार्थी या गंतव्य अब उपलब्ध नहीं है।';
+  String get transferBeneficiaryUnavailable =>
+      'यह लाभार्थी या गंतव्य अब उपलब्ध नहीं है।';
 
   @override
-  String get transferConflictError => 'इस हस्तांतरण की पहले ही पुष्टि हो चुकी है या अब इसका उपयोग नहीं किया जा सकता।';
+  String get transferConflictError =>
+      'इस हस्तांतरण की पहले ही पुष्टि हो चुकी है या अब इसका उपयोग नहीं किया जा सकता।';
 
   @override
-  String get transferQuoteExpired => 'दर समाप्त हो गई है। नई कोटेशन की गणना की जाएगी।';
+  String get transferQuoteExpired =>
+      'दर समाप्त हो गई है। नई कोटेशन की गणना की जाएगी।';
 
   @override
-  String get transferUnavailableError => 'यह हस्तांतरण इस लाभार्थी या राशि के लिए उपलब्ध नहीं है।';
+  String get transferUnavailableError =>
+      'यह हस्तांतरण इस लाभार्थी या राशि के लिए उपलब्ध नहीं है।';
 
   @override
   String get systemLanguage => 'डिवाइस की भाषा';
@@ -875,13 +929,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get newPasswordRequired => 'कृपया नया पासवर्ड दर्ज करें';
 
   @override
-  String get newPasswordUnchanged => 'नया पासवर्ड वर्तमान पासवर्ड से अलग होना चाहिए।';
+  String get newPasswordUnchanged =>
+      'नया पासवर्ड वर्तमान पासवर्ड से अलग होना चाहिए।';
 
   @override
-  String get confirmNewPasswordRequired => 'कृपया अपने नए पासवर्ड की पुष्टि करें';
+  String get confirmNewPasswordRequired =>
+      'कृपया अपने नए पासवर्ड की पुष्टि करें';
 
   @override
-  String get passwordChangeSessionInfo => 'आपकी सुरक्षा के लिए, अन्य सभी डिवाइस से साइन आउट कर दिया जाएगा। यह डिवाइस साइन इन रहेगा।';
+  String get passwordChangeSessionInfo =>
+      'आपकी सुरक्षा के लिए, अन्य सभी डिवाइस से साइन आउट कर दिया जाएगा। यह डिवाइस साइन इन रहेगा।';
 
   @override
   String get changePasswordAction => 'पासवर्ड बदलें';
@@ -890,21 +947,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get passwordChangedTitle => 'पासवर्ड बदल दिया गया';
 
   @override
-  String get passwordChangedMessage => 'आपका पासवर्ड बदल दिया गया है। आपके अन्य डिवाइस से साइन आउट कर दिया गया है।';
+  String get passwordChangedMessage =>
+      'आपका पासवर्ड बदल दिया गया है। आपके अन्य डिवाइस से साइन आउट कर दिया गया है।';
 
   @override
   String get continueAction => 'जारी रखें';
 
   @override
-  String get passwordLoginUnavailable => 'यह खाता बाहरी साइन-इन प्रदाता का उपयोग करता है और इसमें PayFlow पासवर्ड नहीं है।';
+  String get passwordLoginUnavailable =>
+      'यह खाता बाहरी साइन-इन प्रदाता का उपयोग करता है और इसमें PayFlow पासवर्ड नहीं है।';
 
   @override
-  String get changePasswordNetworkError => 'पासवर्ड नहीं बदला जा सका। अपना कनेक्शन जाँचें।';
+  String get changePasswordNetworkError =>
+      'पासवर्ड नहीं बदला जा सका। अपना कनेक्शन जाँचें।';
 
   @override
-  String get changePasswordServerError => 'पासवर्ड सेवा अस्थायी रूप से उपलब्ध नहीं है।';
+  String get changePasswordServerError =>
+      'पासवर्ड सेवा अस्थायी रूप से उपलब्ध नहीं है।';
 
   @override
   String get changePasswordUnexpectedError => 'अभी पासवर्ड नहीं बदला जा सकता।';
-
 }
