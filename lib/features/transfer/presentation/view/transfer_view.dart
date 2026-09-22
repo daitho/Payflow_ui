@@ -217,6 +217,19 @@ class _TransferViewState extends State<TransferView> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 18),
+                      _SuggestedAmounts(
+                        title: l10n.transferSuggestedAmounts,
+                        amounts: vm.suggestedAmounts,
+                        currency: vm.sentCurrency,
+                        selectedAmount:
+                            vm.amountInput == TransferAmountInput.sent
+                            ? vm.sentAmount
+                            : null,
+                        enabled: !vm.confirming,
+                        onSelected: (amount) =>
+                            _selectSuggestedAmount(vm, amount),
+                      ),
                       const SizedBox(height: 26),
                       Text(
                         l10n.transferFundingLabel.toUpperCase(),
@@ -277,19 +290,6 @@ class _TransferViewState extends State<TransferView> {
                           onRetry: vm.canContinue ? vm.ensureQuote : null,
                         ),
                       ],
-                      const SizedBox(height: 28),
-                      _SuggestedAmounts(
-                        title: l10n.transferSuggestedAmounts,
-                        amounts: vm.suggestedAmounts,
-                        currency: vm.sentCurrency,
-                        selectedAmount:
-                            vm.amountInput == TransferAmountInput.sent
-                            ? vm.sentAmount
-                            : null,
-                        enabled: !vm.confirming,
-                        onSelected: (amount) =>
-                            _selectSuggestedAmount(vm, amount),
-                      ),
                     ],
                   ),
                 ),
