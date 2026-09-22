@@ -336,9 +336,7 @@ GoRouter _createRouter() {
         path: AppRoutes.register,
         builder: (context, state) {
           return ChangeNotifierProvider(
-            create: (_) => RegisterViewModel(
-              registerService: _registerService,
-            ),
+            create: (_) => RegisterViewModel(registerService: _registerService),
             child: const RegisterView(),
           );
         },
@@ -346,13 +344,11 @@ GoRouter _createRouter() {
 
       GoRoute(
         path: AppRoutes.verifyRegistration,
-        redirect: (context, state) =>
-            state.extra is VerificationChallengeModel
+        redirect: (context, state) => state.extra is VerificationChallengeModel
             ? null
             : AppRoutes.register,
         builder: (context, state) {
-          final challenge =
-              state.extra! as VerificationChallengeModel;
+          final challenge = state.extra! as VerificationChallengeModel;
           return ChangeNotifierProvider(
             create: (_) => VerificationViewModel(
               initialChallenge: challenge,
@@ -414,15 +410,13 @@ GoRouter _createRouter() {
       ),
       GoRoute(
         path: AppRoutes.verifyIdentifier,
-        redirect: (context, state) =>
-            state.extra is VerificationChallengeModel
+        redirect: (context, state) => state.extra is VerificationChallengeModel
             ? null
             : AppRoutes.authenticationMethods,
         builder: (context, state) {
           return ChangeNotifierProvider(
             create: (_) => VerificationViewModel(
-              initialChallenge:
-                  state.extra! as VerificationChallengeModel,
+              initialChallenge: state.extra! as VerificationChallengeModel,
               verificationService: _verificationService,
               sessionService: _sessionService,
               flow: VerificationFlow.additionalIdentifier,

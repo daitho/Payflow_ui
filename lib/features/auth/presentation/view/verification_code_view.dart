@@ -14,14 +14,11 @@ class VerificationCodeView extends StatefulWidget {
   const VerificationCodeView({super.key});
 
   @override
-  State<VerificationCodeView> createState() =>
-      _VerificationCodeViewState();
+  State<VerificationCodeView> createState() => _VerificationCodeViewState();
 }
 
-class _VerificationCodeViewState
-    extends State<VerificationCodeView> {
-  final TextEditingController _codeController =
-      TextEditingController();
+class _VerificationCodeViewState extends State<VerificationCodeView> {
+  final TextEditingController _codeController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,15 +30,12 @@ class _VerificationCodeViewState
   Widget build(BuildContext context) {
     final viewModel = context.watch<VerificationViewModel>();
     final copy = VerificationCopy.of(context);
-    final isEmail =
-        viewModel.channel == VerificationChannel.email;
+    final isEmail = viewModel.channel == VerificationChannel.email;
 
     if (_codeController.text != viewModel.code) {
       _codeController.value = TextEditingValue(
         text: viewModel.code,
-        selection: TextSelection.collapsed(
-          offset: viewModel.code.length,
-        ),
+        selection: TextSelection.collapsed(offset: viewModel.code.length),
       );
     }
 
@@ -75,9 +69,7 @@ class _VerificationCodeViewState
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isEmail
-                      ? Icons.mark_email_read_outlined
-                      : Icons.sms_outlined,
+                  isEmail ? Icons.mark_email_read_outlined : Icons.sms_outlined,
                   color: AppColors.primary,
                   size: 36,
                 ),
@@ -94,9 +86,7 @@ class _VerificationCodeViewState
               ),
               const SizedBox(height: 12),
               Text(
-                copy.sentTo +
-                    '\n' +
-                    viewModel.maskedDestination,
+                copy.sentTo + '\n' + viewModel.maskedDestination,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   height: 1.5,
@@ -110,9 +100,7 @@ class _VerificationCodeViewState
                 autofocus: true,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
-                autofillHints: const [
-                  AutofillHints.oneTimeCode,
-                ],
+                autofillHints: const [AutofillHints.oneTimeCode],
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(6),
@@ -207,36 +195,28 @@ class _VerificationCodeViewState
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
                         viewModel.canResend
                             ? copy.resend
                             : copy.resendIn +
                                   ' ' +
-                                  viewModel.secondsUntilResend
-                                      .toString() +
+                                  viewModel.secondsUntilResend.toString() +
                                   's',
                       ),
               ),
               TextButton.icon(
                 onPressed: viewModel.canResend
                     ? () => viewModel.resend(
-                          channel:
-                              viewModel.channel.alternative,
-                        )
+                        channel: viewModel.channel.alternative,
+                      )
                     : null,
                 icon: Icon(
-                  isEmail
-                      ? Icons.sms_outlined
-                      : Icons.alternate_email_rounded,
+                  isEmail ? Icons.sms_outlined : Icons.alternate_email_rounded,
                   size: 19,
                 ),
-                label: Text(
-                  isEmail ? copy.usePhone : copy.useEmail,
-                ),
+                label: Text(isEmail ? copy.usePhone : copy.useEmail),
               ),
               const SizedBox(height: 22),
               Container(
@@ -274,9 +254,7 @@ class _VerificationCodeViewState
     );
   }
 
-  Future<void> _confirm(
-    VerificationViewModel viewModel,
-  ) async {
+  Future<void> _confirm(VerificationViewModel viewModel) async {
     final success = await viewModel.confirm();
     if (!mounted || !success) return;
     if (viewModel.isRegistration) {
@@ -286,18 +264,13 @@ class _VerificationCodeViewState
     }
   }
 
-  String _error(
-    VerificationCopy copy,
-    VerificationErrorType type,
-  ) {
+  String _error(VerificationCopy copy, VerificationErrorType type) {
     return switch (type) {
       VerificationErrorType.invalidCode => copy.invalidCode,
       VerificationErrorType.expired => copy.expired,
-      VerificationErrorType.tooManyAttempts =>
-        copy.tooManyAttempts,
+      VerificationErrorType.tooManyAttempts => copy.tooManyAttempts,
       VerificationErrorType.resendTooSoon => copy.resendIn,
-      VerificationErrorType.channelUnavailable =>
-        copy.channelUnavailable,
+      VerificationErrorType.channelUnavailable => copy.channelUnavailable,
       VerificationErrorType.network => copy.networkError,
       VerificationErrorType.unexpected => copy.unexpectedError,
     };

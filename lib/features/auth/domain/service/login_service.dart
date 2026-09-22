@@ -24,6 +24,7 @@ class LoginService {
       ),
     );
   }
+
   Future<VerificationChallengeModel> recoverVerification({
     required String identifier,
     required String password,

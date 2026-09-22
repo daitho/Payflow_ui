@@ -8,12 +8,7 @@ class ChangePasswordApiService {
 
   const ChangePasswordApiService({required Dio dio}) : _dio = dio;
 
-  Future<void> changePassword(
-    ChangePasswordRequestDto request,
-  ) async {
-    await _dio.put<void>(
-      ApiEndpoints.accountPassword,
-      data: request.toJson(),
-    );
+  Future<void> changePassword(ChangePasswordRequestDto request) async {
+    await _dio.put<void>(ApiEndpoints.accountPassword, data: request.toJson());
   }
 }

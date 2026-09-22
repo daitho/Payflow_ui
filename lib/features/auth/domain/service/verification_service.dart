@@ -7,9 +7,8 @@ import '../repository/auth_repository.dart';
 class VerificationService {
   final AuthRepository _authRepository;
 
-  const VerificationService({
-    required AuthRepository authRepository,
-  }) : _authRepository = authRepository;
+  const VerificationService({required AuthRepository authRepository})
+    : _authRepository = authRepository;
 
   Future<AuthSessionModel> confirm({
     required String challengeId,
@@ -31,8 +30,7 @@ class VerificationService {
     return _authRepository.startIdentifierVerification(channel);
   }
 
-  Future<IdentifierVerificationStatusModel>
-  confirmAdditional({
+  Future<IdentifierVerificationStatusModel> confirmAdditional({
     required String challengeId,
     required String code,
   }) {

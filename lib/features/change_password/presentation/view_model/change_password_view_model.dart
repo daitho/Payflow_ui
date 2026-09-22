@@ -13,9 +13,8 @@ enum ConfirmationPasswordFieldError { required, mismatch }
 class ChangePasswordViewModel extends ChangeNotifier {
   final ChangePasswordService _service;
 
-  ChangePasswordViewModel({
-    required ChangePasswordService service,
-  }) : _service = service;
+  ChangePasswordViewModel({required ChangePasswordService service})
+    : _service = service;
 
   bool _isSubmitting = false;
   bool _currentPasswordVisible = false;
@@ -34,8 +33,7 @@ class ChangePasswordViewModel extends ChangeNotifier {
   bool get confirmationPasswordVisible => _confirmationPasswordVisible;
   String get newPassword => _newPassword;
 
-  CurrentPasswordFieldError? get currentPasswordError =>
-      _currentPasswordError;
+  CurrentPasswordFieldError? get currentPasswordError => _currentPasswordError;
   NewPasswordFieldError? get newPasswordError => _newPasswordError;
   ConfirmationPasswordFieldError? get confirmationPasswordError =>
       _confirmationPasswordError;
@@ -119,11 +117,9 @@ class ChangePasswordViewModel extends ChangeNotifier {
     }
 
     if (confirmationPassword.isEmpty) {
-      _confirmationPasswordError =
-          ConfirmationPasswordFieldError.required;
+      _confirmationPasswordError = ConfirmationPasswordFieldError.required;
     } else if (confirmationPassword != newPassword) {
-      _confirmationPasswordError =
-          ConfirmationPasswordFieldError.mismatch;
+      _confirmationPasswordError = ConfirmationPasswordFieldError.mismatch;
     }
 
     if (_currentPasswordError != null ||

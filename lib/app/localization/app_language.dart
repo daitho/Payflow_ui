@@ -11,8 +11,7 @@ enum AppLanguage {
   final String? languageCode;
   const AppLanguage(this.languageCode);
 
-  Locale? get locale =>
-      languageCode == null ? null : Locale(languageCode!);
+  Locale? get locale => languageCode == null ? null : Locale(languageCode!);
 
   static AppLanguage fromStoredCode(String? code) {
     return AppLanguage.values.firstWhere(

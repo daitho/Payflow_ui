@@ -23,8 +23,7 @@ class RegisterService {
         lastName: lastName.trim(),
         email: email.trim().toLowerCase(),
         phoneE164: phoneE164.trim(),
-        residenceCountryIsoCode2:
-            residenceCountryIsoCode2.trim().toUpperCase(),
+        residenceCountryIsoCode2: residenceCountryIsoCode2.trim().toUpperCase(),
         password: password,
         verificationChannel: VerificationChannel.email,
       ),

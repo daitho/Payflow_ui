@@ -162,8 +162,7 @@ class LoginViewModel extends ChangeNotifier {
     on IdentifierNotVerifiedException {
       _loginError = LoginErrorType.identifierNotVerified;
       return false;
-    }
-    on InvalidCredentialsException {
+    } on InvalidCredentialsException {
       _loginError = LoginErrorType.invalidCredentials;
       return false;
     }

@@ -8,10 +8,7 @@ import '../../domain/model/verification_challenge_model.dart';
 import '../../domain/model/verification_channel.dart';
 import '../../domain/service/verification_service.dart';
 
-enum VerificationFlow {
-  registration,
-  additionalIdentifier,
-}
+enum VerificationFlow { registration, additionalIdentifier }
 
 class VerificationViewModel extends ChangeNotifier {
   final VerificationService _verificationService;
@@ -37,8 +34,7 @@ class VerificationViewModel extends ChangeNotifier {
     _startCountdown();
   }
 
-  bool get isRegistration =>
-      flow == VerificationFlow.registration;
+  bool get isRegistration => flow == VerificationFlow.registration;
   VerificationChannel get channel => _challenge.channel;
   String get maskedDestination => _challenge.maskedDestination;
   String get code => _code;
@@ -51,9 +47,7 @@ class VerificationViewModel extends ChangeNotifier {
 
   void setCode(String value) {
     final digits = value.replaceAll(RegExp(r'\D'), '');
-    _code = digits.length > 6
-        ? digits.substring(0, 6)
-        : digits;
+    _code = digits.length > 6 ? digits.substring(0, 6) : digits;
     _error = null;
     notifyListeners();
   }
@@ -87,25 +81,20 @@ class VerificationViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> resend({
-    VerificationChannel? channel,
-  }) async {
+  Future<void> resend({VerificationChannel? channel}) async {
     if (!canResend) return;
     _isResending = true;
     _error = null;
     notifyListeners();
 
     try {
-      final requestedChannel =
-          channel ?? _challenge.channel;
+      final requestedChannel = channel ?? _challenge.channel;
       _challenge = isRegistration
           ? await _verificationService.resend(
               challengeId: _challenge.challengeId,
               channel: requestedChannel,
             )
-          : await _verificationService.startAdditional(
-              requestedChannel,
-            );
+          : await _verificationService.startAdditional(requestedChannel);
       _code = '';
       _startCountdown();
     } on VerificationException catch (exception) {

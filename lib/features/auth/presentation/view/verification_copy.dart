@@ -44,9 +44,7 @@ class VerificationCopy {
   });
 
   static VerificationCopy of(BuildContext context) {
-    return _values[
-          Localizations.localeOf(context).languageCode
-        ] ??
+    return _values[Localizations.localeOf(context).languageCode] ??
         _values['fr']!;
   }
 
@@ -66,9 +64,11 @@ class VerificationCopy {
       channelUnavailable: 'Ce mode de réception est indisponible.',
       networkError: 'Vérifiez votre connexion internet.',
       unexpectedError: 'Une erreur est survenue. Réessayez.',
-      securityNote: 'Ne communiquez jamais ce code, même à un conseiller PayFlow.',
+      securityNote:
+          'Ne communiquez jamais ce code, même à un conseiller PayFlow.',
       recoveryTitle: 'Vérification nécessaire',
-      recoveryMessage: "Cet identifiant n'est pas encore vérifié. Reprenez la vérification pour vous connecter.",
+      recoveryMessage:
+          "Cet identifiant n'est pas encore vérifié. Reprenez la vérification pour vous connecter.",
       recoveryAction: 'Reprendre la vérification',
       cancel: 'Annuler',
     ),
@@ -89,7 +89,8 @@ class VerificationCopy {
       unexpectedError: 'Something went wrong. Try again.',
       securityNote: 'Never share this code, even with a PayFlow adviser.',
       recoveryTitle: 'Verification required',
-      recoveryMessage: 'This identifier has not been verified. Resume verification to sign in.',
+      recoveryMessage:
+          'This identifier has not been verified. Resume verification to sign in.',
       recoveryAction: 'Resume verification',
       cancel: 'Cancel',
     ),
@@ -110,7 +111,8 @@ class VerificationCopy {
       unexpectedError: 'Se produjo un error. Inténtalo de nuevo.',
       securityNote: 'Nunca compartas este código, ni siquiera con PayFlow.',
       recoveryTitle: 'Verificación necesaria',
-      recoveryMessage: 'Este identificador no está verificado. Reanuda la verificación para iniciar sesión.',
+      recoveryMessage:
+          'Este identificador no está verificado. Reanuda la verificación para iniciar sesión.',
       recoveryAction: 'Reanudar',
       cancel: 'Cancelar',
     ),
@@ -152,7 +154,8 @@ class VerificationCopy {
       unexpectedError: 'एक त्रुटि हुई। फिर प्रयास करें।',
       securityNote: 'यह कोड किसी से साझा न करें, PayFlow सलाहकार से भी नहीं।',
       recoveryTitle: 'सत्यापन आवश्यक है',
-      recoveryMessage: 'यह पहचानकर्ता सत्यापित नहीं है। साइन इन करने के लिए सत्यापन जारी रखें।',
+      recoveryMessage:
+          'यह पहचानकर्ता सत्यापित नहीं है। साइन इन करने के लिए सत्यापन जारी रखें।',
       recoveryAction: 'सत्यापन जारी रखें',
       cancel: 'रद्द करें',
     ),

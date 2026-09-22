@@ -174,7 +174,6 @@ class ProfileView extends StatelessWidget {
   }
 }
 
-
 Future<void> _showLanguagePicker(BuildContext context) async {
   final LocaleController controller = context.read<LocaleController>();
 

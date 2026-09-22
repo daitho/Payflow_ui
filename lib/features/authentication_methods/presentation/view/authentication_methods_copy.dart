@@ -28,8 +28,8 @@ class AuthenticationMethodsCopy {
   });
 
   static AuthenticationMethodsCopy of(BuildContext context) {
-    return values[Localizations.localeOf(context).languageCode]
-        ?? values['fr']!;
+    return values[Localizations.localeOf(context).languageCode] ??
+        values['fr']!;
   }
 
   static const values = <String, AuthenticationMethodsCopy>{

@@ -42,8 +42,7 @@ class AuthApiService {
 
       if (statusCode == 403 &&
           (errorCode == ApiErrorCodes.identifierNotVerified ||
-              errorCode ==
-                  ApiErrorCodes.accountVerificationRequired)) {
+              errorCode == ApiErrorCodes.accountVerificationRequired)) {
         throw const IdentifierNotVerifiedException();
       }
 
@@ -93,9 +92,7 @@ class AuthApiService {
     }
   }
 
-  Future<VerificationChallengeDto> register(
-    RegisterRequestDto request,
-  ) async {
+  Future<VerificationChallengeDto> register(RegisterRequestDto request) async {
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.authRegister,
       data: request.toJson(),
@@ -120,9 +117,7 @@ class AuthApiService {
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return VerificationChallengeDto.fromJson(data);
     } on DioException catch (exception) {
@@ -140,9 +135,7 @@ class AuthApiService {
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return AuthSessionDto.fromJson(data);
     } on DioException catch (exception) {
@@ -160,9 +153,7 @@ class AuthApiService {
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return VerificationChallengeDto.fromJson(data);
     } on DioException catch (exception) {
@@ -170,54 +161,39 @@ class AuthApiService {
     }
   }
 
-  VerificationException _mapVerificationException(
-    DioException exception,
-  ) {
+  VerificationException _mapVerificationException(DioException exception) {
     final data = exception.response?.data;
-    final code = data is Map<String, dynamic>
-        ? data['code'] as String?
-        : null;
+    final code = data is Map<String, dynamic> ? data['code'] as String? : null;
 
     return switch (code) {
-      ApiErrorCodes.invalidVerificationCode =>
-        const VerificationException(
-          VerificationErrorType.invalidCode,
-        ),
-      ApiErrorCodes.verificationExpired =>
-        const VerificationException(
-          VerificationErrorType.expired,
-        ),
-      ApiErrorCodes.verificationAttemptsExceeded =>
-        const VerificationException(
-          VerificationErrorType.tooManyAttempts,
-        ),
-      ApiErrorCodes.verificationResendTooSoon =>
-        const VerificationException(
-          VerificationErrorType.resendTooSoon,
-        ),
+      ApiErrorCodes.invalidVerificationCode => const VerificationException(
+        VerificationErrorType.invalidCode,
+      ),
+      ApiErrorCodes.verificationExpired => const VerificationException(
+        VerificationErrorType.expired,
+      ),
+      ApiErrorCodes.verificationAttemptsExceeded => const VerificationException(
+        VerificationErrorType.tooManyAttempts,
+      ),
+      ApiErrorCodes.verificationResendTooSoon => const VerificationException(
+        VerificationErrorType.resendTooSoon,
+      ),
       ApiErrorCodes.verificationChannelUnavailable =>
-        const VerificationException(
-          VerificationErrorType.channelUnavailable,
-        ),
+        const VerificationException(VerificationErrorType.channelUnavailable),
       _ when exception.type == DioExceptionType.connectionError =>
         const VerificationException(VerificationErrorType.network),
-      _ => const VerificationException(
-          VerificationErrorType.unexpected,
-        ),
+      _ => const VerificationException(VerificationErrorType.unexpected),
     };
   }
 
-  Future<IdentifierVerificationStatusDto>
-  identifierVerificationStatus() async {
+  Future<IdentifierVerificationStatusDto> identifierVerificationStatus() async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
         ApiEndpoints.accountIdentifiers,
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return IdentifierVerificationStatusDto.fromJson(data);
     } on DioException catch (exception) {
@@ -230,15 +206,11 @@ class AuthApiService {
   ) async {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
-        ApiEndpoints.accountIdentifierVerification(
-          channel.apiValue,
-        ),
+        ApiEndpoints.accountIdentifierVerification(channel.apiValue),
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return VerificationChallengeDto.fromJson(data);
     } on DioException catch (exception) {
@@ -246,8 +218,7 @@ class AuthApiService {
     }
   }
 
-  Future<IdentifierVerificationStatusDto>
-  confirmIdentifierVerification(
+  Future<IdentifierVerificationStatusDto> confirmIdentifierVerification(
     ConfirmVerificationRequestDto request,
   ) async {
     try {
@@ -257,9 +228,7 @@ class AuthApiService {
       );
       final data = response.data;
       if (data == null) {
-        throw const VerificationException(
-          VerificationErrorType.unexpected,
-        );
+        throw const VerificationException(VerificationErrorType.unexpected);
       }
       return IdentifierVerificationStatusDto.fromJson(data);
     } on DioException catch (exception) {

@@ -479,7 +479,6 @@ class _Divider extends StatelessWidget {
   }
 }
 
-
 String _authenticationMethodsLabel(BuildContext context) {
   return switch (Localizations.localeOf(context).languageCode) {
     'en' => 'Sign-in methods',

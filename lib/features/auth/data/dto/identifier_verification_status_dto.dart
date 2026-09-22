@@ -9,9 +9,7 @@ class IdentifierVerificationStatusDto {
     required this.phoneVerified,
   });
 
-  factory IdentifierVerificationStatusDto.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory IdentifierVerificationStatusDto.fromJson(Map<String, dynamic> json) {
     return IdentifierVerificationStatusDto(
       emailVerified: json['emailVerified'] as bool? ?? false,
       phoneVerified: json['phoneVerified'] as bool? ?? false,

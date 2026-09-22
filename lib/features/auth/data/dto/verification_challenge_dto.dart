@@ -16,17 +16,13 @@ class VerificationChallengeDto {
     required this.resendAvailableAt,
   });
 
-  factory VerificationChallengeDto.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory VerificationChallengeDto.fromJson(Map<String, dynamic> json) {
     return VerificationChallengeDto(
       challengeId: json['challengeId'] as String,
       channel: json['channel'] as String,
       maskedDestination: json['maskedDestination'] as String,
       expiresAt: DateTime.parse(json['expiresAt'] as String),
-      resendAvailableAt: DateTime.parse(
-        json['resendAvailableAt'] as String,
-      ),
+      resendAvailableAt: DateTime.parse(json['resendAvailableAt'] as String),
     );
   }
 

@@ -1542,13 +1542,22 @@ abstract class AppLocalizations {
   /// **'Phone number'**
   String get contactPhone;
 
-  /// Confirmation of the beneficiary phone number.
+  /// No description provided for @contactPhoneConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm phone number'**
   String get contactPhoneConfirmation;
 
-  /// Error displayed when beneficiary phone numbers differ.
+  /// No description provided for @contactPhoneMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The two phone numbers do not match.'**
   String get contactPhoneMismatch;
 
-  /// Title of the beneficiary country and calling-code selector.
+  /// No description provided for @contactChooseDialCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose country and calling code'**
   String get contactChooseDialCode;
 
   /// No description provided for @contactCountry.

@@ -11,12 +11,15 @@ import '../../../features/change_password/presentation/view_model/change_passwor
 import '../app_routes.dart';
 
 GoRoute buildChangePasswordRoute({required Dio dio}) {
-  final ChangePasswordApiService apiService =
-      ChangePasswordApiService(dio: dio);
-  final ChangePasswordRepository repository =
-      ChangePasswordRepositoryImpl(apiService: apiService);
-  final ChangePasswordService service =
-      ChangePasswordService(repository: repository);
+  final ChangePasswordApiService apiService = ChangePasswordApiService(
+    dio: dio,
+  );
+  final ChangePasswordRepository repository = ChangePasswordRepositoryImpl(
+    apiService: apiService,
+  );
+  final ChangePasswordService service = ChangePasswordService(
+    repository: repository,
+  );
 
   return GoRoute(
     path: AppRoutes.changePassword,

@@ -25,9 +25,7 @@ class ChangePasswordRepositoryImpl implements ChangePasswordRepository {
     } on DioException catch (exception) {
       throw _mapDioException(exception);
     } catch (_) {
-      throw const ChangePasswordException(
-        ChangePasswordErrorType.unexpected,
-      );
+      throw const ChangePasswordException(ChangePasswordErrorType.unexpected);
     }
   }
 
@@ -36,9 +34,7 @@ class ChangePasswordRepositoryImpl implements ChangePasswordRepository {
         exception.type == DioExceptionType.sendTimeout ||
         exception.type == DioExceptionType.receiveTimeout ||
         exception.type == DioExceptionType.connectionError) {
-      return const ChangePasswordException(
-        ChangePasswordErrorType.network,
-      );
+      return const ChangePasswordException(ChangePasswordErrorType.network);
     }
 
     final String? errorCode = _errorCode(exception.response?.data);
@@ -68,14 +64,10 @@ class ChangePasswordRepositoryImpl implements ChangePasswordRepository {
     }
 
     if (statusCode != null && statusCode >= 500) {
-      return const ChangePasswordException(
-        ChangePasswordErrorType.server,
-      );
+      return const ChangePasswordException(ChangePasswordErrorType.server);
     }
 
-    return const ChangePasswordException(
-      ChangePasswordErrorType.unexpected,
-    );
+    return const ChangePasswordException(ChangePasswordErrorType.unexpected);
   }
 
   String? _errorCode(Object? data) {

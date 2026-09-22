@@ -17,8 +17,7 @@ class ChangePasswordView extends StatefulWidget {
 class _ChangePasswordViewState extends State<ChangePasswordView> {
   final TextEditingController _currentPasswordController =
       TextEditingController();
-  final TextEditingController _newPasswordController =
-      TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmationPasswordController =
       TextEditingController();
 
@@ -33,8 +32,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final ChangePasswordViewModel viewModel =
-        context.watch<ChangePasswordViewModel>();
+    final ChangePasswordViewModel viewModel = context
+        .watch<ChangePasswordViewModel>();
 
     return PopScope(
       canPop: !viewModel.isSubmitting,
@@ -54,10 +53,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           ),
           title: Text(
             l10n.changePassword,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           centerTitle: true,
         ),
@@ -242,8 +238,9 @@ class _PasswordField extends StatelessWidget {
       autofillHints: autofillHints,
       autocorrect: false,
       enableSuggestions: false,
-      textInputAction:
-          onSubmitted == null ? TextInputAction.next : TextInputAction.done,
+      textInputAction: onSubmitted == null
+          ? TextInputAction.next
+          : TextInputAction.done,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       decoration: InputDecoration(
@@ -269,10 +266,7 @@ class _PasswordField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFF168C88),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF168C88), width: 1.5),
         ),
       ),
     );
@@ -318,10 +312,7 @@ class _PasswordRequirements extends StatelessWidget {
             valid: viewModel.hasLowercase,
             label: l10n.passwordLowercase,
           ),
-          _Requirement(
-            valid: viewModel.hasDigit,
-            label: l10n.passwordDigit,
-          ),
+          _Requirement(valid: viewModel.hasDigit, label: l10n.passwordDigit),
           _Requirement(
             valid: viewModel.hasSpecialCharacter,
             label: l10n.passwordSpecial,
@@ -357,10 +348,7 @@ class _Requirement extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 12.5, color: color),
-            ),
+            child: Text(label, style: TextStyle(fontSize: 12.5, color: color)),
           ),
         ],
       ),
@@ -421,10 +409,7 @@ class _InlineError extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            color: Color(0xFFD63C3C),
-          ),
+          const Icon(Icons.error_outline_rounded, color: Color(0xFFD63C3C)),
           const SizedBox(width: 10),
           Expanded(child: Text(message)),
         ],
@@ -444,10 +429,7 @@ String? _currentPasswordError(
   };
 }
 
-String? _newPasswordError(
-  AppLocalizations l10n,
-  NewPasswordFieldError? error,
-) {
+String? _newPasswordError(AppLocalizations l10n, NewPasswordFieldError? error) {
   return switch (error) {
     NewPasswordFieldError.required => l10n.newPasswordRequired,
     NewPasswordFieldError.weak => l10n.passwordInvalid,
@@ -461,30 +443,23 @@ String? _confirmationPasswordError(
   ConfirmationPasswordFieldError? error,
 ) {
   return switch (error) {
-    ConfirmationPasswordFieldError.required =>
-      l10n.confirmNewPasswordRequired,
+    ConfirmationPasswordFieldError.required => l10n.confirmNewPasswordRequired,
     ConfirmationPasswordFieldError.mismatch => l10n.passwordsDoNotMatch,
     null => null,
   };
 }
 
-String _requestError(
-  AppLocalizations l10n,
-  ChangePasswordErrorType error,
-) {
+String _requestError(AppLocalizations l10n, ChangePasswordErrorType error) {
   return switch (error) {
     ChangePasswordErrorType.passwordLoginUnavailable =>
       l10n.passwordLoginUnavailable,
-    ChangePasswordErrorType.sessionExpired =>
-      l10n.contactSessionError,
+    ChangePasswordErrorType.sessionExpired => l10n.contactSessionError,
     ChangePasswordErrorType.network => l10n.changePasswordNetworkError,
     ChangePasswordErrorType.server => l10n.changePasswordServerError,
-    ChangePasswordErrorType.unexpected =>
-      l10n.changePasswordUnexpectedError,
+    ChangePasswordErrorType.unexpected => l10n.changePasswordUnexpectedError,
     ChangePasswordErrorType.invalidCurrentPassword =>
       l10n.currentPasswordIncorrect,
     ChangePasswordErrorType.weakPassword => l10n.passwordInvalid,
-    ChangePasswordErrorType.unchangedPassword =>
-      l10n.newPasswordUnchanged,
+    ChangePasswordErrorType.unchangedPassword => l10n.newPasswordUnchanged,
   };
 }

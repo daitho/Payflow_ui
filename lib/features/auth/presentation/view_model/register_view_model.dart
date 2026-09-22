@@ -5,9 +5,8 @@ import '../../domain/service/register_service.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final RegisterService _registerService;
-  RegisterViewModel({
-    required RegisterService registerService,
-  }) : _registerService = registerService;
+  RegisterViewModel({required RegisterService registerService})
+    : _registerService = registerService;
 
   VerificationChallengeModel? _challenge;
 
@@ -283,8 +282,7 @@ class RegisterViewModel extends ChangeNotifier {
         lastName: cleanLastName,
         email: cleanEmail,
         phoneE164: cleanPhoneE164,
-        residenceCountryIsoCode2:
-            residenceCountryIsoCode2,
+        residenceCountryIsoCode2: residenceCountryIsoCode2,
         password: password,
       );
       return true;

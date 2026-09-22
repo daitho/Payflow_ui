@@ -641,9 +641,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  Future<void> _offerVerificationRecovery(
-    LoginViewModel viewModel,
-  ) async {
+  Future<void> _offerVerificationRecovery(LoginViewModel viewModel) async {
     final copy = VerificationCopy.of(context);
     final bool? resume = await showDialog<bool>(
       context: context,
@@ -665,24 +663,21 @@ class _LoginViewState extends State<LoginView> {
 
     if (resume != true || !mounted) return;
 
-    final VerificationChallengeModel? challenge =
-        await viewModel.recoverVerification(
-      identifier: _identifierController.text,
-      password: _passwordController.text,
-    );
+    final VerificationChallengeModel? challenge = await viewModel
+        .recoverVerification(
+          identifier: _identifierController.text,
+          password: _passwordController.text,
+        );
 
     if (!mounted) return;
     if (challenge == null) {
-      _showMessage(_loginErrorMessage(
-        viewModel.loginError ?? LoginErrorType.unexpected,
-      ));
+      _showMessage(
+        _loginErrorMessage(viewModel.loginError ?? LoginErrorType.unexpected),
+      );
       return;
     }
 
-    context.push(
-      AppRoutes.verifyRegistration,
-      extra: challenge,
-    );
+    context.push(AppRoutes.verifyRegistration, extra: challenge);
   }
 
   // =========================================================

@@ -67,10 +67,7 @@ void main() {
     );
 
     expect(success, isFalse);
-    expect(
-      viewModel.currentPasswordError,
-      CurrentPasswordFieldError.invalid,
-    );
+    expect(viewModel.currentPasswordError, CurrentPasswordFieldError.invalid);
     expect(viewModel.errorType, isNull);
   });
 }

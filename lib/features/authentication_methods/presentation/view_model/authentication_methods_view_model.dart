@@ -29,8 +29,7 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
   bool get emailVerified => _emailVerified;
   bool get phoneVerified => _phoneVerified;
   String get email => _sessionService.currentUser?.email ?? '';
-  String get phone =>
-      _sessionService.currentUser?.phoneE164 ?? '';
+  String get phone => _sessionService.currentUser?.phoneE164 ?? '';
   VerificationErrorType? get error => _error;
 
   Future<void> load() async {
@@ -49,16 +48,12 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<VerificationChallengeModel?> start(
-    VerificationChannel channel,
-  ) async {
+  Future<VerificationChallengeModel?> start(VerificationChannel channel) async {
     _loading = true;
     _error = null;
     notifyListeners();
     try {
-      return await _verificationService.startAdditional(
-        channel,
-      );
+      return await _verificationService.startAdditional(channel);
     } on VerificationException catch (exception) {
       _error = exception.type;
       return null;

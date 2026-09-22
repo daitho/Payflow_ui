@@ -1038,10 +1038,7 @@ class _RegisterViewState extends State<RegisterView> {
     if (challenge == null) {
       return;
     }
-    context.push(
-      AppRoutes.verifyRegistration,
-      extra: challenge,
-    );
+    context.push(AppRoutes.verifyRegistration, extra: challenge);
   }
 
   // =========================================================

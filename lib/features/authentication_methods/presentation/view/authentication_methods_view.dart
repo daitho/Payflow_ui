@@ -22,10 +22,7 @@ class AuthenticationMethodsView extends StatelessWidget {
         centerTitle: true,
         title: Text(
           copy.title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
         ),
         leading: IconButton(
           onPressed: context.pop,
@@ -49,11 +46,8 @@ class AuthenticationMethodsView extends StatelessWidget {
                       verifyLabel: copy.verify,
                       onTap: vm.emailVerified || vm.loading
                           ? null
-                          : () => _start(
-                                context,
-                                vm,
-                                VerificationChannel.email,
-                              ),
+                          : () =>
+                                _start(context, vm, VerificationChannel.email),
                     ),
                     const Divider(height: 1, indent: 68),
                     _MethodTile(
@@ -65,11 +59,8 @@ class AuthenticationMethodsView extends StatelessWidget {
                       verifyLabel: copy.verify,
                       onTap: vm.phoneVerified || vm.loading
                           ? null
-                          : () => _start(
-                                context,
-                                vm,
-                                VerificationChannel.phone,
-                              ),
+                          : () =>
+                                _start(context, vm, VerificationChannel.phone),
                     ),
                   ],
                 ),
@@ -89,9 +80,7 @@ class AuthenticationMethodsView extends StatelessWidget {
                   Text(
                     copy.error,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFFD43C3C),
-                    ),
+                    style: const TextStyle(color: Color(0xFFD43C3C)),
                   ),
                 ],
                 const SizedBox(height: 16),
@@ -226,10 +215,7 @@ class _MethodTile extends StatelessWidget {
 class _ProviderTile extends StatelessWidget {
   final String name;
   final String status;
-  const _ProviderTile({
-    required this.name,
-    required this.status,
-  });
+  const _ProviderTile({required this.name, required this.status});
 
   @override
   Widget build(BuildContext context) {

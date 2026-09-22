@@ -25,14 +25,13 @@ abstract interface class AuthRepository {
     required VerificationChannel channel,
   });
 
-  Future<IdentifierVerificationStatusModel>
-  identifierVerificationStatus();
+  Future<IdentifierVerificationStatusModel> identifierVerificationStatus();
 
-  Future<VerificationChallengeModel>
-  startIdentifierVerification(VerificationChannel channel);
+  Future<VerificationChallengeModel> startIdentifierVerification(
+    VerificationChannel channel,
+  );
 
-  Future<IdentifierVerificationStatusModel>
-  confirmIdentifierVerification({
+  Future<IdentifierVerificationStatusModel> confirmIdentifierVerification({
     required String challengeId,
     required String code,
   });

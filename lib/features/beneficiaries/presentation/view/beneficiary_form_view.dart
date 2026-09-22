@@ -70,10 +70,8 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
             Expanded(
               child: ListView.separated(
                 itemCount: countries.length,
-                separatorBuilder: (_, __) => const Divider(
-                  height: 1,
-                  indent: 64,
-                ),
+                separatorBuilder: (_, __) =>
+                    const Divider(height: 1, indent: 64),
                 itemBuilder: (context, index) {
                   final country = countries[index];
                   final digits = country.phoneCode.replaceAll(
@@ -93,10 +91,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                             color: Color(0xFF0C9F93),
                           )
                         : null,
-                    onTap: () => Navigator.pop(
-                      sheetContext,
-                      country,
-                    ),
+                    onTap: () => Navigator.pop(sheetContext, country),
                   );
                 },
               ),
@@ -142,17 +137,14 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
             textDirection: TextDirection.ltr,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          if (interactive)
-            const Icon(Icons.arrow_drop_down_rounded),
+          if (interactive) const Icon(Icons.arrow_drop_down_rounded),
         ],
       ),
     );
 
     if (!interactive) return content;
     return InkWell(
-      onTap: vm.saving
-          ? null
-          : () => _chooseCountry(vm, countries),
+      onTap: vm.saving ? null : () => _chooseCountry(vm, countries),
       child: content,
     );
   }
@@ -217,12 +209,9 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     final countryField = FormField<String>(
       key: ValueKey('country-${vm.countryId}'),
       initialValue: vm.countryId,
-      validator: (value) =>
-          value == null ? l10n.contactRequired : null,
+      validator: (value) => value == null ? l10n.contactRequired : null,
       builder: (field) => InkWell(
-        onTap: vm.saving
-            ? null
-            : () => _chooseCountry(vm, countries),
+        onTap: vm.saving ? null : () => _chooseCountry(vm, countries),
         borderRadius: BorderRadius.circular(12),
         child: InputDecorator(
           decoration: _decoration(
@@ -314,7 +303,11 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: _phone,
-                          enabled: !vm.saving && dialCode.isNotEmpty,
+                          enabled: !vm.saving,
+                          readOnly: dialCode.isEmpty,
+                          onTap: dialCode.isEmpty && !vm.saving
+                              ? () => _chooseCountry(vm, countries)
+                              : null,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           inputFormatters: [
@@ -323,21 +316,20 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                               15 - dialDigits.length,
                             ),
                           ],
-                          decoration: _decoration(
-                            hint: l10n.contactPhone,
-                          ).copyWith(
-                            prefixIcon: _phonePrefix(
-                              vm: vm,
-                              countries: countries,
-                              country: selectedCountry,
-                              dialCode: dialCode,
-                              interactive: true,
-                            ),
-                            prefixIconConstraints: const BoxConstraints(
-                              minWidth: 0,
-                              minHeight: 0,
-                            ),
-                          ),
+                          decoration: _decoration(hint: l10n.contactPhone)
+                              .copyWith(
+                                prefixIcon: _phonePrefix(
+                                  vm: vm,
+                                  countries: countries,
+                                  country: selectedCountry,
+                                  dialCode: dialCode,
+                                  interactive: true,
+                                ),
+                                prefixIconConstraints: const BoxConstraints(
+                                  minWidth: 0,
+                                  minHeight: 0,
+                                ),
+                              ),
                           validator: (value) {
                             final digits = value ?? '';
                             if (dialCode.isEmpty ||
@@ -354,7 +346,8 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: _phoneConfirmation,
-                          enabled: !vm.saving && dialCode.isNotEmpty,
+                          enabled: !vm.saving,
+                          readOnly: dialCode.isEmpty,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           inputFormatters: [
@@ -363,21 +356,22 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                               15 - dialDigits.length,
                             ),
                           ],
-                          decoration: _decoration(
-                            hint: l10n.contactPhoneConfirmation,
-                          ).copyWith(
-                            prefixIcon: _phonePrefix(
-                              vm: vm,
-                              countries: countries,
-                              country: selectedCountry,
-                              dialCode: dialCode,
-                              interactive: false,
-                            ),
-                            prefixIconConstraints: const BoxConstraints(
-                              minWidth: 0,
-                              minHeight: 0,
-                            ),
-                          ),
+                          decoration:
+                              _decoration(
+                                hint: l10n.contactPhoneConfirmation,
+                              ).copyWith(
+                                prefixIcon: _phonePrefix(
+                                  vm: vm,
+                                  countries: countries,
+                                  country: selectedCountry,
+                                  dialCode: dialCode,
+                                  interactive: false,
+                                ),
+                                prefixIconConstraints: const BoxConstraints(
+                                  minWidth: 0,
+                                  minHeight: 0,
+                                ),
+                              ),
                           validator: (value) {
                             final digits = value ?? '';
                             if (digits.isEmpty) {

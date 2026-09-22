@@ -65,9 +65,7 @@ class AuthRepositoryImpl implements AuthRepository {
   // =========================================================
 
   @override
-  Future<VerificationChallengeModel> register(
-    RegisterCommand command,
-  ) async {
+  Future<VerificationChallengeModel> register(RegisterCommand command) async {
     final deviceContext = await _deviceService.getDeviceContext();
     var registerRequestDto = RegisterRequestDto(
       lastName: command.lastName,
@@ -75,8 +73,7 @@ class AuthRepositoryImpl implements AuthRepository {
       email: command.email,
       password: command.password,
       phoneE164: command.phoneE164,
-      residenceCountryIsoCode2:
-          command.residenceCountryIsoCode2,
+      residenceCountryIsoCode2: command.residenceCountryIsoCode2,
       verificationChannel: command.verificationChannel.apiValue,
       deviceId: deviceContext.deviceId,
       deviceName: deviceContext.deviceName,
@@ -122,35 +119,25 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<IdentifierVerificationStatusModel>
   identifierVerificationStatus() async {
-    final response =
-        await _authApiService.identifierVerificationStatus();
+    final response = await _authApiService.identifierVerificationStatus();
     return response.toModel();
   }
 
   @override
-  Future<VerificationChallengeModel>
-  startIdentifierVerification(
+  Future<VerificationChallengeModel> startIdentifierVerification(
     VerificationChannel channel,
   ) async {
-    final response =
-        await _authApiService.startIdentifierVerification(
-      channel,
-    );
+    final response = await _authApiService.startIdentifierVerification(channel);
     return response.toModel();
   }
 
   @override
-  Future<IdentifierVerificationStatusModel>
-  confirmIdentifierVerification({
+  Future<IdentifierVerificationStatusModel> confirmIdentifierVerification({
     required String challengeId,
     required String code,
   }) async {
-    final response =
-        await _authApiService.confirmIdentifierVerification(
-      ConfirmVerificationRequestDto(
-        challengeId: challengeId,
-        code: code,
-      ),
+    final response = await _authApiService.confirmIdentifierVerification(
+      ConfirmVerificationRequestDto(challengeId: challengeId, code: code),
     );
     return response.toModel();
   }
