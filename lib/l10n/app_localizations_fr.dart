@@ -790,6 +790,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get contactPhone => 'Numéro de téléphone';
 
   @override
+  String get contactPhoneConfirmation => 'Confirmer le numéro de téléphone';
+
+  @override
+  String get contactPhoneMismatch => 'Les deux numéros ne correspondent pas.';
+
+  @override
+  String get contactChooseDialCode => 'Choisir le pays et l’indicatif';
+
+  @override
   String get contactCountry => 'Pays';
 
   @override

@@ -779,6 +779,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactPhone => 'Phone number';
 
   @override
+  String get contactPhoneConfirmation => 'Confirm phone number';
+
+  @override
+  String get contactPhoneMismatch => 'The two phone numbers do not match.';
+
+  @override
+  String get contactChooseDialCode => 'Choose country and calling code';
+
+  @override
   String get contactCountry => 'Country';
 
   @override

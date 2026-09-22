@@ -777,6 +777,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get contactPhone => 'फ़ोन नंबर';
 
   @override
+  String get contactPhoneConfirmation => 'फ़ोन नंबर की पुष्टि करें';
+
+  @override
+  String get contactPhoneMismatch => 'दोनों फ़ोन नंबर मेल नहीं खाते।';
+
+  @override
+  String get contactChooseDialCode => 'देश और कॉलिंग कोड चुनें';
+
+  @override
   String get contactCountry => 'देश';
 
   @override

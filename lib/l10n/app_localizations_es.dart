@@ -792,6 +792,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get contactPhone => 'Número de teléfono';
 
   @override
+  String get contactPhoneConfirmation => 'Confirmar número de teléfono';
+
+  @override
+  String get contactPhoneMismatch => 'Los dos números no coinciden.';
+
+  @override
+  String get contactChooseDialCode => 'Elegir país y prefijo';
+
+  @override
   String get contactCountry => 'País';
 
   @override

@@ -741,6 +741,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get contactPhone => '电话号码';
 
   @override
+  String get contactPhoneConfirmation => '确认手机号码';
+
+  @override
+  String get contactPhoneMismatch => '两次输入的号码不一致。';
+
+  @override
+  String get contactChooseDialCode => '选择国家和区号';
+
+  @override
   String get contactCountry => '国家';
 
   @override

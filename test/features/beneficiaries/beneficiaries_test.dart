@@ -114,4 +114,23 @@ void main() {
       vm.dispose();
     },
   );
+  test('saved beneficiary is visible immediately without reloading', () async {
+    final vm = BeneficiariesViewModel(BeneficiaryService(FakeRepository()));
+    await vm.load();
+    const bob = BeneficiaryContact(
+      id: 'bob',
+      fullName: 'Bob Martin',
+      countryId: 'sn',
+      countryName: 'Sénégal',
+      countryCode: 'SN',
+      operatorId: 'wave',
+      phoneE164: '+221770000000',
+    );
+
+    vm.upsert(bob);
+
+    expect(vm.items.map((item) => item.id), contains('bob'));
+    expect(vm.items.length, 2);
+    vm.dispose();
+  });
 }

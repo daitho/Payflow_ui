@@ -7,7 +7,6 @@ import '../../domain/model/beneficiary_contact.dart';
 import '../view_model/beneficiary_form_view_model.dart';
 import '../widget/beneficiary_avatar.dart';
 import '../widget/beneficiary_error.dart';
-import 'beneficiary_form_copy.dart';
 
 class BeneficiaryFormView extends StatefulWidget {
   const BeneficiaryFormView({super.key});
@@ -51,7 +50,6 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
   ) async {
     if (vm.saving || countries.isEmpty) return;
 
-    final copy = BeneficiaryFormCopy.of(context);
     final selected = await showModalBottomSheet<BeneficiaryCountry>(
       context: context,
       showDragHandle: true,
@@ -61,7 +59,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
               child: Text(
-                copy.chooseDialCode,
+                AppLocalizations.of(context).contactChooseDialCode,
                 style: const TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.w700,
@@ -139,7 +137,9 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
             const Icon(Icons.flag_outlined, size: 21),
           const SizedBox(width: 6),
           Text(
-            dialCode.isEmpty ? '+ code' : dialCode,
+            dialCode.isEmpty
+                ? AppLocalizations.of(context).contactChoose
+                : dialCode,
             textDirection: TextDirection.ltr,
             style: Theme.of(context).textTheme.titleMedium,
           ),
@@ -196,28 +196,6 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     final operatorValid = vm.operators.any((o) => o.id == vm.operatorId);
     final phoneOnlyUnavailable =
         vm.original?.destinationId != null && vm.original?.phoneE164 == null;
-    final countryItems = countries
-        .map(
-          (c) => DropdownMenuItem(
-            value: c.id,
-            child: Text(
-              '${beneficiaryFlag(c.isoCode)}  ${c.name}',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        )
-        .toList();
-    if (!countryValid && vm.countryId != null && vm.original != null) {
-      countryItems.add(
-        DropdownMenuItem(
-          value: vm.countryId,
-          child: Text(
-            vm.original!.countryName,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      );
-    }
     final operatorItems = vm.operators
         .map(
           (o) => DropdownMenuItem(
@@ -387,9 +365,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                             ),
                           ],
                           decoration: _decoration(
-                            hint: BeneficiaryFormCopy.of(
-                              context,
-                            ).confirmPhone,
+                            hint: l10n.contactPhoneConfirmation,
                           ).copyWith(
                             prefixIcon: _phonePrefix(
                               vm: vm,
@@ -409,9 +385,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                               return l10n.contactRequired;
                             }
                             if (digits != _phone.text) {
-                              return BeneficiaryFormCopy.of(
-                                context,
-                              ).phoneMismatch;
+                              return l10n.contactPhoneMismatch;
                             }
                             return null;
                           },
