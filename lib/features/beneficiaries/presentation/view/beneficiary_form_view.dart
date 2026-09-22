@@ -112,7 +112,6 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     if (changed) {
       _phone.clear();
       _phoneConfirmation.clear();
-      _form.currentState?.reset();
     }
   }
 
