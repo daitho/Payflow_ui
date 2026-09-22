@@ -925,6 +925,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'El tipo ha caducado. Se calculará una nueva cotización.';
 
   @override
+  String get transferAmountBelowMinimumError => "El importe es inferior al mínimo permitido para este destino.";
+
+  @override
+  String get transferAmountAboveMaximumError => "El importe supera el máximo permitido para este destino.";
+
+  @override
   String get transferUnavailableError =>
       'Esta transferencia no está disponible para este beneficiario o importe.';
 

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pay_flow_ui/features/beneficiaries/domain/model/beneficiary_contact.dart';
 import 'package:pay_flow_ui/features/beneficiaries/domain/repository/beneficiary_repository.dart';
 import 'package:pay_flow_ui/features/beneficiaries/domain/service/beneficiary_service.dart';
+import 'package:pay_flow_ui/features/transfer/domain/exception/transfer_exception.dart';
 import 'package:pay_flow_ui/features/transfer/domain/model/transfer_draft_seed.dart';
 import 'package:pay_flow_ui/features/transfer/domain/model/transfer_quote.dart';
 import 'package:pay_flow_ui/features/transfer/domain/repository/transfer_repository.dart';
@@ -39,6 +40,7 @@ class TransfersFake implements TransferRepository {
   int quoteRequests = 0;
   String? beneficiaryId, destinationId, sentCurrency, idempotencyKey;
   num? sentAmount, receivedAmount;
+  TransferFailure? quoteFailure;
 
   @override
   Future<TransferQuote> createQuote({
@@ -49,6 +51,8 @@ class TransfersFake implements TransferRepository {
     required String sentCurrency,
   }) async {
     quoteRequests++;
+    final failure = quoteFailure;
+    if (failure != null) throw TransferException(failure);
     this.beneficiaryId = beneficiaryId;
     this.destinationId = destinationId;
     this.sentAmount = sentAmount;
@@ -138,6 +142,30 @@ void main() {
     expect(transfers.receivedAmount, 6560);
     expect(vm.quote!.receivedAmount, 6560);
     expect(vm.sentAmount, closeTo(10, .01));
+    vm.dispose();
+  });
+
+  test('amount limit errors disable continue until amount changes', () async {
+    final transfers = TransfersFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+
+    transfers.quoteFailure = TransferFailure.amountBelowMinimum;
+    vm.setSentAmount('1');
+    await vm.ensureQuote();
+
+    expect(vm.error, TransferFailure.amountBelowMinimum);
+    expect(vm.canContinue, isFalse);
+
+    transfers.quoteFailure = null;
+    vm.setSentAmount('20');
+
+    expect(vm.error, isNull);
+    expect(vm.canContinue, isTrue);
     vm.dispose();
   });
 

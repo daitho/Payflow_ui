@@ -861,6 +861,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferQuoteExpired => '汇率已过期，将重新计算报价。';
 
   @override
+  String get transferAmountBelowMinimumError => "金额低于此收款目的地允许的最低限额。";
+
+  @override
+  String get transferAmountAboveMaximumError => "金额超过此收款目的地允许的最高限额。";
+
+  @override
   String get transferUnavailableError => '此收款人或该金额暂不支持汇款。';
 
   @override

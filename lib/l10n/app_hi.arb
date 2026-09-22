@@ -327,6 +327,8 @@
   "transferBeneficiaryUnavailable": "यह लाभार्थी या गंतव्य अब उपलब्ध नहीं है।",
   "transferConflictError": "इस हस्तांतरण की पहले ही पुष्टि हो चुकी है या अब इसका उपयोग नहीं किया जा सकता।",
   "transferQuoteExpired": "दर समाप्त हो गई है। नई कोटेशन की गणना की जाएगी।",
+  "transferAmountBelowMinimumError": "राशि इस गंतव्य के लिए अनुमत न्यूनतम सीमा से कम है।",
+  "transferAmountAboveMaximumError": "राशि इस गंतव्य के लिए अनुमत अधिकतम सीमा से अधिक है।",
   "transferUnavailableError": "यह हस्तांतरण इस लाभार्थी या राशि के लिए उपलब्ध नहीं है।",
   "systemLanguage": "डिवाइस की भाषा",
   "spanish": "स्पेनिश",

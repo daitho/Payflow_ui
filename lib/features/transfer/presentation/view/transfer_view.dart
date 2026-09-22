@@ -848,6 +848,10 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       TransferFailure.notFound => l10n.transferBeneficiaryUnavailable,
       TransferFailure.conflict => l10n.transferConflictError,
       TransferFailure.quoteExpired => l10n.transferQuoteExpired,
+      TransferFailure.amountBelowMinimum =>
+        l10n.transferAmountBelowMinimumError,
+      TransferFailure.amountAboveMaximum =>
+        l10n.transferAmountAboveMaximumError,
       TransferFailure.unavailable => l10n.transferUnavailableError,
       TransferFailure.network => l10n.contactNetworkError,
       TransferFailure.timeout => l10n.homeTimeoutError,

@@ -327,6 +327,8 @@
   "transferBeneficiaryUnavailable": "Este beneficiario o destino ya no está disponible.",
   "transferConflictError": "Esta transferencia ya se ha confirmado o ya no puede utilizarse.",
   "transferQuoteExpired": "El tipo ha caducado. Se calculará una nueva cotización.",
+  "transferAmountBelowMinimumError": "El importe es inferior al mínimo permitido para este destino.",
+  "transferAmountAboveMaximumError": "El importe supera el máximo permitido para este destino.",
   "transferUnavailableError": "Esta transferencia no está disponible para este beneficiario o importe.",
   "systemLanguage": "Idioma del dispositivo",
   "spanish": "Español",
