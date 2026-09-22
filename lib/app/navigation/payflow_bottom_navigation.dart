@@ -37,9 +37,15 @@ class PayflowBottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final double progress = collapseProgress.clamp(0.0, 1.0).toDouble();
     final height = lerpDouble(64, 15, progress)!;
-    final double labelOpacity = (1 - progress / .42)\n        .clamp(0.0, 1.0)\n        .toDouble();
-    final double iconOpacity = (1 - ((progress - .38) / .54))\n        .clamp(0.0, 1.0)\n        .toDouble();
-    final double handleOpacity = ((progress - .72) / .28)\n        .clamp(0.0, 1.0)\n        .toDouble();
+    final double labelOpacity = (1 - progress / .42)
+        .clamp(0.0, 1.0)
+        .toDouble();
+    final double iconOpacity = (1 - ((progress - .38) / .54))
+        .clamp(0.0, 1.0)
+        .toDouble();
+    final double handleOpacity = ((progress - .72) / .28)
+        .clamp(0.0, 1.0)
+        .toDouble();
     final radius = lerpDouble(38, 10, progress)!;
 
     return Semantics(
