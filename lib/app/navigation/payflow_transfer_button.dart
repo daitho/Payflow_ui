@@ -18,9 +18,7 @@ class PayflowTransferButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double progress = collapseProgress.clamp(0.0, 1.0).toDouble();
-    final double labelOpacity = (1 - progress / .62)
-        .clamp(0.0, 1.0)
-        .toDouble();
+    final double labelOpacity = (1 - progress / .62).clamp(0.0, 1.0).toDouble();
     final height = lerpDouble(35, 48, progress)!;
     final horizontalPadding = lerpDouble(10, 10.5, progress)!;
     final iconSize = lerpDouble(25, 27, progress)!;

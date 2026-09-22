@@ -224,9 +224,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (delta != 0) {
-      _setNavigationCollapse(
-        _navigationCollapse + (delta / _collapseDistance),
-      );
+      _setNavigationCollapse(_navigationCollapse + (delta / _collapseDistance));
     }
     return false;
   }

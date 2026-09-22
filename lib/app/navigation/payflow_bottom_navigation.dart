@@ -37,9 +37,7 @@ class PayflowBottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final double progress = collapseProgress.clamp(0.0, 1.0).toDouble();
     final height = lerpDouble(64, 15, progress)!;
-    final double labelOpacity = (1 - progress / .42)
-        .clamp(0.0, 1.0)
-        .toDouble();
+    final double labelOpacity = (1 - progress / .42).clamp(0.0, 1.0).toDouble();
     final double iconOpacity = (1 - ((progress - .45) / .47))
         .clamp(0.0, 1.0)
         .toDouble();
@@ -174,9 +172,9 @@ class _NavigationItemView extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 1),
             decoration: BoxDecoration(
               color: selected
-                  ? const Color(0xFFF0F3F2).withValues(
-                      alpha: 1 - collapseProgress,
-                    )
+                  ? const Color(
+                      0xFFF0F3F2,
+                    ).withValues(alpha: 1 - collapseProgress)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(28),
             ),
@@ -216,9 +214,7 @@ class _NavigationItemView extends StatelessWidget {
                           duration: const Duration(milliseconds: 240),
                           curve: Curves.easeOut,
                           style: TextStyle(
-                            color: selected
-                                ? selectedColor
-                                : unselectedColor,
+                            color: selected ? selectedColor : unselectedColor,
                             fontSize: 10.5,
                             fontWeight: selected
                                 ? FontWeight.w700
