@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'dart:ui';
 import 'app/router/app_routes.dart';
+import 'app/navigation/payflow_bottom_navigation.dart';
+import 'app/navigation/payflow_transfer_button.dart';
 import 'features/home/domain/model/home_beneficiary_model.dart';
 import 'features/home/presentation/view/home_view.dart';
 import 'features/home/presentation/view_model/home_view_model.dart';
@@ -23,57 +25,110 @@ class _HomePageState extends State<HomePage> {
   // =========================================================
   // STATE
   // =========================================================
+  static const double _collapseDistance = 118;
+  final PageController _pageController = PageController();
   int _selectedIndex = 0;
+  double _navigationCollapse = 0;
   HomeBeneficiaryModel? _selectedBeneficiary;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   // =========================================================
   // BUILD
   // =========================================================
   @override
   Widget build(BuildContext context) {
-    final double bottomSafeArea = MediaQuery.paddingOf(context).bottom;
+    final media = MediaQuery.of(context);
+    final double bottomSafeArea = media.padding.bottom;
+    final double compactInset = (media.size.width - 78) / 2;
+    final double navigationInset = lerpDouble(
+      34,
+      compactInset > 34 ? compactInset : 34,
+      _navigationCollapse,
+    )!;
+    final double transferBottom = lerpDouble(
+      bottomSafeArea + 82,
+      bottomSafeArea + 29,
+      _navigationCollapse,
+    )!;
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7F6),
-      /*
-       * Le contenu peut continuer derrière les éléments
-       * flottants.
-       */
       extendBody: true,
       body: Stack(
         children: [
-          // ===================================================
-          // PAGE
-          // ===================================================
-          Positioned.fill(child: _buildSelectedPage()),
-          // ===================================================
-          // TRANSFER CTA
-          // ===================================================
+          Positioned.fill(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: _handleScrollNotification,
+              child: PageView.builder(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                onPageChanged: (index) {
+                  if (_selectedIndex != index && mounted) {
+                    setState(() => _selectedIndex = index);
+                  }
+                },
+                itemBuilder: (context, index) => KeyedSubtree(
+                  key: ValueKey('payflow-tab-$index'),
+                  child: _buildPage(index),
+                ),
+              ),
+            ),
+          ),
           if (_selectedIndex == 0)
             Positioned(
               left: 0,
               right: 0,
-              /*
-               * Juste au-dessus de la navigation.
-               */
-              bottom: bottomSafeArea + 82,
-              child: Center(child: _buildTransferButton()),
+              bottom: transferBottom,
+              child: Center(
+                child: PayflowTransferButton(
+                  label: l10n.transferAction,
+                  collapseProgress: _navigationCollapse,
+                  onTap: _openTransfer,
+                ),
+              ),
             ),
-
-          // ===================================================
-          // FLOATING NAVIGATION
-          // ===================================================
           Positioned(
-            left: 34,
-            right: 34,
-            /*
-             * Pas de marge artificielle supplémentaire.
-             * La SafeArea fait uniquement le travail nécessaire.
-             */
+            left: navigationInset,
+            right: navigationInset,
             bottom: 0,
             child: SafeArea(
               top: false,
               minimum: EdgeInsets.zero,
-              child: _buildFloatingNavigation(),
+              child: PayflowBottomNavigation(
+                selectedIndex: _selectedIndex,
+                collapseProgress: _navigationCollapse,
+                onSelected: _selectTab,
+                onExpand: _expandNavigation,
+                items: [
+                  PayflowNavigationItem(
+                    selectedIcon: Icons.home_rounded,
+                    unselectedIcon: Icons.home_outlined,
+                    label: l10n.homeTab,
+                  ),
+                  PayflowNavigationItem(
+                    selectedIcon: Icons.people_alt_rounded,
+                    unselectedIcon: Icons.people_outline_rounded,
+                    label: l10n.contactsTab,
+                  ),
+                  PayflowNavigationItem(
+                    selectedIcon: Icons.group_add_rounded,
+                    unselectedIcon: Icons.group_add_outlined,
+                    label: l10n.referralTab,
+                  ),
+                  PayflowNavigationItem(
+                    selectedIcon: Icons.person_rounded,
+                    unselectedIcon: Icons.person_outline_rounded,
+                    label: l10n.profileTab,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -84,8 +139,8 @@ class _HomePageState extends State<HomePage> {
   // =========================================================
   // SELECTED PAGE
   // =========================================================
-  Widget _buildSelectedPage() {
-    switch (_selectedIndex) {
+  Widget _buildPage(int index) {
+    switch (index) {
       // -------------------------------------------------------
       // HOME
       // -------------------------------------------------------
@@ -154,214 +209,54 @@ class _HomePageState extends State<HomePage> {
   }
 
   // =========================================================
-  // TRANSFER CTA
+  // NAVIGATION MOTION
   // =========================================================
-  Widget _buildTransferButton() {
-    final AppLocalizations l10n = AppLocalizations.of(context);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: _openTransfer,
-        borderRadius: BorderRadius.circular(25),
-        child: Container(
-          height: 35,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFF8A00),
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.16),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              /*
-               * L'icône remplace le +
-               */
-              const Icon(
-                Icons.swap_horiz_rounded,
-                color: Colors.white,
-                size: 25,
-              ),
-              const SizedBox(width: 9),
-              Text(
-                l10n.transferAction,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) {
+      return false;
+    }
+
+    double delta = 0;
+    if (notification is ScrollUpdateNotification) {
+      delta = notification.scrollDelta ?? 0;
+    } else if (notification is OverscrollNotification) {
+      delta = notification.overscroll;
+    }
+
+    if (delta != 0) {
+      _setNavigationCollapse(
+        _navigationCollapse + (delta / _collapseDistance),
+      );
+    }
+    return false;
   }
 
-  // =========================================================
-  // FLOATING NAVIGATION
-  // =========================================================
-  Widget _buildFloatingNavigation() {
-    final AppLocalizations l10n = AppLocalizations.of(context);
-    return Container(
-      height: 64,
-      // Ombre extérieure séparée du fond translucide
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(38),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 28,
-            spreadRadius: 0,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(38),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
-            decoration: BoxDecoration(
-              // 92 % opaque = légère transparence professionnelle
-              color: Colors.white.withValues(alpha: 0.55),
-              borderRadius: BorderRadius.circular(5),
-              // Bordure très légère pour détacher la barre du contenu
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.20),
-                width: 0.8,
-              ),
-            ),
-
-            child: Row(
-              children: [
-                // =================================================
-                // HOME
-                // =================================================
-                Expanded(
-                  child: _buildNavItem(
-                    index: 0,
-                    selectedIcon: Icons.home_rounded,
-                    unselectedIcon: Icons.home_outlined,
-                    label: l10n.homeTab,
-                  ),
-                ),
-
-                // =================================================
-                // CONTACTS
-                // =================================================
-                Expanded(
-                  child: _buildNavItem(
-                    index: 1,
-                    selectedIcon: Icons.people_alt_rounded,
-                    unselectedIcon: Icons.people_outline_rounded,
-                    label: l10n.contactsTab,
-                  ),
-                ),
-
-                // =================================================
-                // REFERRAL
-                // =================================================
-                Expanded(
-                  child: _buildNavItem(
-                    index: 2,
-                    selectedIcon: Icons.group_add_rounded,
-                    unselectedIcon: Icons.group_add_outlined,
-                    label: l10n.referralTab,
-                  ),
-                ),
-                // =================================================
-                // PROFILE
-                // =================================================
-                Expanded(
-                  child: _buildNavItem(
-                    index: 3,
-                    selectedIcon: Icons.person_rounded,
-                    unselectedIcon: Icons.person_outline_rounded,
-                    label: l10n.profileTab,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // =========================================================
-  // NAVIGATION ITEM
-  // =========================================================
-  Widget _buildNavItem({
-    required int index,
-    required IconData selectedIcon,
-    required IconData unselectedIcon,
-    required String label,
-  }) {
-    final bool selected = _selectedIndex == index;
-    const Color selectedColor = Color(0xFF008B80);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          _selectTab(index);
-        },
-        borderRadius: BorderRadius.circular(28),
-        // Suppression du flash/ripple visuel
-        splashFactory: NoSplash.splashFactory,
-        highlightColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        child: Container(
-          //duration: const Duration(milliseconds: 180),
-          //curve: Curves.easeOut,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: selected ? const Color(0xFFF0F3F2) : Colors.transparent,
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                selected ? selectedIcon : unselectedIcon,
-                size: 23,
-                color: selected ? selectedColor : const Color(0xFF302C2A),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: selected ? selectedColor : const Color(0xFF302C2A),
-                  fontSize: 10.5,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // =========================================================
-  // TAB
-  // =========================================================
-  void _selectTab(int index) {
-    if (_selectedIndex == index) {
+  void _setNavigationCollapse(double value) {
+    final next = value.clamp(0.0, 1.0);
+    if ((next - _navigationCollapse).abs() < 0.001 || !mounted) {
       return;
     }
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _navigationCollapse = next);
+  }
+
+  void _expandNavigation() {
+    if (_navigationCollapse == 0) {
+      return;
+    }
+    setState(() => _navigationCollapse = 0);
+  }
+
+  void _selectTab(int index) {
+    if (_selectedIndex == index || !_pageController.hasClients) {
+      return;
+    }
+
+    setState(() => _selectedIndex = index);
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 360),
+      curve: Curves.easeInOutCubicEmphasized,
+    );
   }
 
   // =========================================================
