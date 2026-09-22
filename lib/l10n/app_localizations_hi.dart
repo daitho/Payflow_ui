@@ -907,6 +907,12 @@ class AppLocalizationsHi extends AppLocalizations {
       'दर समाप्त हो गई है। नई कोटेशन की गणना की जाएगी।';
 
   @override
+  String get transferAmountBelowMinimumError => "राशि इस गंतव्य के लिए अनुमत न्यूनतम सीमा से कम है।";
+
+  @override
+  String get transferAmountAboveMaximumError => "राशि इस गंतव्य के लिए अनुमत अधिकतम सीमा से अधिक है।";
+
+  @override
   String get transferUnavailableError =>
       'यह हस्तांतरण इस लाभार्थी या राशि के लिए उपलब्ध नहीं है।';
 

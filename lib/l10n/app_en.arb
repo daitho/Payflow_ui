@@ -327,6 +327,8 @@
   "transferBeneficiaryUnavailable": "This beneficiary or destination is no longer available.",
   "transferConflictError": "This transfer has already been confirmed or can no longer be used.",
   "transferQuoteExpired": "The rate has expired. A new quote will be calculated.",
+  "transferAmountBelowMinimumError": "The amount is below the minimum allowed for this destination.",
+  "transferAmountAboveMaximumError": "The amount exceeds the maximum allowed for this destination.",
   "transferUnavailableError": "This transfer is not available for this beneficiary or amount.",
   "systemLanguage": "Device language",
   "spanish": "Spanish",

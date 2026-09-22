@@ -912,6 +912,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'The rate has expired. A new quote will be calculated.';
 
   @override
+  String get transferAmountBelowMinimumError => "The amount is below the minimum allowed for this destination.";
+
+  @override
+  String get transferAmountAboveMaximumError => "The amount exceeds the maximum allowed for this destination.";
+
+  @override
   String get transferUnavailableError =>
       'This transfer is not available for this beneficiary or amount.';
 

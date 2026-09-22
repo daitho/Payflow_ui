@@ -65,8 +65,16 @@ class TransferViewModel extends ChangeNotifier {
   num get _activeAmount => _amountInput == TransferAmountInput.sent
       ? _sentAmount
       : _receivedAmount;
+  bool get hasBlockingAmountError =>
+      _error == TransferFailure.amountBelowMinimum ||
+      _error == TransferFailure.amountAboveMaximum;
+
   bool get canContinue =>
-      _beneficiary != null && hasUsableDestination && _activeAmount > 0 && !busy;
+      _beneficiary != null &&
+      hasUsableDestination &&
+      _activeAmount > 0 &&
+      !busy &&
+      !hasBlockingAmountError;
 
   String get initialAmountText {
     final value = _sentAmount.toDouble();

@@ -4,6 +4,8 @@ enum TransferFailure {
   notFound,
   conflict,
   quoteExpired,
+  amountBelowMinimum,
+  amountAboveMaximum,
   unavailable,
   network,
   timeout,

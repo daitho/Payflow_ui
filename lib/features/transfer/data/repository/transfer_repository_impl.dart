@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../domain/exception/transfer_error_codes.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/transfer_quote.dart';
 import '../../domain/repository/transfer_repository.dart';
@@ -41,7 +42,13 @@ class TransferRepositoryImpl implements TransferRepository {
     try {
       return await action();
     } on DioException catch (error) {
-      final failure = switch (error.response?.statusCode) {
+      final errorCode = _errorCode(error.response?.data);
+      final failure = switch (errorCode) {
+        TransferErrorCodes.amountBelowMinimum =>
+          TransferFailure.amountBelowMinimum,
+        TransferErrorCodes.amountAboveMaximum =>
+          TransferFailure.amountAboveMaximum,
+        _ => switch (error.response?.statusCode) {
         400 => TransferFailure.invalid,
         401 => TransferFailure.sessionExpired,
         404 => TransferFailure.notFound,
@@ -56,6 +63,7 @@ class TransferRepositoryImpl implements TransferRepository {
           DioExceptionType.badResponse => TransferFailure.server,
           _ => TransferFailure.unexpected,
         },
+      },
       };
       throw TransferException(failure);
     } on FormatException {
@@ -65,5 +73,13 @@ class TransferRepositoryImpl implements TransferRepository {
     } on StateError {
       throw const TransferException(TransferFailure.invalidResponse);
     }
+  }
+
+  String? _errorCode(Object? responseData) {
+    if (responseData case final Map<dynamic, dynamic> data) {
+      final code = data['code'];
+      return code is String ? code : null;
+    }
+    return null;
   }
 }

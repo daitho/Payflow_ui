@@ -1782,6 +1782,18 @@ abstract class AppLocalizations {
   /// **'The rate has expired. A new quote will be calculated.'**
   String get transferQuoteExpired;
 
+  /// No description provided for @transferAmountBelowMinimumError.
+  ///
+  /// In en, this message translates to:
+  /// **'The amount is below the minimum allowed for this destination.'**
+  String get transferAmountBelowMinimumError;
+
+  /// No description provided for @transferAmountAboveMaximumError.
+  ///
+  /// In en, this message translates to:
+  /// **'The amount exceeds the maximum allowed for this destination.'**
+  String get transferAmountAboveMaximumError;
+
   /// No description provided for @transferUnavailableError.
   ///
   /// In en, this message translates to:
