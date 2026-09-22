@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'app/router/app_routes.dart';
 import 'app/navigation/payflow_bottom_navigation.dart';
+import 'app/navigation/payflow_navigation_motion.dart';
 import 'app/navigation/payflow_transfer_button.dart';
 import 'features/home/domain/model/home_beneficiary_model.dart';
 import 'features/home/presentation/view/home_view.dart';
@@ -25,8 +26,9 @@ class _HomePageState extends State<HomePage> {
   // =========================================================
   // STATE
   // =========================================================
-  static const double _collapseDistance = 118;
   final PageController _pageController = PageController();
+  final PayflowNavigationMotion _navigationMotion =
+      PayflowNavigationMotion();
   int _selectedIndex = 0;
   double _navigationCollapse = 0;
   HomeBeneficiaryModel? _selectedBeneficiary;
@@ -216,6 +218,16 @@ class _HomePageState extends State<HomePage> {
       return false;
     }
 
+    if (notification is ScrollStartNotification) {
+      _navigationMotion.resetGesture();
+      return false;
+    }
+
+    if (notification is ScrollEndNotification) {
+      _navigationMotion.resetGesture();
+      return false;
+    }
+
     double delta = 0;
     if (notification is ScrollUpdateNotification) {
       delta = notification.scrollDelta ?? 0;
@@ -225,7 +237,10 @@ class _HomePageState extends State<HomePage> {
 
     if (delta != 0) {
       _setNavigationCollapse(
-        _navigationCollapse + (delta / _collapseDistance),
+        _navigationMotion.consume(
+          progress: _navigationCollapse,
+          delta: delta,
+        ),
       );
     }
     return false;
@@ -240,6 +255,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _expandNavigation() {
+    _navigationMotion.resetGesture();
     if (_navigationCollapse == 0) {
       return;
     }
