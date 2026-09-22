@@ -75,6 +75,8 @@ class AuthRepositoryImpl implements AuthRepository {
       email: command.email,
       password: command.password,
       phoneE164: command.phoneE164,
+      residenceCountryIsoCode2:
+          command.residenceCountryIsoCode2,
       verificationChannel: command.verificationChannel.apiValue,
       deviceId: deviceContext.deviceId,
       deviceName: deviceContext.deviceName,

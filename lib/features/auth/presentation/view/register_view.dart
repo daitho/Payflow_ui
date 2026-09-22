@@ -1027,6 +1027,7 @@ class _RegisterViewState extends State<RegisterView> {
       lastName: _lastNameController.text,
       email: _emailController.text,
       phoneE164: phoneE164,
+      residenceCountryIsoCode2: country.countryCode,
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
     );

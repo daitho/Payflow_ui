@@ -223,6 +223,7 @@ class RegisterViewModel extends ChangeNotifier {
     required String lastName,
     required String email,
     required String phoneE164,
+    required String residenceCountryIsoCode2,
     required String password,
     required String confirmPassword,
   }) async {
@@ -282,6 +283,8 @@ class RegisterViewModel extends ChangeNotifier {
         lastName: cleanLastName,
         email: cleanEmail,
         phoneE164: cleanPhoneE164,
+        residenceCountryIsoCode2:
+            residenceCountryIsoCode2,
         password: password,
       );
       return true;

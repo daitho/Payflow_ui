@@ -14,6 +14,7 @@ class RegisterService {
     required String lastName,
     required String email,
     required String phoneE164,
+    required String residenceCountryIsoCode2,
     required String password,
   }) {
     return _authRepository.register(
@@ -22,6 +23,8 @@ class RegisterService {
         lastName: lastName.trim(),
         email: email.trim().toLowerCase(),
         phoneE164: phoneE164.trim(),
+        residenceCountryIsoCode2:
+            residenceCountryIsoCode2.trim().toUpperCase(),
         password: password,
         verificationChannel: VerificationChannel.email,
       ),

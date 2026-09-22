@@ -5,6 +5,7 @@ class RegisterCommand {
   final String lastName;
   final String email;
   final String phoneE164;
+  final String residenceCountryIsoCode2;
   final String password;
   final VerificationChannel verificationChannel;
 
@@ -13,6 +14,7 @@ class RegisterCommand {
     required this.lastName,
     required this.email,
     required this.phoneE164,
+    required this.residenceCountryIsoCode2,
     required this.password,
     required this.verificationChannel,
   });
