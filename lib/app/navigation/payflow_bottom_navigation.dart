@@ -40,7 +40,7 @@ class PayflowBottomNavigation extends StatelessWidget {
     final double labelOpacity = (1 - progress / .42)
         .clamp(0.0, 1.0)
         .toDouble();
-    final double iconOpacity = (1 - ((progress - .38) / .54))
+    final double iconOpacity = (1 - ((progress - .45) / .47))
         .clamp(0.0, 1.0)
         .toDouble();
     final double handleOpacity = ((progress - .72) / .28)

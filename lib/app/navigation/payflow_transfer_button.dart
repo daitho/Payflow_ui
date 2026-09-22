@@ -22,7 +22,7 @@ class PayflowTransferButton extends StatelessWidget {
         .clamp(0.0, 1.0)
         .toDouble();
     final height = lerpDouble(35, 48, progress)!;
-    final horizontalPadding = lerpDouble(10, 11.5, progress)!;
+    final horizontalPadding = lerpDouble(10, 10.5, progress)!;
     final iconSize = lerpDouble(25, 27, progress)!;
 
     return Semantics(
