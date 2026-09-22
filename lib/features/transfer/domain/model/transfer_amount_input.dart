@@ -1,0 +1,1 @@
+enum TransferAmountInput { sent, received }

@@ -4,7 +4,8 @@ abstract interface class TransferRepository {
   Future<TransferQuote> createQuote({
     required String beneficiaryId,
     required String destinationId,
-    required num sentAmount,
+    num? sentAmount,
+    num? receivedAmount,
     required String sentCurrency,
   });
 

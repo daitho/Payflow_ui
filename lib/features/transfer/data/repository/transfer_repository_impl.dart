@@ -13,13 +13,15 @@ class TransferRepositoryImpl implements TransferRepository {
   Future<TransferQuote> createQuote({
     required String beneficiaryId,
     required String destinationId,
-    required num sentAmount,
+    num? sentAmount,
+    num? receivedAmount,
     required String sentCurrency,
   }) => _guard(
     () async => (await _api.createQuote(
       beneficiaryId: beneficiaryId,
       destinationId: destinationId,
       sentAmount: sentAmount,
+      receivedAmount: receivedAmount,
       sentCurrency: sentCurrency,
     )).toDomain(),
   );

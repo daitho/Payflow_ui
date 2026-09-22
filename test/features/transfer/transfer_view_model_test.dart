@@ -38,30 +38,34 @@ class BeneficiariesFake implements BeneficiaryRepository {
 class TransfersFake implements TransferRepository {
   int quoteRequests = 0;
   String? beneficiaryId, destinationId, sentCurrency, idempotencyKey;
-  num? sentAmount;
+  num? sentAmount, receivedAmount;
 
   @override
   Future<TransferQuote> createQuote({
     required String beneficiaryId,
     required String destinationId,
-    required num sentAmount,
+    num? sentAmount,
+    num? receivedAmount,
     required String sentCurrency,
   }) async {
     quoteRequests++;
     this.beneficiaryId = beneficiaryId;
     this.destinationId = destinationId;
     this.sentAmount = sentAmount;
+    this.receivedAmount = receivedAmount;
     this.sentCurrency = sentCurrency;
+    final resolvedSentAmount =
+        sentAmount ?? (receivedAmount! / 655.96);
     return TransferQuote(
       id: 'quote-1',
       beneficiaryId: beneficiaryId,
       destinationId: destinationId,
-      sentAmount: sentAmount,
+      sentAmount: resolvedSentAmount,
       sentCurrency: sentCurrency,
       customerRate: 655.96,
       fee: 1,
-      totalDebited: sentAmount + 1,
-      receivedAmount: sentAmount * 655.96,
+      totalDebited: resolvedSentAmount + 1,
+      receivedAmount: receivedAmount ?? resolvedSentAmount * 655.96,
       receivedCurrency: 'XAF',
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
       status: 'ACTIVE',
@@ -117,4 +121,33 @@ void main() {
       vm.dispose();
     },
   );
+
+  test('received amount requests a backend reverse quote', () async {
+    final transfers = TransfersFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+
+    vm.setReceivedAmount('6560');
+    await vm.ensureQuote();
+
+    expect(transfers.sentAmount, isNull);
+    expect(transfers.receivedAmount, 6560);
+    expect(vm.quote!.receivedAmount, 6560);
+    expect(vm.sentAmount, closeTo(10, .01));
+    vm.dispose();
+  });
+
+  test('amount suggestions follow the source currency', () {
+    final eur = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(sentCurrency: 'EUR'),
+    );
+    expect(eur.suggestedAmounts, [20, 50, 100, 150, 200]);
+    eur.dispose();
+  });
 }

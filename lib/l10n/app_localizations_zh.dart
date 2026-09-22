@@ -825,6 +825,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferFundingLabel => '付款方式';
 
   @override
+  String get transferSuggestedAmounts => "建议金额";
+
+  @override
   String get transferFundingCard => '银行卡';
 
   @override

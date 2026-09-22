@@ -315,6 +315,7 @@
   "transferYouSend": "您汇出",
   "transferAmountReceived": "到账金额",
   "transferFundingLabel": "付款方式",
+  "transferSuggestedAmounts": "建议金额",
   "transferFundingCard": "银行卡",
   "transferCurrentRate": "汇率",
   "transferChooseForQuote": "选择收款人以计算汇率和手续费。",

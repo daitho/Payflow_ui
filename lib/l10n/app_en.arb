@@ -315,6 +315,7 @@
   "transferYouSend": "You send",
   "transferAmountReceived": "Amount received",
   "transferFundingLabel": "Payment method",
+  "transferSuggestedAmounts": "Suggested amounts",
   "transferFundingCard": "Bank card",
   "transferCurrentRate": "Exchange rate",
   "transferChooseForQuote": "Choose a beneficiary to calculate the rate and fees.",

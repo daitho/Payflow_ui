@@ -880,6 +880,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transferFundingLabel => 'Mode d\'envoi';
 
   @override
+  String get transferSuggestedAmounts => "Montants suggérés";
+
+  @override
   String get transferFundingCard => 'Carte bancaire';
 
   @override

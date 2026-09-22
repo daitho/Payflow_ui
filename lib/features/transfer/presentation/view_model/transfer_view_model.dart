@@ -8,8 +8,10 @@ import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/domain/service/beneficiary_service.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/transfer_draft_seed.dart';
+import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
 import '../../domain/service/transfer_service.dart';
+import '../../domain/service/transfer_amount_suggestions.dart';
 
 class TransferViewModel extends ChangeNotifier {
   final TransferService _transfers;
@@ -32,6 +34,8 @@ class TransferViewModel extends ChangeNotifier {
   TransferQuote? _quote;
   TransferFailure? _error;
   num _sentAmount;
+  num _receivedAmount = 0;
+  TransferAmountInput _amountInput = TransferAmountInput.sent;
   final String _sentCurrency;
   TransferFundingMethod _fundingMethod = TransferFundingMethod.card;
   bool _initializing = false;
@@ -46,7 +50,11 @@ class TransferViewModel extends ChangeNotifier {
   TransferQuote? get quote => _quote;
   TransferFailure? get error => _error;
   num get sentAmount => _sentAmount;
+  num get receivedAmount => _receivedAmount;
+  TransferAmountInput get amountInput => _amountInput;
   String get sentCurrency => _sentCurrency;
+  List<num> get suggestedAmounts =>
+      TransferAmountSuggestions.forCurrency(_sentCurrency);
   TransferFundingMethod get fundingMethod => _fundingMethod;
   bool get initializing => _initializing;
   bool get quoting => _quoting;
@@ -54,8 +62,11 @@ class TransferViewModel extends ChangeNotifier {
   bool get busy => _initializing || _quoting || _confirming;
   bool get hasUsableDestination =>
       _beneficiary?.destinationId?.trim().isNotEmpty == true;
+  num get _activeAmount => _amountInput == TransferAmountInput.sent
+      ? _sentAmount
+      : _receivedAmount;
   bool get canContinue =>
-      _beneficiary != null && hasUsableDestination && _sentAmount > 0 && !busy;
+      _beneficiary != null && hasUsableDestination && _activeAmount > 0 && !busy;
 
   String get initialAmountText {
     final value = _sentAmount.toDouble();
@@ -97,8 +108,29 @@ class TransferViewModel extends ChangeNotifier {
 
   void setSentAmount(String rawValue) {
     if (_disposed) return;
-    final normalized = rawValue.trim().replaceAll(',', '.');
-    _sentAmount = num.tryParse(normalized) ?? 0;
+    _amountInput = TransferAmountInput.sent;
+    _sentAmount = _parseAmount(rawValue);
+    _receivedAmount = 0;
+    _invalidateQuote();
+    _scheduleQuote();
+    _notify();
+  }
+
+  void setReceivedAmount(String rawValue) {
+    if (_disposed) return;
+    _amountInput = TransferAmountInput.received;
+    _receivedAmount = _parseAmount(rawValue);
+    _sentAmount = 0;
+    _invalidateQuote();
+    _scheduleQuote();
+    _notify();
+  }
+
+  void selectSuggestedAmount(num amount) {
+    if (_disposed || amount <= 0) return;
+    _amountInput = TransferAmountInput.sent;
+    _sentAmount = amount;
+    _receivedAmount = 0;
     _invalidateQuote();
     _scheduleQuote();
     _notify();
@@ -112,8 +144,11 @@ class TransferViewModel extends ChangeNotifier {
 
   Future<TransferQuote?> ensureQuote() async {
     _quoteDebounce?.cancel();
+    final quoteMatchesInput = _amountInput == TransferAmountInput.sent
+        ? _quote?.sentAmount == _sentAmount
+        : _quote?.receivedAmount == _receivedAmount;
     if (_quote?.isUsable == true &&
-        _quote!.sentAmount == _sentAmount &&
+        quoteMatchesInput &&
         _quote!.beneficiaryId == _beneficiary?.id) {
       return _quote;
     }
@@ -150,7 +185,7 @@ class TransferViewModel extends ChangeNotifier {
 
   void _scheduleQuote() {
     _quoteDebounce?.cancel();
-    if (_beneficiary == null || !hasUsableDestination || _sentAmount <= 0) {
+    if (_beneficiary == null || !hasUsableDestination || _activeAmount <= 0) {
       return;
     }
     _quoteDebounce = Timer(const Duration(milliseconds: 550), _requestQuote);
@@ -163,7 +198,7 @@ class TransferViewModel extends ChangeNotifier {
         contact == null ||
         destinationId == null ||
         destinationId.trim().isEmpty ||
-        _sentAmount <= 0) {
+        _activeAmount <= 0) {
       return;
     }
     final generation = ++_quoteGeneration;
@@ -174,11 +209,18 @@ class TransferViewModel extends ChangeNotifier {
       final result = await _transfers.createQuote(
         beneficiaryId: contact.id,
         destinationId: destinationId,
-        sentAmount: _sentAmount,
+        sentAmount: _amountInput == TransferAmountInput.sent
+            ? _sentAmount
+            : null,
+        receivedAmount: _amountInput == TransferAmountInput.received
+            ? _receivedAmount
+            : null,
         sentCurrency: _sentCurrency,
       );
       if (!_disposed && generation == _quoteGeneration) {
         _quote = result;
+        _sentAmount = result.sentAmount;
+        _receivedAmount = result.receivedAmount;
         _idempotencyKey = _uuid.v4();
       }
     } on TransferException catch (error) {
@@ -195,6 +237,11 @@ class TransferViewModel extends ChangeNotifier {
         _notify();
       }
     }
+  }
+
+  num _parseAmount(String rawValue) {
+    final normalized = rawValue.trim().replaceAll(',', '.');
+    return num.tryParse(normalized) ?? 0;
   }
 
   void _invalidateQuote() {

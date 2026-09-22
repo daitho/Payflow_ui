@@ -315,6 +315,7 @@
   "transferYouSend": "आप भेजेंगे",
   "transferAmountReceived": "प्राप्त राशि",
   "transferFundingLabel": "भुगतान का तरीका",
+  "transferSuggestedAmounts": "सुझाई गई राशियाँ",
   "transferFundingCard": "बैंक कार्ड",
   "transferCurrentRate": "विनिमय दर",
   "transferChooseForQuote": "दर और शुल्क की गणना के लिए लाभार्थी चुनें।",
