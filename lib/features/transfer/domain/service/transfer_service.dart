@@ -9,20 +9,24 @@ class TransferService {
   Future<TransferQuote> createQuote({
     required String beneficiaryId,
     required String destinationId,
-    required num sentAmount,
+    num? sentAmount,
+    num? receivedAmount,
     required String sentCurrency,
   }) {
     final currency = sentCurrency.trim().toUpperCase();
+    final hasSentAmount = sentAmount != null && sentAmount > 0;
+    final hasReceivedAmount = receivedAmount != null && receivedAmount > 0;
     if (beneficiaryId.trim().isEmpty ||
         destinationId.trim().isEmpty ||
-        sentAmount <= 0 ||
+        hasSentAmount == hasReceivedAmount ||
         !RegExp(r'^[A-Z]{3}$').hasMatch(currency)) {
       throw const TransferException(TransferFailure.invalid);
     }
     return _repository.createQuote(
       beneficiaryId: beneficiaryId,
       destinationId: destinationId,
-      sentAmount: sentAmount,
+      sentAmount: hasSentAmount ? sentAmount : null,
+      receivedAmount: hasReceivedAmount ? receivedAmount : null,
       sentCurrency: currency,
     );
   }

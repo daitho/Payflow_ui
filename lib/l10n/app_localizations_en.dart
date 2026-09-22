@@ -870,6 +870,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferFundingLabel => 'Payment method';
 
   @override
+  String get transferSuggestedAmounts => "Suggested amounts";
+
+  @override
   String get transferFundingCard => 'Bank card';
 
   @override

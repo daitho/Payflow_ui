@@ -9,7 +9,8 @@ class TransferApiService {
   Future<TransferQuoteDto> createQuote({
     required String beneficiaryId,
     required String destinationId,
-    required num sentAmount,
+    num? sentAmount,
+    num? receivedAmount,
     required String sentCurrency,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
@@ -17,7 +18,8 @@ class TransferApiService {
       data: {
         'beneficiaryId': beneficiaryId,
         'destinationId': destinationId,
-        'sentAmount': sentAmount,
+        if (sentAmount != null) 'sentAmount': sentAmount,
+        if (receivedAmount != null) 'receivedAmount': receivedAmount,
         'sentCurrency': sentCurrency,
       },
     );

@@ -315,6 +315,7 @@
   "transferYouSend": "Tú envías",
   "transferAmountReceived": "Importe recibido",
   "transferFundingLabel": "Método de pago",
+  "transferSuggestedAmounts": "Importes sugeridos",
   "transferFundingCard": "Tarjeta bancaria",
   "transferCurrentRate": "Tipo de cambio",
   "transferChooseForQuote": "Elige un beneficiario para calcular el tipo y las comisiones.",

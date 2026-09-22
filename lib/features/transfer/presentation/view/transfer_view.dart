@@ -9,6 +9,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
 import '../../domain/exception/transfer_exception.dart';
+import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
 import '../view_model/transfer_view_model.dart';
 
@@ -19,20 +20,63 @@ class TransferView extends StatefulWidget {
 }
 
 class _TransferViewState extends State<TransferView> {
-  late final TextEditingController _amount;
+  late final TextEditingController _sentAmount;
+  late final TextEditingController _receivedAmount;
+  String? _synchronizedQuoteId;
 
   @override
   void initState() {
     super.initState();
-    _amount = TextEditingController(
+    _sentAmount = TextEditingController(
       text: context.read<TransferViewModel>().initialAmountText,
     );
+    _receivedAmount = TextEditingController();
   }
 
   @override
   void dispose() {
-    _amount.dispose();
+    _sentAmount.dispose();
+    _receivedAmount.dispose();
     super.dispose();
+  }
+
+  void _synchronizeQuotedAmount(TransferViewModel viewModel) {
+    final quote = viewModel.quote;
+    if (quote == null || quote.id == _synchronizedQuoteId) return;
+    _synchronizedQuoteId = quote.id;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || viewModel.quote?.id != quote.id) return;
+      if (viewModel.amountInput == TransferAmountInput.sent) {
+        _setAmountText(_receivedAmount, quote.receivedAmount);
+      } else {
+        _setAmountText(_sentAmount, quote.sentAmount);
+      }
+    });
+  }
+
+  void _setAmountText(TextEditingController controller, num amount) {
+    final text = _editableDecimal(amount);
+    controller.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
+  void _changeSentAmount(TransferViewModel viewModel, String value) {
+    _receivedAmount.clear();
+    viewModel.setSentAmount(value);
+  }
+
+  void _changeReceivedAmount(TransferViewModel viewModel, String value) {
+    _sentAmount.clear();
+    viewModel.setReceivedAmount(value);
+  }
+
+  void _selectSuggestedAmount(TransferViewModel viewModel, num amount) {
+    FocusScope.of(context).unfocus();
+    _setAmountText(_sentAmount, amount);
+    _receivedAmount.clear();
+    viewModel.selectSuggestedAmount(amount);
   }
 
   Future<void> _chooseBeneficiary(TransferViewModel vm) async {
@@ -84,6 +128,7 @@ class _TransferViewState extends State<TransferView> {
     final contact = vm.beneficiary;
     final quote = vm.quote;
     final flag = contact == null ? '' : beneficiaryFlag(contact.countryCode);
+    _synchronizeQuotedAmount(vm);
     return PopScope(
       canPop: !vm.confirming,
       child: Scaffold(
@@ -143,21 +188,31 @@ class _TransferViewState extends State<TransferView> {
                           Expanded(
                             child: _AmountField(
                               label: l10n.transferYouSend,
-                              controller: _amount,
-                              currency: vm.sentCurrency,
+                              controller: _sentAmount,
+                              currency: _displayCurrency(vm.sentCurrency),
                               enabled: !vm.confirming,
-                              onChanged: vm.setSentAmount,
+                              loading:
+                                  vm.quoting &&
+                                  vm.amountInput == TransferAmountInput.received,
+                              onChanged: (value) => _changeSentAmount(vm, value),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: _ReceivedAmountCard(
+                            child: _AmountField(
                               label: l10n.transferAmountReceived,
-                              amount: quote?.receivedAmount,
-                              currency:
-                                  quote?.receivedCurrency ??
-                                  contact?.currencyCode,
-                              loading: vm.quoting,
+                              controller: _receivedAmount,
+                              currency: _displayCurrency(
+                                quote?.receivedCurrency ??
+                                    contact?.currencyCode ??
+                                    '',
+                              ),
+                              enabled: !vm.confirming && contact != null,
+                              loading:
+                                  vm.quoting &&
+                                  vm.amountInput == TransferAmountInput.sent,
+                              onChanged: (value) =>
+                                  _changeReceivedAmount(vm, value),
                             ),
                           ),
                         ],
@@ -222,6 +277,19 @@ class _TransferViewState extends State<TransferView> {
                           onRetry: vm.canContinue ? vm.ensureQuote : null,
                         ),
                       ],
+                      const SizedBox(height: 28),
+                      _SuggestedAmounts(
+                        title: l10n.transferSuggestedAmounts,
+                        amounts: vm.suggestedAmounts,
+                        currency: vm.sentCurrency,
+                        selectedAmount:
+                            vm.amountInput == TransferAmountInput.sent
+                            ? vm.sentAmount
+                            : null,
+                        enabled: !vm.confirming,
+                        onSelected: (amount) =>
+                            _selectSuggestedAmount(vm, amount),
+                      ),
                     ],
                   ),
                 ),
@@ -398,12 +466,14 @@ class _AmountField extends StatelessWidget {
   final TextEditingController controller;
   final String currency;
   final bool enabled;
+  final bool loading;
   final ValueChanged<String> onChanged;
   const _AmountField({
     required this.label,
     required this.controller,
     required this.currency,
     required this.enabled,
+    this.loading = false,
     required this.onChanged,
   });
 
@@ -420,7 +490,16 @@ class _AmountField extends StatelessWidget {
     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
     decoration: _fieldDecoration().copyWith(
       labelText: label.toUpperCase(),
-      suffixText: currency,
+      suffixIcon: loading
+          ? const Padding(
+              padding: EdgeInsets.all(15),
+              child: SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          : null,
+      suffixText: loading ? null : currency,
       suffixStyle: const TextStyle(
         color: Color(0xFF777274),
         fontWeight: FontWeight.w600,
@@ -429,46 +508,65 @@ class _AmountField extends StatelessWidget {
   );
 }
 
-class _ReceivedAmountCard extends StatelessWidget {
-  final String label;
-  final num? amount;
-  final String? currency;
-  final bool loading;
-  const _ReceivedAmountCard({
-    required this.label,
-    required this.amount,
+class _SuggestedAmounts extends StatelessWidget {
+  final String title;
+  final List<num> amounts;
+  final String currency;
+  final num? selectedAmount;
+  final bool enabled;
+  final ValueChanged<num> onSelected;
+
+  const _SuggestedAmounts({
+    required this.title,
+    required this.amounts,
     required this.currency,
-    required this.loading,
+    required this.selectedAmount,
+    required this.enabled,
+    required this.onSelected,
   });
 
   @override
-  Widget build(BuildContext context) => InputDecorator(
-    decoration: _fieldDecoration().copyWith(labelText: label.toUpperCase()),
-    child: Row(
-      children: [
-        Expanded(
-          child: loading
-              ? const LinearProgressIndicator(minHeight: 2)
-              : Text(
-                  amount == null ? '—' : _decimal(amount!),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          color: Color(0xFF777274),
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
         ),
-        if (currency != null) ...[
-          const SizedBox(width: 8),
-          Text(
-            currency == 'XAF' || currency == 'XOF' ? 'CFA' : currency!,
-            style: const TextStyle(
-              color: Color(0xFF777274),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ],
-    ),
+      ),
+      const SizedBox(height: 10),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final amount in amounts) ...[
+              ChoiceChip(
+                label: Text('${_editableDecimal(amount)} $currency'),
+                selected: selectedAmount == amount,
+                onSelected: enabled ? (_) => onSelected(amount) : null,
+                selectedColor: const Color(0xFFFFE4BA),
+                side: BorderSide(
+                  color: selectedAmount == amount
+                      ? const Color(0xFFFF9400)
+                      : const Color(0xFFE0DCDD),
+                ),
+                labelStyle: TextStyle(
+                  color: selectedAmount == amount
+                      ? const Color(0xFFC86E00)
+                      : const Color(0xFF514B4D),
+                  fontWeight: FontWeight.w600,
+                ),
+                showCheckmark: false,
+              ),
+              const SizedBox(width: 8),
+            ],
+          ],
+        ),
+      ),
+    ],
   );
 }
 
@@ -715,6 +813,18 @@ InputDecoration _fieldDecoration() => InputDecoration(
   ),
   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 17),
 );
+
+String _displayCurrency(String currency) {
+  final normalized = currency.trim().toUpperCase();
+  return normalized == 'XAF' || normalized == 'XOF' ? 'CFA' : normalized;
+}
+
+String _editableDecimal(num value) {
+  final decimal = value.toDouble();
+  return decimal == decimal.roundToDouble()
+      ? decimal.toStringAsFixed(0)
+      : decimal.toStringAsFixed(2);
+}
 
 String _decimal(num value) {
   final asDouble = value.toDouble();

@@ -866,6 +866,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferFundingLabel => 'भुगतान का तरीका';
 
   @override
+  String get transferSuggestedAmounts => "सुझाई गई राशियाँ";
+
+  @override
   String get transferFundingCard => 'बैंक कार्ड';
 
   @override

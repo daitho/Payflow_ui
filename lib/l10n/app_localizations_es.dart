@@ -883,6 +883,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferFundingLabel => 'Método de pago';
 
   @override
+  String get transferSuggestedAmounts => "Importes sugeridos";
+
+  @override
   String get transferFundingCard => 'Tarjeta bancaria';
 
   @override

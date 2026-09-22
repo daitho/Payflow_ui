@@ -1710,6 +1710,12 @@ abstract class AppLocalizations {
   /// **'Payment method'**
   String get transferFundingLabel;
 
+  /// No description provided for @transferSuggestedAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested amounts'**
+  String get transferSuggestedAmounts;
+
   /// No description provided for @transferFundingCard.
   ///
   /// In en, this message translates to:
