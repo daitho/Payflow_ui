@@ -17,8 +17,8 @@ class PayflowTransferButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = collapseProgress.clamp(0.0, 1.0);
-    final labelOpacity = (1 - progress / .62).clamp(0.0, 1.0);
+    final double progress = collapseProgress.clamp(0.0, 1.0).toDouble();
+    final double labelOpacity = (1 - progress / .62)\n        .clamp(0.0, 1.0)\n        .toDouble();
     final height = lerpDouble(35, 48, progress)!;
     final horizontalPadding = lerpDouble(10, 11.5, progress)!;
     final iconSize = lerpDouble(25, 27, progress)!;
@@ -31,9 +31,7 @@ class PayflowTransferButton extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(height / 2),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 90),
-            curve: Curves.linear,
+          child: Container(
             height: height,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             decoration: BoxDecoration(

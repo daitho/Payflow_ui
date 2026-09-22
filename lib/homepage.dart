@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _setNavigationCollapse(double value) {
-    final next = value.clamp(0.0, 1.0);
+    final double next = value.clamp(0.0, 1.0).toDouble();
     if ((next - _navigationCollapse).abs() < 0.001 || !mounted) {
       return;
     }
