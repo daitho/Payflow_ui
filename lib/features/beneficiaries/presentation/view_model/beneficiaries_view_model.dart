@@ -18,6 +18,23 @@ class BeneficiariesViewModel extends ChangeNotifier {
       ).contains(beneficiarySearchKey(_query)),
     ),
   );
+  void upsert(BeneficiaryContact contact) {
+    final index = _items.indexWhere((item) => item.id == contact.id);
+    if (index < 0) {
+      _items = [..._items, contact];
+    } else {
+      final updated = [..._items];
+      updated[index] = contact;
+      _items = updated;
+    }
+    _items.sort(
+      (left, right) => beneficiarySearchKey(
+        left.fullName,
+      ).compareTo(beneficiarySearchKey(right.fullName)),
+    );
+    notifyListeners();
+  }
+
   void search(String value) {
     _query = value;
     notifyListeners();

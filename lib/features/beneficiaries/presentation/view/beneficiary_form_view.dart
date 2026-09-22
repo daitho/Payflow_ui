@@ -7,6 +7,7 @@ import '../../domain/model/beneficiary_contact.dart';
 import '../view_model/beneficiary_form_view_model.dart';
 import '../widget/beneficiary_avatar.dart';
 import '../widget/beneficiary_error.dart';
+import 'beneficiary_form_copy.dart';
 
 class BeneficiaryFormView extends StatefulWidget {
   const BeneficiaryFormView({super.key});
@@ -16,12 +17,15 @@ class BeneficiaryFormView extends StatefulWidget {
 
 class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
   final _form = GlobalKey<FormState>();
-  final _name = TextEditingController(), _phone = TextEditingController();
+  final _name = TextEditingController();
+  final _phone = TextEditingController();
+  final _phoneConfirmation = TextEditingController();
   bool _initialized = false;
   @override
   void dispose() {
     _name.dispose();
     _phone.dispose();
+    _phoneConfirmation.dispose();
     super.dispose();
   }
 
@@ -41,6 +45,119 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
       borderSide: BorderSide.none,
     ),
   );
+  Future<void> _chooseCountry(
+    BeneficiaryFormViewModel vm,
+    List<BeneficiaryCountry> countries,
+  ) async {
+    if (vm.saving || countries.isEmpty) return;
+
+    final copy = BeneficiaryFormCopy.of(context);
+    final selected = await showModalBottomSheet<BeneficiaryCountry>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+              child: Text(
+                copy.chooseDialCode,
+                style: const TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: ListView.separated(
+                itemCount: countries.length,
+                separatorBuilder: (_, __) => const Divider(
+                  height: 1,
+                  indent: 64,
+                ),
+                itemBuilder: (context, index) {
+                  final country = countries[index];
+                  final digits = country.phoneCode.replaceAll(
+                    RegExp(r'[^0-9]'),
+                    '',
+                  );
+                  return ListTile(
+                    leading: Text(
+                      beneficiaryFlag(country.isoCode),
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                    title: Text(country.name),
+                    subtitle: Text('+$digits'),
+                    trailing: country.id == vm.countryId
+                        ? const Icon(
+                            Icons.check_circle,
+                            color: Color(0xFF0C9F93),
+                          )
+                        : null,
+                    onTap: () => Navigator.pop(
+                      sheetContext,
+                      country,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted || selected == null) return;
+    final changed = selected.id != vm.countryId;
+    vm.selectCountry(selected.id);
+    if (changed) {
+      _phone.clear();
+      _phoneConfirmation.clear();
+      _form.currentState?.reset();
+    }
+  }
+
+  Widget _phonePrefix({
+    required BeneficiaryFormViewModel vm,
+    required List<BeneficiaryCountry> countries,
+    required BeneficiaryCountry? country,
+    required String dialCode,
+    required bool interactive,
+  }) {
+    final content = Padding(
+      padding: const EdgeInsets.only(left: 12, right: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (country != null)
+            Text(
+              beneficiaryFlag(country.isoCode),
+              style: const TextStyle(fontSize: 21),
+            )
+          else
+            const Icon(Icons.flag_outlined, size: 21),
+          const SizedBox(width: 6),
+          Text(
+            dialCode.isEmpty ? '+ code' : dialCode,
+            textDirection: TextDirection.ltr,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          if (interactive)
+            const Icon(Icons.arrow_drop_down_rounded),
+        ],
+      ),
+    );
+
+    if (!interactive) return content;
+    return InkWell(
+      onTap: vm.saving
+          ? null
+          : () => _chooseCountry(vm, countries),
+      child: content,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<BeneficiaryFormViewModel>();
@@ -72,6 +189,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
       _phone.text = dialCode.isNotEmpty && storedPhone.startsWith(dialCode)
           ? storedPhone.substring(dialCode.length)
           : '';
+      _phoneConfirmation.text = _phone.text;
       _initialized = true;
     }
     final countryValid = countries.any((c) => c.id == vm.countryId);
@@ -119,15 +237,36 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
         ),
       );
     }
-    final countryField = DropdownButtonFormField<String>(
+    final countryField = FormField<String>(
       key: ValueKey('country-${vm.countryId}'),
       initialValue: vm.countryId,
-      isExpanded: true,
-      decoration: _decoration(label: l10n.contactCountry),
-      hint: Text(l10n.contactChoose),
-      items: countryItems,
-      onChanged: vm.saving ? null : vm.selectCountry,
-      validator: (v) => v == null ? l10n.contactRequired : null,
+      validator: (value) =>
+          value == null ? l10n.contactRequired : null,
+      builder: (field) => InkWell(
+        onTap: vm.saving
+            ? null
+            : () => _chooseCountry(vm, countries),
+        borderRadius: BorderRadius.circular(12),
+        child: InputDecorator(
+          decoration: _decoration(
+            label: l10n.contactCountry,
+          ).copyWith(errorText: field.errorText),
+          child: Row(
+            children: [
+              if (selectedCountry != null) ...[
+                Text(
+                  beneficiaryFlag(selectedCountry.isoCode),
+                  style: const TextStyle(fontSize: 21),
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Text(selectedCountry.name)),
+              ] else
+                Expanded(child: Text(l10n.contactChoose)),
+              const Icon(Icons.arrow_drop_down_rounded),
+            ],
+          ),
+        ),
+      ),
     );
     final operatorField = DropdownButtonFormField<String>(
       key: ValueKey('operator-${vm.countryId}-${vm.operatorId}'),
@@ -200,30 +339,23 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                           controller: _phone,
                           enabled: !vm.saving && dialCode.isNotEmpty,
                           keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(
                               15 - dialDigits.length,
                             ),
                           ],
-                          decoration: _decoration(hint: l10n.contactPhone).copyWith(
-                            // A separate display widget keeps the prefix visible even
-                            // when empty or unfocused, and outside the editable text.
-                            prefixIcon: dialCode.isEmpty
-                                ? null
-                                : Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 16,
-                                      right: 10,
-                                    ),
-                                    child: Text(
-                                      dialCode,
-                                      textDirection: TextDirection.ltr,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
-                                  ),
+                          decoration: _decoration(
+                            hint: l10n.contactPhone,
+                          ).copyWith(
+                            prefixIcon: _phonePrefix(
+                              vm: vm,
+                              countries: countries,
+                              country: selectedCountry,
+                              dialCode: dialCode,
+                              interactive: true,
+                            ),
                             prefixIconConstraints: const BoxConstraints(
                               minWidth: 0,
                               minHeight: 0,
@@ -238,6 +370,48 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                                   r'^\+[1-9][0-9]{6,14}$',
                                 ).hasMatch('$dialCode$digits')) {
                               return l10n.contactPhoneInvalid;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _phoneConfirmation,
+                          enabled: !vm.saving && dialCode.isNotEmpty,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(
+                              15 - dialDigits.length,
+                            ),
+                          ],
+                          decoration: _decoration(
+                            hint: BeneficiaryFormCopy.of(
+                              context,
+                            ).confirmPhone,
+                          ).copyWith(
+                            prefixIcon: _phonePrefix(
+                              vm: vm,
+                              countries: countries,
+                              country: selectedCountry,
+                              dialCode: dialCode,
+                              interactive: false,
+                            ),
+                            prefixIconConstraints: const BoxConstraints(
+                              minWidth: 0,
+                              minHeight: 0,
+                            ),
+                          ),
+                          validator: (value) {
+                            final digits = value ?? '';
+                            if (digits.isEmpty) {
+                              return l10n.contactRequired;
+                            }
+                            if (digits != _phone.text) {
+                              return BeneficiaryFormCopy.of(
+                                context,
+                              ).phoneMismatch;
                             }
                             return null;
                           },

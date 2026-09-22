@@ -24,7 +24,9 @@ class BeneficiariesView extends StatelessWidget {
           ? AppRoutes.beneficiaryCreate
           : AppRoutes.beneficiaryEditPath(id),
     );
-    if (saved != null && context.mounted) await vm.load();
+    if (saved != null && context.mounted) {
+      vm.upsert(saved);
+    }
   }
 
   @override
