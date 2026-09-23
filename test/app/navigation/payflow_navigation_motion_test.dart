@@ -2,6 +2,48 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pay_flow_ui/app/navigation/payflow_navigation_motion.dart';
 
 void main() {
+  test('top boundary always keeps navigation expanded', () {
+    final motion = PayflowNavigationMotion();
+
+    final progress = motion.consume(
+      progress: .7,
+      delta: -80,
+      boundary: PayflowScrollBoundary.top,
+    );
+
+    expect(progress, 0);
+  });
+
+  test('bottom boundary always keeps navigation collapsed', () {
+    final motion = PayflowNavigationMotion();
+
+    final progress = motion.consume(
+      progress: .2,
+      delta: 80,
+      boundary: PayflowScrollBoundary.bottom,
+    );
+
+    expect(progress, 1);
+  });
+
+  test('boundary lock resets the activation distance', () {
+    final motion = PayflowNavigationMotion(
+      activationDistance: 36,
+      transitionDistance: 150,
+    );
+
+    motion.consume(progress: .5, delta: 50);
+    final atTop = motion.consume(
+      progress: .6,
+      delta: -20,
+      boundary: PayflowScrollBoundary.top,
+    );
+    final afterLeavingTop = motion.consume(progress: atTop, delta: 20);
+
+    expect(atTop, 0);
+    expect(afterLeavingTop, 0);
+  });
+
   test('waits for the downward activation distance', () {
     final motion = PayflowNavigationMotion(
       activationDistance: 36,

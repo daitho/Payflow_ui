@@ -1,3 +1,5 @@
+enum PayflowScrollBoundary { none, top, bottom }
+
 class PayflowNavigationMotion {
   final double activationDistance;
   final double transitionDistance;
@@ -15,7 +17,18 @@ class PayflowNavigationMotion {
   double consume({
     required double progress,
     required double delta,
+    PayflowScrollBoundary boundary = PayflowScrollBoundary.none,
   }) {
+    if (boundary == PayflowScrollBoundary.top) {
+      resetGesture();
+      return 0;
+    }
+
+    if (boundary == PayflowScrollBoundary.bottom) {
+      resetGesture();
+      return 1;
+    }
+
     if (delta == 0) {
       return _bounded(progress);
     }

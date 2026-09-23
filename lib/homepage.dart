@@ -218,6 +218,18 @@ class _HomePageState extends State<HomePage> {
       return false;
     }
 
+    final boundary = _scrollBoundary(notification.metrics);
+    if (boundary != PayflowScrollBoundary.none) {
+      _setNavigationCollapse(
+        _navigationMotion.consume(
+          progress: _navigationCollapse,
+          delta: 0,
+          boundary: boundary,
+        ),
+      );
+      return false;
+    }
+
     if (notification is ScrollStartNotification) {
       _navigationMotion.resetGesture();
       return false;
@@ -244,6 +256,23 @@ class _HomePageState extends State<HomePage> {
       );
     }
     return false;
+  }
+
+  PayflowScrollBoundary _scrollBoundary(ScrollMetrics metrics) {
+    const tolerance = 0.5;
+    final hasScrollableContent =
+        metrics.maxScrollExtent - metrics.minScrollExtent > tolerance;
+
+    if (!hasScrollableContent ||
+        metrics.pixels <= metrics.minScrollExtent + tolerance) {
+      return PayflowScrollBoundary.top;
+    }
+
+    if (metrics.pixels >= metrics.maxScrollExtent - tolerance) {
+      return PayflowScrollBoundary.bottom;
+    }
+
+    return PayflowScrollBoundary.none;
   }
 
   void _setNavigationCollapse(double value) {
