@@ -193,15 +193,22 @@ class _NavigationItemView extends StatelessWidget {
                       scale: selected ? 1.06 : 1,
                       duration: const Duration(milliseconds: 260),
                       curve: Curves.easeOutBack,
-                      child: AnimatedSwitcher(
+                      child: AnimatedCrossFade(
                         duration: const Duration(milliseconds: 220),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        child: Icon(
-                          selected ? item.selectedIcon : item.unselectedIcon,
-                          key: ValueKey(selected),
+                        firstCurve: Curves.easeIn,
+                        secondCurve: Curves.easeOut,
+                        crossFadeState: selected
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        firstChild: Icon(
+                          item.unselectedIcon,
                           size: 23,
-                          color: selected ? selectedColor : unselectedColor,
+                          color: unselectedColor,
+                        ),
+                        secondChild: Icon(
+                          item.selectedIcon,
+                          size: 23,
+                          color: selectedColor,
                         ),
                       ),
                     ),

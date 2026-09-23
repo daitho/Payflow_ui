@@ -21,6 +21,7 @@ void main() {
     required double progress,
     required ValueChanged<int> onSelected,
     required VoidCallback onExpand,
+    int selectedIndex = 0,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -29,7 +30,7 @@ void main() {
           child: SizedBox(
             width: 340,
             child: PayflowBottomNavigation(
-              selectedIndex: 0,
+              selectedIndex: selectedIndex,
               collapseProgress: progress,
               items: items,
               onSelected: onSelected,
@@ -55,6 +56,25 @@ void main() {
     await tester.pump();
 
     expect(selected, 1);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('rapid tab changes keep animation keys unique', (tester) async {
+    Widget buildNavigation(int selectedIndex) => navigation(
+      progress: 0,
+      selectedIndex: selectedIndex,
+      onSelected: (_) {},
+      onExpand: () {},
+    );
+
+    await tester.pumpWidget(buildNavigation(0));
+    await tester.pumpWidget(buildNavigation(1));
+    await tester.pump(const Duration(milliseconds: 40));
+    await tester.pumpWidget(buildNavigation(0));
+    await tester.pump(const Duration(milliseconds: 40));
+    await tester.pumpWidget(buildNavigation(1));
+    await tester.pump();
+
     expect(tester.takeException(), isNull);
   });
 
