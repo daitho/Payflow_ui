@@ -866,7 +866,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferFundingLabel => 'भुगतान का तरीका';
 
   @override
-  String get transferSuggestedAmounts => "सुझाई गई राशियाँ";
+  String get transferSuggestedAmounts => 'सुझाई गई राशियाँ';
 
   @override
   String get transferFundingCard => 'बैंक कार्ड';
@@ -907,10 +907,12 @@ class AppLocalizationsHi extends AppLocalizations {
       'दर समाप्त हो गई है। नई कोटेशन की गणना की जाएगी।';
 
   @override
-  String get transferAmountBelowMinimumError => "राशि इस गंतव्य के लिए अनुमत न्यूनतम सीमा से कम है।";
+  String get transferAmountBelowMinimumError =>
+      'राशि इस गंतव्य के लिए अनुमत न्यूनतम सीमा से कम है।';
 
   @override
-  String get transferAmountAboveMaximumError => "राशि इस गंतव्य के लिए अनुमत अधिकतम सीमा से अधिक है।";
+  String get transferAmountAboveMaximumError =>
+      'राशि इस गंतव्य के लिए अनुमत अधिकतम सीमा से अधिक है।';
 
   @override
   String get transferUnavailableError =>

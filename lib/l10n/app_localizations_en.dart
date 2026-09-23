@@ -870,7 +870,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferFundingLabel => 'Payment method';
 
   @override
-  String get transferSuggestedAmounts => "Suggested amounts";
+  String get transferSuggestedAmounts => 'Suggested amounts';
 
   @override
   String get transferFundingCard => 'Bank card';
@@ -912,10 +912,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'The rate has expired. A new quote will be calculated.';
 
   @override
-  String get transferAmountBelowMinimumError => "The amount is below the minimum allowed for this destination.";
+  String get transferAmountBelowMinimumError =>
+      'The amount is below the minimum allowed for this destination.';
 
   @override
-  String get transferAmountAboveMaximumError => "The amount exceeds the maximum allowed for this destination.";
+  String get transferAmountAboveMaximumError =>
+      'The amount exceeds the maximum allowed for this destination.';
 
   @override
   String get transferUnavailableError =>

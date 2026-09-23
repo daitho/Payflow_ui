@@ -883,7 +883,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferFundingLabel => 'Método de pago';
 
   @override
-  String get transferSuggestedAmounts => "Importes sugeridos";
+  String get transferSuggestedAmounts => 'Importes sugeridos';
 
   @override
   String get transferFundingCard => 'Tarjeta bancaria';
@@ -925,10 +925,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'El tipo ha caducado. Se calculará una nueva cotización.';
 
   @override
-  String get transferAmountBelowMinimumError => "El importe es inferior al mínimo permitido para este destino.";
+  String get transferAmountBelowMinimumError =>
+      'El importe es inferior al mínimo permitido para este destino.';
 
   @override
-  String get transferAmountAboveMaximumError => "El importe supera el máximo permitido para este destino.";
+  String get transferAmountAboveMaximumError =>
+      'El importe supera el máximo permitido para este destino.';
 
   @override
   String get transferUnavailableError =>

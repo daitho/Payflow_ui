@@ -880,7 +880,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transferFundingLabel => 'Mode d\'envoi';
 
   @override
-  String get transferSuggestedAmounts => "Montants suggérés";
+  String get transferSuggestedAmounts => 'Montants suggérés';
 
   @override
   String get transferFundingCard => 'Carte bancaire';
@@ -922,10 +922,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le taux a expiré. Une nouvelle cotation va être calculée.';
 
   @override
-  String get transferAmountBelowMinimumError => "Le montant est inférieur au minimum autorisé pour cette destination.";
+  String get transferAmountBelowMinimumError =>
+      'Le montant est inférieur au minimum autorisé pour cette destination.';
 
   @override
-  String get transferAmountAboveMaximumError => "Le montant dépasse le maximum autorisé pour cette destination.";
+  String get transferAmountAboveMaximumError =>
+      'Le montant dépasse le maximum autorisé pour cette destination.';
 
   @override
   String get transferUnavailableError =>
