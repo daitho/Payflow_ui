@@ -29,3 +29,15 @@ final class ConfirmedTransferDto {
     status: json['status'] as String,
   );
 }
+
+
+final class PaypalPaymentIntentDto {
+  final Map<String, dynamic> json;
+  const PaypalPaymentIntentDto(this.json);
+
+  PaypalPaymentIntent toDomain() => PaypalPaymentIntent(
+    id: json['paymentIntentId'] as String,
+    status: json['status'] as String,
+    approvalUrl: json['approvalUrl'] as String?,
+  );
+}

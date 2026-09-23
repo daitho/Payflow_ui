@@ -31,15 +31,48 @@ class TransferService {
     );
   }
 
-  Future<ConfirmedTransfer> confirm({
+  Future<PaypalPaymentIntent> createPaypalPayment({
     required String quoteId,
     required String idempotencyKey,
   }) {
     if (quoteId.trim().isEmpty || idempotencyKey.trim().isEmpty) {
       throw const TransferException(TransferFailure.invalid);
     }
+    return _repository.createPaypalPayment(
+      quoteId: quoteId,
+      idempotencyKey: idempotencyKey,
+    );
+  }
+
+  Future<PaypalPaymentIntent> capturePaypalPayment({
+    required String paymentIntentId,
+    required String idempotencyKey,
+  }) {
+    if (paymentIntentId.trim().isEmpty || idempotencyKey.trim().isEmpty) {
+      throw const TransferException(TransferFailure.invalid);
+    }
+    return _repository.capturePaypalPayment(
+      paymentIntentId: paymentIntentId,
+      idempotencyKey: idempotencyKey,
+    );
+  }
+
+  Future<ConfirmedTransfer> confirm({
+    required String quoteId,
+    required TransferFundingMethod fundingMethod,
+    String? paymentIntentId,
+    required String idempotencyKey,
+  }) {
+    if (quoteId.trim().isEmpty ||
+        idempotencyKey.trim().isEmpty ||
+        (fundingMethod == TransferFundingMethod.paypal &&
+            (paymentIntentId == null || paymentIntentId.trim().isEmpty))) {
+      throw const TransferException(TransferFailure.invalid);
+    }
     return _repository.confirm(
       quoteId: quoteId,
+      fundingMethod: fundingMethod,
+      paymentIntentId: paymentIntentId,
       idempotencyKey: idempotencyKey,
     );
   }

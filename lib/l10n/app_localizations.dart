@@ -1722,6 +1722,17 @@ abstract class AppLocalizations {
   /// **'Bank card'**
   String get transferFundingCard;
 
+  /// Payment methods available for the transfer.
+  String get transferFundingApplePay;
+  String get transferFundingGooglePay;
+  String get transferFundingPaypal;
+
+  /// PayPal external approval flow.
+  String get transferPaypalReturnTitle;
+  String get transferPaypalReturnMessage;
+  String get transferPaypalVerify;
+  String get transferPaypalLaunchError;
+
   /// No description provided for @transferCurrentRate.
   ///
   /// In en, this message translates to:
