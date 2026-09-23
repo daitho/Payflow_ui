@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../domain/model/transfer_quote.dart';
 import '../dto/transfer_quote_dto.dart';
 
 class TransferApiService {
@@ -28,13 +29,46 @@ class TransferApiService {
     return TransferQuoteDto(data);
   }
 
-  Future<ConfirmedTransferDto> confirm({
+  Future<PaypalPaymentIntentDto> createPaypalPayment({
     required String quoteId,
     required String idempotencyKey,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
-      '/api/v1/transfers',
+      '/api/v1/payment-intents/paypal',
       data: {'quoteId': quoteId},
+      options: Options(headers: {'Idempotency-Key': idempotencyKey}),
+    );
+    final data = response.data;
+    if (data == null) throw StateError('Empty PayPal payment response');
+    return PaypalPaymentIntentDto(data);
+  }
+
+  Future<PaypalPaymentIntentDto> capturePaypalPayment({
+    required String paymentIntentId,
+    required String idempotencyKey,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/api/v1/payment-intents/paypal/$paymentIntentId/capture',
+      options: Options(headers: {'Idempotency-Key': idempotencyKey}),
+    );
+    final data = response.data;
+    if (data == null) throw StateError('Empty PayPal capture response');
+    return PaypalPaymentIntentDto(data);
+  }
+
+  Future<ConfirmedTransferDto> confirm({
+    required String quoteId,
+    required TransferFundingMethod fundingMethod,
+    String? paymentIntentId,
+    required String idempotencyKey,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/api/v1/transfers',
+      data: {
+        'quoteId': quoteId,
+        'paymentMethod': fundingMethod.apiValue,
+        if (paymentIntentId != null) 'paymentIntentId': paymentIntentId,
+      },
       options: Options(headers: {'Idempotency-Key': idempotencyKey}),
     );
     final data = response.data;

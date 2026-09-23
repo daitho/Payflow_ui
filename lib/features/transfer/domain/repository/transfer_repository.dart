@@ -9,8 +9,20 @@ abstract interface class TransferRepository {
     required String sentCurrency,
   });
 
+  Future<PaypalPaymentIntent> createPaypalPayment({
+    required String quoteId,
+    required String idempotencyKey,
+  });
+
+  Future<PaypalPaymentIntent> capturePaypalPayment({
+    required String paymentIntentId,
+    required String idempotencyKey,
+  });
+
   Future<ConfirmedTransfer> confirm({
     required String quoteId,
+    required TransferFundingMethod fundingMethod,
+    String? paymentIntentId,
     required String idempotencyKey,
   });
 }

@@ -1,4 +1,39 @@
-enum TransferFundingMethod { card }
+enum TransferFundingMethod {
+  applePay,
+  googlePay,
+  paypal,
+  card,
+}
+
+extension TransferFundingMethodApi on TransferFundingMethod {
+  String get apiValue => switch (this) {
+    TransferFundingMethod.applePay => 'APPLE_PAY',
+    TransferFundingMethod.googlePay => 'GOOGLE_PAY',
+    TransferFundingMethod.paypal => 'PAYPAL',
+    TransferFundingMethod.card => 'CARD',
+  };
+}
+
+class PaypalPaymentIntent {
+  final String id;
+  final String status;
+  final String? approvalUrl;
+
+  const PaypalPaymentIntent({
+    required this.id,
+    required this.status,
+    this.approvalUrl,
+  });
+
+  bool get requiresPayerAction =>
+      status.toUpperCase() == 'PAYER_ACTION_REQUIRED' &&
+      approvalUrl?.trim().isNotEmpty == true;
+
+  bool get completed {
+    final normalized = status.toUpperCase();
+    return normalized == 'COMPLETED' || normalized == 'CONSUMED';
+  }
+}
 
 class TransferQuote {
   final String id;

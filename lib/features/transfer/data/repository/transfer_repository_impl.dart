@@ -28,12 +28,38 @@ class TransferRepositoryImpl implements TransferRepository {
   );
 
   @override
+  Future<PaypalPaymentIntent> createPaypalPayment({
+    required String quoteId,
+    required String idempotencyKey,
+  }) => _guard(
+    () async => (await _api.createPaypalPayment(
+      quoteId: quoteId,
+      idempotencyKey: idempotencyKey,
+    )).toDomain(),
+  );
+
+  @override
+  Future<PaypalPaymentIntent> capturePaypalPayment({
+    required String paymentIntentId,
+    required String idempotencyKey,
+  }) => _guard(
+    () async => (await _api.capturePaypalPayment(
+      paymentIntentId: paymentIntentId,
+      idempotencyKey: idempotencyKey,
+    )).toDomain(),
+  );
+
+  @override
   Future<ConfirmedTransfer> confirm({
     required String quoteId,
+    required TransferFundingMethod fundingMethod,
+    String? paymentIntentId,
     required String idempotencyKey,
   }) => _guard(
     () async => (await _api.confirm(
       quoteId: quoteId,
+      fundingMethod: fundingMethod,
+      paymentIntentId: paymentIntentId,
       idempotencyKey: idempotencyKey,
     )).toDomain(),
   );
@@ -48,6 +74,17 @@ class TransferRepositoryImpl implements TransferRepository {
           TransferFailure.amountBelowMinimum,
         TransferErrorCodes.amountAboveMaximum =>
           TransferFailure.amountAboveMaximum,
+        TransferErrorCodes.paymentProviderUnavailable ||
+        TransferErrorCodes.paymentProviderError ||
+        TransferErrorCodes.paymentCaptureFailed =>
+          TransferFailure.unavailable,
+        TransferErrorCodes.paymentIntentNotFound =>
+          TransferFailure.notFound,
+        TransferErrorCodes.paymentNotReady ||
+        TransferErrorCodes.paymentAmountMismatch ||
+        TransferErrorCodes.paymentRequired ||
+        TransferErrorCodes.paymentNotCompleted =>
+          TransferFailure.conflict,
         _ => switch (error.response?.statusCode) {
         400 => TransferFailure.invalid,
         401 => TransferFailure.sessionExpired,

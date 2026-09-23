@@ -50,6 +50,7 @@ dependencies:
   country_picker: ^2.0.28
   uuid: ^4.6.0
   device_info_plus: ^13.2.0
+  url_launcher: ^6.3.2
 
 
 dev_dependencies:

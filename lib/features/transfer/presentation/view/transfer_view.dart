@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -11,6 +13,7 @@ import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
+import '../../domain/service/transfer_funding_availability.dart';
 import '../view_model/transfer_view_model.dart';
 
 class TransferView extends StatefulWidget {
@@ -104,6 +107,7 @@ class _TransferViewState extends State<TransferView> {
       ),
       builder: (sheetContext) => _TransferReviewSheet(
         viewModel: vm,
+        onConfirm: () => _confirmPayment(vm),
         onConfirmed: (transferId) {
           Navigator.of(sheetContext).pop(transferId);
         },
@@ -112,6 +116,63 @@ class _TransferViewState extends State<TransferView> {
     if (mounted && confirmedTransferId != null) {
       context.pop(confirmedTransferId);
     }
+  }
+
+  Future<ConfirmedTransfer?> _confirmPayment(
+    TransferViewModel viewModel,
+  ) async {
+    if (viewModel.fundingMethod != TransferFundingMethod.paypal) {
+      return viewModel.confirm();
+    }
+
+    final payment = await viewModel.startPaypalPayment();
+    if (!mounted || payment == null) {
+      _showError(viewModel.error);
+      return null;
+    }
+
+    final approvalUrl = Uri.tryParse(payment.approvalUrl ?? '');
+    if (approvalUrl == null ||
+        !await launchUrl(
+          approvalUrl,
+          mode: LaunchMode.externalApplication,
+        )) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text(l10n.transferPaypalLaunchError)),
+          );
+      }
+      return null;
+    }
+
+    if (!mounted) return null;
+    final l10n = AppLocalizations.of(context);
+    final shouldVerify = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.transferPaypalReturnTitle),
+        content: Text(l10n.transferPaypalReturnMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.transferPaypalVerify),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldVerify != true || !mounted) return null;
+    final result = await viewModel.capturePaypalAndConfirm();
+    if (result == null && mounted) _showError(viewModel.error);
+    return result;
   }
 
   void _showError(TransferFailure? failure) {
@@ -128,6 +189,10 @@ class _TransferViewState extends State<TransferView> {
     final contact = vm.beneficiary;
     final quote = vm.quote;
     final flag = contact == null ? '' : beneficiaryFlag(contact.countryCode);
+    final fundingMethods = TransferFundingAvailability.resolve(
+      supportsGooglePay: _supportsGooglePay,
+      hasSavedCard: vm.hasSavedCard,
+    );
     _synchronizeQuotedAmount(vm);
     return PopScope(
       canPop: !vm.confirming,
@@ -243,17 +308,29 @@ class _TransferViewState extends State<TransferView> {
                       DropdownButtonFormField<TransferFundingMethod>(
                         initialValue: vm.fundingMethod,
                         decoration: _fieldDecoration().copyWith(
-                          prefixIcon: const Icon(
-                            Icons.credit_card_rounded,
-                            color: Color(0xFF24466E),
+                          prefixIcon: Icon(
+                            _fundingIcon(vm.fundingMethod),
+                            color: const Color(0xFF24466E),
                           ),
                         ),
-                        items: [
-                          DropdownMenuItem(
-                            value: TransferFundingMethod.card,
-                            child: Text(l10n.transferFundingCard),
-                          ),
-                        ],
+                        items: fundingMethods
+                            .map(
+                              (method) => DropdownMenuItem(
+                                value: method,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      _fundingIcon(method),
+                                      size: 20,
+                                      color: const Color(0xFF24466E),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_fundingLabel(l10n, method)),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(growable: false),
                         onChanged: vm.confirming
                             ? null
                             : (value) {
@@ -610,9 +687,11 @@ class _InlineError extends StatelessWidget {
 
 class _TransferReviewSheet extends StatelessWidget {
   final TransferViewModel viewModel;
+  final Future<ConfirmedTransfer?> Function() onConfirm;
   final ValueChanged<String> onConfirmed;
   const _TransferReviewSheet({
     required this.viewModel,
+    required this.onConfirm,
     required this.onConfirmed,
   });
 
@@ -715,7 +794,7 @@ class _TransferReviewSheet extends StatelessWidget {
               onPressed: viewModel.confirming
                   ? null
                   : () async {
-                      final result = await viewModel.confirm();
+                      final result = await onConfirm();
                       if (result != null) onConfirmed(result.id);
                     },
               style: FilledButton.styleFrom(
@@ -860,3 +939,32 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       TransferFailure.unexpected ||
       null => l10n.contactServerError,
     };
+
+
+bool get _supportsGooglePay {
+  if (kIsWeb) return true;
+  return switch (defaultTargetPlatform) {
+    TargetPlatform.android ||
+    TargetPlatform.windows ||
+    TargetPlatform.linux ||
+    TargetPlatform.macOS => true,
+    TargetPlatform.iOS || TargetPlatform.fuchsia => false,
+  };
+}
+
+String _fundingLabel(
+  AppLocalizations l10n,
+  TransferFundingMethod method,
+) => switch (method) {
+  TransferFundingMethod.applePay => l10n.transferFundingApplePay,
+  TransferFundingMethod.googlePay => l10n.transferFundingGooglePay,
+  TransferFundingMethod.paypal => l10n.transferFundingPaypal,
+  TransferFundingMethod.card => l10n.transferFundingCard,
+};
+
+IconData _fundingIcon(TransferFundingMethod method) => switch (method) {
+  TransferFundingMethod.applePay => Icons.apple,
+  TransferFundingMethod.googlePay => Icons.g_mobiledata_rounded,
+  TransferFundingMethod.paypal => Icons.account_balance_wallet_rounded,
+  TransferFundingMethod.card => Icons.credit_card_rounded,
+};

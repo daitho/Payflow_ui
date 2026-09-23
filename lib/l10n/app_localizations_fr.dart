@@ -886,6 +886,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transferFundingCard => 'Carte bancaire';
 
   @override
+  String get transferFundingApplePay => 'Apple Pay';
+
+  @override
+  String get transferFundingGooglePay => 'Google Pay';
+
+  @override
+  String get transferFundingPaypal => 'PayPal';
+
+  @override
+  String get transferPaypalReturnTitle => 'Finalisez votre paiement PayPal';
+
+  @override
+  String get transferPaypalReturnMessage => 'Autorisez le paiement dans PayPal, puis revenez dans PayFlow pour le vérifier. Le transfert sera créé uniquement après confirmation du serveur.';
+
+  @override
+  String get transferPaypalVerify => 'Vérifier le paiement';
+
+  @override
+  String get transferPaypalLaunchError => 'Impossible d’ouvrir PayPal de manière sécurisée.';
+
+  @override
   String get transferCurrentRate => 'Taux de change';
 
   @override

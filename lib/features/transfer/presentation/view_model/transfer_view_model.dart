@@ -17,12 +17,14 @@ class TransferViewModel extends ChangeNotifier {
   final TransferService _transfers;
   final BeneficiaryService _beneficiaries;
   final TransferDraftSeed seed;
+  final bool hasSavedCard;
   final Uuid _uuid;
 
   TransferViewModel({
     required TransferService transferService,
     required BeneficiaryService beneficiaryService,
     this.seed = const TransferDraftSeed(),
+    this.hasSavedCard = false,
     Uuid uuid = const Uuid(),
   }) : _transfers = transferService,
        _beneficiaries = beneficiaryService,
@@ -37,7 +39,8 @@ class TransferViewModel extends ChangeNotifier {
   num _receivedAmount = 0;
   TransferAmountInput _amountInput = TransferAmountInput.sent;
   final String _sentCurrency;
-  TransferFundingMethod _fundingMethod = TransferFundingMethod.card;
+  TransferFundingMethod _fundingMethod = TransferFundingMethod.applePay;
+  PaypalPaymentIntent? _paypalPayment;
   bool _initializing = false;
   bool _quoting = false;
   bool _confirming = false;
@@ -45,6 +48,8 @@ class TransferViewModel extends ChangeNotifier {
   int _quoteGeneration = 0;
   Timer? _quoteDebounce;
   String? _idempotencyKey;
+  String? _paymentIdempotencyKey;
+  String? _captureIdempotencyKey;
 
   BeneficiaryContact? get beneficiary => _beneficiary;
   TransferQuote? get quote => _quote;
@@ -56,6 +61,7 @@ class TransferViewModel extends ChangeNotifier {
   List<num> get suggestedAmounts =>
       TransferAmountSuggestions.forCurrency(_sentCurrency);
   TransferFundingMethod get fundingMethod => _fundingMethod;
+  PaypalPaymentIntent? get paypalPayment => _paypalPayment;
   bool get initializing => _initializing;
   bool get quoting => _quoting;
   bool get confirming => _confirming;
@@ -147,6 +153,9 @@ class TransferViewModel extends ChangeNotifier {
   void selectFundingMethod(TransferFundingMethod method) {
     if (_disposed || _fundingMethod == method) return;
     _fundingMethod = method;
+    _paypalPayment = null;
+    _paymentIdempotencyKey = null;
+    _captureIdempotencyKey = null;
     _notify();
   }
 
@@ -164,7 +173,77 @@ class TransferViewModel extends ChangeNotifier {
     return _quote?.isUsable == true ? _quote : null;
   }
 
+  Future<PaypalPaymentIntent?> startPaypalPayment() async {
+    if (_confirming || _disposed) return null;
+    final currentQuote = await ensureQuote();
+    if (currentQuote == null || _disposed) return null;
+    _confirming = true;
+    _error = null;
+    _notify();
+    try {
+      final payment = await _transfers.createPaypalPayment(
+        quoteId: currentQuote.id,
+        idempotencyKey: _paymentIdempotencyKey ??= _uuid.v4(),
+      );
+      if (!_disposed) _paypalPayment = payment;
+      return _disposed ? null : payment;
+    } on TransferException catch (error) {
+      if (!_disposed) _error = error.failure;
+      return null;
+    } catch (_) {
+      if (!_disposed) _error = TransferFailure.unexpected;
+      return null;
+    } finally {
+      if (!_disposed) {
+        _confirming = false;
+        _notify();
+      }
+    }
+  }
+
+  Future<ConfirmedTransfer?> capturePaypalAndConfirm() async {
+    if (_confirming || _disposed) return null;
+    final currentQuote = await ensureQuote();
+    final payment = _paypalPayment;
+    if (currentQuote == null || payment == null || _disposed) return null;
+    _confirming = true;
+    _error = null;
+    _notify();
+    try {
+      final captured = await _transfers.capturePaypalPayment(
+        paymentIntentId: payment.id,
+        idempotencyKey: _captureIdempotencyKey ??= _uuid.v4(),
+      );
+      if (!captured.completed) {
+        _error = TransferFailure.unavailable;
+        return null;
+      }
+      _paypalPayment = captured;
+      final result = await _transfers.confirm(
+        quoteId: currentQuote.id,
+        fundingMethod: TransferFundingMethod.paypal,
+        paymentIntentId: captured.id,
+        idempotencyKey: _idempotencyKey ??= _uuid.v4(),
+      );
+      return _disposed ? null : result;
+    } on TransferException catch (error) {
+      if (!_disposed) _error = error.failure;
+      return null;
+    } catch (_) {
+      if (!_disposed) _error = TransferFailure.unexpected;
+      return null;
+    } finally {
+      if (!_disposed) {
+        _confirming = false;
+        _notify();
+      }
+    }
+  }
+
   Future<ConfirmedTransfer?> confirm() async {
+    if (_fundingMethod == TransferFundingMethod.paypal) {
+      return capturePaypalAndConfirm();
+    }
     if (_confirming || _disposed) return null;
     final currentQuote = await ensureQuote();
     if (currentQuote == null || _disposed) return null;
@@ -174,6 +253,7 @@ class TransferViewModel extends ChangeNotifier {
     try {
       final result = await _transfers.confirm(
         quoteId: currentQuote.id,
+        fundingMethod: _fundingMethod,
         idempotencyKey: _idempotencyKey ??= _uuid.v4(),
       );
       return _disposed ? null : result;
@@ -256,6 +336,9 @@ class TransferViewModel extends ChangeNotifier {
     _quoteGeneration++;
     _quote = null;
     _idempotencyKey = null;
+    _paymentIdempotencyKey = null;
+    _captureIdempotencyKey = null;
+    _paypalPayment = null;
     _error = null;
   }
 

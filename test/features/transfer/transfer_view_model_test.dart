@@ -39,6 +39,8 @@ class BeneficiariesFake implements BeneficiaryRepository {
 class TransfersFake implements TransferRepository {
   int quoteRequests = 0;
   String? beneficiaryId, destinationId, sentCurrency, idempotencyKey;
+  TransferFundingMethod? confirmedFundingMethod;
+  String? confirmedPaymentIntentId;
   num? sentAmount, receivedAmount;
   TransferFailure? quoteFailure;
 
@@ -77,11 +79,34 @@ class TransfersFake implements TransferRepository {
   }
 
   @override
+  Future<PaypalPaymentIntent> createPaypalPayment({
+    required String quoteId,
+    required String idempotencyKey,
+  }) async => const PaypalPaymentIntent(
+    id: 'payment-1',
+    status: 'PAYER_ACTION_REQUIRED',
+    approvalUrl: 'https://www.sandbox.paypal.com/checkoutnow?token=ORDER-1',
+  );
+
+  @override
+  Future<PaypalPaymentIntent> capturePaypalPayment({
+    required String paymentIntentId,
+    required String idempotencyKey,
+  }) async => const PaypalPaymentIntent(
+    id: 'payment-1',
+    status: 'COMPLETED',
+  );
+
+  @override
   Future<ConfirmedTransfer> confirm({
     required String quoteId,
+    required TransferFundingMethod fundingMethod,
+    String? paymentIntentId,
     required String idempotencyKey,
   }) async {
     this.idempotencyKey = idempotencyKey;
+    confirmedFundingMethod = fundingMethod;
+    confirmedPaymentIntentId = paymentIntentId;
     return const ConfirmedTransfer(id: 'transfer-1', status: 'COMPLETED');
   }
 }
@@ -125,6 +150,26 @@ void main() {
       vm.dispose();
     },
   );
+
+  test('PayPal is captured before transfer confirmation', () async {
+    final transfers = TransfersFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+    vm.selectFundingMethod(TransferFundingMethod.paypal);
+
+    final payment = await vm.startPaypalPayment();
+    expect(payment!.requiresPayerAction, isTrue);
+
+    final transfer = await vm.capturePaypalAndConfirm();
+    expect(transfer!.id, 'transfer-1');
+    expect(transfers.confirmedFundingMethod, TransferFundingMethod.paypal);
+    expect(transfers.confirmedPaymentIntentId, 'payment-1');
+    vm.dispose();
+  });
 
   test('received amount requests a backend reverse quote', () async {
     final transfers = TransfersFake();

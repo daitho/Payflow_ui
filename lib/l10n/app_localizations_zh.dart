@@ -831,6 +831,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferFundingCard => '银行卡';
 
   @override
+  String get transferFundingApplePay => 'Apple Pay';
+
+  @override
+  String get transferFundingGooglePay => 'Google Pay';
+
+  @override
+  String get transferFundingPaypal => 'PayPal';
+
+  @override
+  String get transferPaypalReturnTitle => '完成 PayPal 付款';
+
+  @override
+  String get transferPaypalReturnMessage => '请在 PayPal 中授权付款，然后返回 PayFlow 进行验证。只有服务器确认后才会创建汇款。';
+
+  @override
+  String get transferPaypalVerify => '验证付款';
+
+  @override
+  String get transferPaypalLaunchError => '无法安全打开 PayPal。';
+
+  @override
   String get transferCurrentRate => '汇率';
 
   @override
