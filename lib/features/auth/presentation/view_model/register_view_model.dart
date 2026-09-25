@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../domain/exception/registration_exception.dart';
 import '../../domain/model/verification_challenge_model.dart';
 import '../../domain/service/register_service.dart';
 
@@ -9,6 +10,9 @@ class RegisterViewModel extends ChangeNotifier {
     : _registerService = registerService;
 
   VerificationChallengeModel? _challenge;
+  String? _errorMessage;
+
+  String? get errorMessage => _errorMessage;
 
   VerificationChallengeModel? get challenge => _challenge;
 
@@ -273,6 +277,7 @@ class RegisterViewModel extends ChangeNotifier {
     // =========================================================
     // LOADING
     // =========================================================
+    _errorMessage = null;
     _isLoading = true;
     notifyListeners();
 
@@ -286,6 +291,14 @@ class RegisterViewModel extends ChangeNotifier {
         password: password,
       );
       return true;
+    } on RegistrationException catch (error) {
+      _errorMessage = error.message;
+      debugPrint('Registration rejected: ${error.code ?? 'unknown'}');
+      return false;
+    } catch (error) {
+      _errorMessage = 'Une erreur inattendue est survenue. Réessaie.';
+      debugPrint('Registration failed unexpectedly: $error');
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
