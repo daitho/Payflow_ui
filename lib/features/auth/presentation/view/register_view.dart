@@ -1031,7 +1031,14 @@ class _RegisterViewState extends State<RegisterView> {
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
     );
-    if (!mounted || !valid) {
+    if (!mounted) {
+      return;
+    }
+    if (!valid) {
+      final message = viewModel.errorMessage;
+      if (message != null) {
+        _showMessage(message);
+      }
       return;
     }
     final challenge = viewModel.challenge;
@@ -1072,7 +1079,7 @@ class _RegisterViewState extends State<RegisterView> {
       SnackBar(
         content: Text(message),
 
-        duration: const Duration(milliseconds: 900),
+        duration: const Duration(seconds: 4),
       ),
     );
   }
