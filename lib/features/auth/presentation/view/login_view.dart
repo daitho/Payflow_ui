@@ -10,9 +10,15 @@ import '../view_model/login_error_type.dart';
 import '../view_model/login_view_model.dart';
 import '../../domain/model/verification_challenge_model.dart';
 import 'verification_copy.dart';
+import 'password_reset_copy.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final bool passwordResetCompleted;
+
+  const LoginView({
+    super.key,
+    this.passwordResetCompleted = false,
+  });
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -22,6 +28,17 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _identifierController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.passwordResetCompleted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _showMessage(PasswordResetCopy.of(context).success);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -684,7 +701,10 @@ class _LoginViewState extends State<LoginView> {
   // FORGOT PASSWORD
   // =========================================================
   void _forgotPassword() {
-    _showMessage(AppLocalizations.of(context).forgotPassword);
+    context.push(
+      AppRoutes.forgotPassword,
+      extra: _identifierController.text.trim(),
+    );
   }
 
   // =========================================================

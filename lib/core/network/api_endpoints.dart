@@ -7,6 +7,14 @@ abstract final class ApiEndpoints {
   static const String authVerificationRecover =
       '/api/v1/auth/verification/recover';
   static const String authLogin = '/api/v1/auth/login';
+  static const String authPasswordForgot =
+      '/api/v1/auth/password/forgot';
+  static const String authPasswordForgotResend =
+      '/api/v1/auth/password/forgot/resend';
+  static const String authPasswordForgotVerify =
+      '/api/v1/auth/password/forgot/verify';
+  static const String authPasswordForgotReset =
+      '/api/v1/auth/password/forgot/reset';
   static const String authRefresh = '/api/v1/auth/refresh';
   static const String authLogout = '/api/v1/auth/logout';
   static const String authLogoutAll = '/api/v1/auth/logout-all';

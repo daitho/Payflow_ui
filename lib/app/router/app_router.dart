@@ -33,24 +33,35 @@ import '../../features/active_sessions/data/repository/active_sessions_repositor
 import '../../features/active_sessions/presentation/view/current_device_view.dart';
 import '../../features/active_sessions/presentation/view_model/current_device_view_model.dart';
 import '../../features/auth/data/repository/auth_repository_impl.dart';
+import '../../features/auth/data/repository/password_reset_repository_impl.dart';
 import '../../features/active_sessions/data/service_api/active_sessions_api_service.dart';
 import '../../features/auth/data/service_api/auth_api_service.dart';
+import '../../features/auth/data/service_api/password_reset_api_service.dart';
 import '../../features/active_sessions/domain/repository/active_sessions_repository.dart';
 import '../../features/auth/domain/repository/auth_repository.dart';
+import '../../features/auth/domain/repository/password_reset_repository.dart';
 import '../../features/active_sessions/domain/service/active_sessions_service.dart';
 import '../../features/auth/domain/service/login_service.dart';
+import '../../features/auth/domain/service/password_reset_service.dart';
 import '../../features/auth/domain/service/refresh_service.dart';
 import '../../features/auth/domain/service/register_service.dart';
 import '../../features/active_sessions/presentation/view/active_sessions_view.dart';
 import '../../features/auth/presentation/view/login_view.dart';
+import '../../features/auth/presentation/view/password_reset_code_view.dart';
+import '../../features/auth/presentation/view/password_reset_new_password_view.dart';
+import '../../features/auth/presentation/view/password_reset_request_view.dart';
 import '../../features/auth/presentation/view/register_view.dart';
 import '../../features/auth/presentation/view/verification_code_view.dart';
 import '../../features/auth/presentation/view_model/verification_view_model.dart';
 import '../../features/auth/domain/model/verification_challenge_model.dart';
+import '../../features/auth/domain/model/password_reset_token_model.dart';
 import '../../features/auth/domain/service/verification_service.dart';
 import '../../features/auth/presentation/view/splash_view.dart';
 import '../../features/active_sessions/presentation/view_model/active_sessions_view_model.dart';
 import '../../features/auth/presentation/view_model/login_view_model.dart';
+import '../../features/auth/presentation/view_model/password_reset_code_view_model.dart';
+import '../../features/auth/presentation/view_model/password_reset_new_password_view_model.dart';
+import '../../features/auth/presentation/view_model/password_reset_request_view_model.dart';
 import '../../features/auth/presentation/view_model/register_view_model.dart';
 import '../../features/auth/presentation/view_model/splash_view_model.dart';
 import '../../features/exchange_rates/data/repository/exchange_rate_repository_impl.dart';
@@ -105,6 +116,14 @@ final RefreshService _refreshService = RefreshService(
 final VerificationService _verificationService = VerificationService(
   authRepository: _authRepository,
 );
+final PasswordResetApiService _passwordResetApiService =
+    PasswordResetApiService(dio: _dioClient.dio);
+final PasswordResetRepository _passwordResetRepository =
+    PasswordResetRepositoryImpl(
+      apiService: _passwordResetApiService,
+    );
+final PasswordResetService _passwordResetService =
+    PasswordResetService(repository: _passwordResetRepository);
 // ===========================================================
 // ACTIVE SESSIONS
 // ===========================================================
@@ -211,7 +230,10 @@ GoRouter _createRouter() {
       // =====================================================
       if (location == AppRoutes.login ||
           location == AppRoutes.register ||
-          location == AppRoutes.verifyRegistration) {
+          location == AppRoutes.verifyRegistration ||
+          location == AppRoutes.forgotPassword ||
+          location == AppRoutes.verifyPasswordReset ||
+          location == AppRoutes.resetPassword) {
         return _guestGuard.redirect();
       }
 
@@ -324,7 +346,59 @@ GoRouter _createRouter() {
               loginService: _loginService,
               sessionService: _sessionService,
             ),
-            child: const LoginView(),
+            child: LoginView(
+              passwordResetCompleted: state.extra == true,
+            ),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => PasswordResetRequestViewModel(
+              service: _passwordResetService,
+              initialIdentifier: state.extra is String
+                  ? state.extra! as String
+                  : '',
+            ),
+            child: const PasswordResetRequestView(),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.verifyPasswordReset,
+        redirect: (context, state) =>
+            state.extra is VerificationChallengeModel
+            ? null
+            : AppRoutes.forgotPassword,
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => PasswordResetCodeViewModel(
+              service: _passwordResetService,
+              initialChallenge:
+                  state.extra! as VerificationChallengeModel,
+            ),
+            child: const PasswordResetCodeView(),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.resetPassword,
+        redirect: (context, state) =>
+            state.extra is PasswordResetTokenModel
+            ? null
+            : AppRoutes.forgotPassword,
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => PasswordResetNewPasswordViewModel(
+              service: _passwordResetService,
+              token: state.extra! as PasswordResetTokenModel,
+            ),
+            child: const PasswordResetNewPasswordView(),
           );
         },
       ),
