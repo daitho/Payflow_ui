@@ -4,6 +4,7 @@ import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/api_error_codes.dart';
 
 import '../../domain/exception/login_exception.dart';
+import '../../domain/exception/registration_exception.dart';
 import '../../domain/exception/session_expired_exception.dart';
 import '../dto/auth_session_dto.dart';
 import '../dto/login_request_dto.dart';
@@ -93,18 +94,44 @@ class AuthApiService {
   }
 
   Future<VerificationChallengeDto> register(RegisterRequestDto request) async {
-    final response = await _dio.post<Map<String, dynamic>>(
-      ApiEndpoints.authRegister,
-      data: request.toJson(),
-    );
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        ApiEndpoints.authRegister,
+        data: request.toJson(),
+      );
 
-    final data = response.data;
+      final data = response.data;
+      if (data == null) {
+        throw const RegistrationException(
+          message: "La réponse du serveur est incomplète. Réessaie.",
+        );
+      }
+      return VerificationChallengeDto.fromJson(data);
+    } on DioException catch (exception) {
+      final response = exception.response;
+      if (response != null) {
+        final body = response.data;
+        final code = body is Map ? body['code']?.toString() : null;
+        final serverMessage = body is Map ? body['message'] : null;
+        final status = response.statusCode ?? 0;
 
-    if (data == null) {
-      throw StateError('Empty register response');
+        if (status >= 400 && status < 500) {
+          throw RegistrationException(
+            code: code,
+            message: serverMessage is String && serverMessage.trim().isNotEmpty
+                ? serverMessage
+                : "Les informations saisies n'ont pas pu être acceptées.",
+          );
+        }
+        throw const RegistrationException(
+          message: "Le service est temporairement indisponible. Réessaie plus tard.",
+        );
+      }
+
+      throw const RegistrationException(
+        message: "Impossible de joindre le serveur. Vérifie ta connexion.",
+      );
     }
-
-    return VerificationChallengeDto.fromJson(data);
   }
 
   Future<VerificationChallengeDto> recoverVerification(
