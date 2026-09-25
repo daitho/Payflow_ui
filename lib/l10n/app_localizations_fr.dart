@@ -898,13 +898,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transferPaypalReturnTitle => 'Finalisez votre paiement PayPal';
 
   @override
-  String get transferPaypalReturnMessage => 'Autorisez le paiement dans PayPal, puis revenez dans PayFlow pour le vérifier. Le transfert sera créé uniquement après confirmation du serveur.';
+  String get transferPaypalReturnMessage =>
+      'Autorisez le paiement dans PayPal, puis revenez dans PayFlow pour le vérifier. Le transfert sera créé uniquement après confirmation du serveur.';
 
   @override
   String get transferPaypalVerify => 'Vérifier le paiement';
 
   @override
-  String get transferPaypalLaunchError => 'Impossible d’ouvrir PayPal de manière sécurisée.';
+  String get transferPaypalLaunchError =>
+      'Impossible d’ouvrir PayPal de manière sécurisée.';
 
   @override
   String get transferCurrentRate => 'Taux de change';

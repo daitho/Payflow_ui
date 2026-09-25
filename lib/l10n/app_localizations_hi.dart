@@ -884,13 +884,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferPaypalReturnTitle => 'PayPal भुगतान पूरा करें';
 
   @override
-  String get transferPaypalReturnMessage => 'PayPal में भुगतान अधिकृत करें, फिर PayFlow पर लौटकर उसका सत्यापन करें। सर्वर की पुष्टि के बाद ही हस्तांतरण बनाया जाएगा।';
+  String get transferPaypalReturnMessage =>
+      'PayPal में भुगतान अधिकृत करें, फिर PayFlow पर लौटकर उसका सत्यापन करें। सर्वर की पुष्टि के बाद ही हस्तांतरण बनाया जाएगा।';
 
   @override
   String get transferPaypalVerify => 'भुगतान सत्यापित करें';
 
   @override
-  String get transferPaypalLaunchError => 'PayPal को सुरक्षित रूप से खोला नहीं जा सका।';
+  String get transferPaypalLaunchError =>
+      'PayPal को सुरक्षित रूप से खोला नहीं जा सका।';
 
   @override
   String get transferCurrentRate => 'विनिमय दर';

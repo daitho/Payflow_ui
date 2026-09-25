@@ -888,7 +888,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferPaypalReturnTitle => 'Complete your PayPal payment';
 
   @override
-  String get transferPaypalReturnMessage => 'Authorize the payment in PayPal, then return to PayFlow and verify it. The transfer will only be created after server confirmation.';
+  String get transferPaypalReturnMessage =>
+      'Authorize the payment in PayPal, then return to PayFlow and verify it. The transfer will only be created after server confirmation.';
 
   @override
   String get transferPaypalVerify => 'Verify payment';

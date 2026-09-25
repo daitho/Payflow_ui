@@ -1722,15 +1722,46 @@ abstract class AppLocalizations {
   /// **'Bank card'**
   String get transferFundingCard;
 
-  /// Payment methods available for the transfer.
+  /// No description provided for @transferFundingApplePay.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Pay'**
   String get transferFundingApplePay;
+
+  /// No description provided for @transferFundingGooglePay.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Pay'**
   String get transferFundingGooglePay;
+
+  /// No description provided for @transferFundingPaypal.
+  ///
+  /// In en, this message translates to:
+  /// **'PayPal'**
   String get transferFundingPaypal;
 
-  /// PayPal external approval flow.
+  /// No description provided for @transferPaypalReturnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your PayPal payment'**
   String get transferPaypalReturnTitle;
+
+  /// No description provided for @transferPaypalReturnMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Authorize the payment in PayPal, then return to PayFlow and verify it. The transfer will only be created after server confirmation.'**
   String get transferPaypalReturnMessage;
+
+  /// No description provided for @transferPaypalVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify payment'**
   String get transferPaypalVerify;
+
+  /// No description provided for @transferPaypalLaunchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open PayPal securely.'**
   String get transferPaypalLaunchError;
 
   /// No description provided for @transferCurrentRate.
