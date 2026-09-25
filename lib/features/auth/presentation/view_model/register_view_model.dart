@@ -230,6 +230,7 @@ class RegisterViewModel extends ChangeNotifier {
     required String password,
     required String confirmPassword,
   }) async {
+    _errorMessage = null;
     final String cleanFirstName = firstName.trim();
     final String cleanLastName = lastName.trim();
     final String cleanEmail = email.trim();
@@ -277,7 +278,6 @@ class RegisterViewModel extends ChangeNotifier {
     // =========================================================
     // LOADING
     // =========================================================
-    _errorMessage = null;
     _isLoading = true;
     notifyListeners();
 
