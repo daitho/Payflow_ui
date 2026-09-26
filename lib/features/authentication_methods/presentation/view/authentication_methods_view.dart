@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../app/router/app_routes.dart';
 import '../../../auth/domain/model/verification_channel.dart';
+import '../../domain/model/linked_provider.dart';
 import '../view_model/authentication_methods_view_model.dart';
 import 'authentication_methods_copy.dart';
 
@@ -68,11 +69,23 @@ class AuthenticationMethodsView extends StatelessWidget {
                 _Section(copy.linkedAccounts),
                 _Card(
                   children: [
-                    _ProviderTile(name: 'Google', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Google',
+                      status: _providerStatus(vm, copy, ExternalProvider.google),
+                      linked: vm.provider(ExternalProvider.google)?.linked ?? false,
+                    ),
                     const Divider(height: 1, indent: 68),
-                    _ProviderTile(name: 'Apple', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Apple',
+                      status: _providerStatus(vm, copy, ExternalProvider.apple),
+                      linked: vm.provider(ExternalProvider.apple)?.linked ?? false,
+                    ),
                     const Divider(height: 1, indent: 68),
-                    _ProviderTile(name: 'Facebook', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Facebook',
+                      status: _providerStatus(vm, copy, ExternalProvider.facebook),
+                      linked: vm.provider(ExternalProvider.facebook)?.linked ?? false,
+                    ),
                   ],
                 ),
                 if (vm.error != null) ...[
@@ -95,6 +108,19 @@ class AuthenticationMethodsView extends StatelessWidget {
               ],
             ),
     );
+  }
+
+  String _providerStatus(
+    AuthenticationMethodsViewModel vm,
+    AuthenticationMethodsCopy copy,
+    ExternalProvider provider,
+  ) {
+    if (vm.providersLoading) return copy.loadingProviders;
+    final linked = vm.provider(provider);
+    if (linked == null) return copy.error;
+    if (linked.linked) return copy.linked;
+    if (!linked.available) return copy.unavailable;
+    return copy.notLinked;
   }
 
   Future<void> _start(
@@ -215,7 +241,12 @@ class _MethodTile extends StatelessWidget {
 class _ProviderTile extends StatelessWidget {
   final String name;
   final String status;
-  const _ProviderTile({required this.name, required this.status});
+  final bool linked;
+  const _ProviderTile({
+    required this.name,
+    required this.status,
+    required this.linked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -229,10 +260,9 @@ class _ProviderTile extends StatelessWidget {
       ),
       title: Text(name),
       subtitle: Text(status),
-      trailing: const Icon(
-        Icons.chevron_right_rounded,
-        color: Color(0xFFC1BCB9),
-      ),
+      trailing: linked
+          ? const Icon(Icons.verified_rounded, color: Color(0xFF2E9B62))
+          : null,
     );
   }
 }
