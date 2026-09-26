@@ -10,6 +10,8 @@ class AuthenticationMethodsCopy {
   final String verify;
   final String linked;
   final String notLinked;
+  final String unavailable;
+  final String loadingProviders;
   final String providersLater;
   final String error;
 
@@ -23,6 +25,8 @@ class AuthenticationMethodsCopy {
     required this.verify,
     required this.linked,
     required this.notLinked,
+    required this.unavailable,
+    required this.loadingProviders,
     required this.providersLater,
     required this.error,
   });
@@ -43,6 +47,8 @@ class AuthenticationMethodsCopy {
       verify: 'Vérifier',
       linked: 'Lié',
       notLinked: 'Non lié',
+      unavailable: 'Indisponible pour le moment',
+      loadingProviders: 'Chargement…',
       providersLater: 'La liaison sera activée avec le fournisseur.',
       error: 'Impossible de charger vos moyens de connexion.',
     ),
@@ -56,6 +62,8 @@ class AuthenticationMethodsCopy {
       verify: 'Verify',
       linked: 'Linked',
       notLinked: 'Not linked',
+      unavailable: 'Currently unavailable',
+      loadingProviders: 'Loading…',
       providersLater: 'Linking will be enabled with the provider.',
       error: 'Unable to load your sign-in methods.',
     ),
@@ -69,6 +77,8 @@ class AuthenticationMethodsCopy {
       verify: 'Verificar',
       linked: 'Vinculado',
       notLinked: 'No vinculado',
+      unavailable: 'No disponible por ahora',
+      loadingProviders: 'Cargando…',
       providersLater: 'La vinculación se activará con el proveedor.',
       error: 'No se pueden cargar los métodos de acceso.',
     ),
@@ -82,6 +92,8 @@ class AuthenticationMethodsCopy {
       verify: '验证',
       linked: '已关联',
       notLinked: '未关联',
+      unavailable: '暂不可用',
+      loadingProviders: '正在加载…',
       providersLater: '提供商配置完成后可进行关联。',
       error: '无法加载登录方式。',
     ),
@@ -95,6 +107,8 @@ class AuthenticationMethodsCopy {
       verify: 'सत्यापित करें',
       linked: 'जुड़ा हुआ',
       notLinked: 'नहीं जुड़ा',
+      unavailable: 'फ़िलहाल उपलब्ध नहीं',
+      loadingProviders: 'लोड हो रहा है…',
       providersLater: 'प्रदाता सक्षम होने पर खाता जोड़ा जा सकेगा।',
       error: 'साइन-इन के तरीके लोड नहीं हो सके।',
     ),
