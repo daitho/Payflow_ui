@@ -42,16 +42,39 @@ class BeneficiariesView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 28, 12, 16),
-              child: Text(
-                selectionMode
-                    ? l10n.transferChooseBeneficiary
-                    : l10n.contactTitle,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF242327),
-                ),
+              padding: EdgeInsets.fromLTRB(
+                selectionMode ? 4 : 12,
+                selectionMode ? 16 : 28,
+                12,
+                16,
+              ),
+              child: Row(
+                children: [
+                  if (selectionMode)
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        } else {
+                          context.go(AppRoutes.transfer);
+                        }
+                      },
+                    ),
+                  Expanded(
+                    child: Text(
+                      selectionMode
+                          ? l10n.transferChooseBeneficiary
+                          : l10n.contactTitle,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF242327),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
