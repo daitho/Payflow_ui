@@ -15,6 +15,7 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
 
   bool _loading = false;
   bool _providersLoading = false;
+  bool _linking = false;
   bool _providersError = false;
   Map<ExternalProvider, LinkedProvider> _providers = {};
   bool _emailVerified = false;
@@ -35,6 +36,7 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
 
   bool get loading => _loading;
   bool get providersLoading => _providersLoading;
+  bool get linking => _linking;
   bool get providersError => _providersError;
   LinkedProvider? provider(ExternalProvider provider) => _providers[provider];
   bool get emailVerified => _emailVerified;
@@ -67,6 +69,19 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
       _providersError = true;
     } finally {
       _providersLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> link({required ExternalProvider provider, required String credential, required String currentPassword}) async {
+    if (_linking) return;
+    _linking = true;
+    notifyListeners();
+    try {
+      final linked = await _linkedProviderService.link(provider: provider, credential: credential, currentPassword: currentPassword);
+      _providers[provider] = linked;
+    } finally {
+      _linking = false;
       notifyListeners();
     }
   }
