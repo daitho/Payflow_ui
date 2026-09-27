@@ -25,6 +25,9 @@ class LoginService {
     );
   }
 
+  Future<AuthSessionModel> socialLogin({required String provider, required String credential}) =>
+      _authRepository.socialLogin(provider: provider, credential: credential);
+
   Future<VerificationChallengeModel> recoverVerification({
     required String identifier,
     required String password,
