@@ -50,7 +50,7 @@
 	<key>FacebookAppID</key>
 	<string>1779239629949899</string>
 	<key>FacebookClientToken</key>
-	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
+	<string>5716ea607d4b7f8b202fa6c5f00d1a79</string>
 	<key>FacebookDisplayName</key>
 	<string>PayFlow</string>
 	<key>LSApplicationQueriesSchemes</key>
