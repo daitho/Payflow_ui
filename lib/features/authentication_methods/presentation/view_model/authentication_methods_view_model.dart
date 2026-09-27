@@ -73,12 +73,12 @@ class AuthenticationMethodsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> link({required ExternalProvider provider, required String credential, required String currentPassword}) async {
+  Future<void> link({required ExternalProvider provider, required String credential, required String currentPassword, String? expectedNonce}) async {
     if (_linking) return;
     _linking = true;
     notifyListeners();
     try {
-      final linked = await _linkedProviderService.link(provider: provider, credential: credential, currentPassword: currentPassword);
+      final linked = await _linkedProviderService.link(provider: provider, credential: credential, currentPassword: currentPassword, expectedNonce: expectedNonce);
       _providers[provider] = linked;
     } finally {
       _linking = false;
