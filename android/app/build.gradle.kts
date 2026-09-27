@@ -21,7 +21,7 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = maxOf(21, flutter.minSdkVersion)
         resValue("string", "facebook_app_id", "1779239629949899")
-        resValue("string", "facebook_client_token", providers.gradleProperty("facebookClientToken").orNull ?: "FACEBOOK_CLIENT_TOKEN_NOT_CONFIGURED")
+        resValue("string", "facebook_client_token", providers.gradleProperty("facebookClientToken").orNull ?: "5716ea607d4b7f8b202fa6c5f00d1a79")
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
