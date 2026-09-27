@@ -45,7 +45,7 @@ dependencies:
   google_sign_in: ^7.2.0
   flutter_facebook_auth: ^7.2.0
   shared_preferences: ^2.5.5
-  flutter_secure_storage: ^11.0.0
+  flutter_secure_storage: ^10.3.4
   local_auth: ^3.0.2
   printing: ^5.15.0
   intl: any
