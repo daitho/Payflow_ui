@@ -1,6 +1,16 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+class SocialCredential {
+  final String token;
+  final String? expectedNonce;
+
+  const SocialCredential(this.token, {this.expectedNonce});
+}
 
 /// Obtains a short-lived provider credential. Never persist or log these tokens.
 class SocialCredentialService {
@@ -15,7 +25,7 @@ class SocialCredentialService {
   );
   bool _googleInitialized = false;
 
-  Future<String?> acquire(String provider) async {
+  Future<SocialCredential?> acquire(String provider) async {
     switch (provider.toUpperCase()) {
       case 'GOOGLE':
         if (googleWebClientId.isEmpty) {
@@ -36,8 +46,8 @@ class SocialCredentialService {
         }
         try {
           final account = await signIn.authenticate();
-          return account.authentication.idToken ??
-              (throw StateError('Jeton Google absent'));
+          return SocialCredential(account.authentication.idToken ??
+              (throw StateError('Jeton Google absent')));
         } on GoogleSignInException catch (error) {
           if (error.code == GoogleSignInExceptionCode.canceled) return null;
           rethrow;
@@ -46,17 +56,29 @@ class SocialCredentialService {
         if (kIsWeb) throw UnsupportedError('Connexion Facebook mobile uniquement');
         // A fresh login prevents reusing a token from a different Facebook account.
         await FacebookAuth.instance.logOut();
-        final result = await FacebookAuth.instance.login(permissions: ['public_profile', 'email']);
+        final random = Random.secure();
+        final nonce = base64Url.encode(
+          List<int>.generate(32, (_) => random.nextInt(256)),
+        ).replaceAll('=', '');
+        final result = await FacebookAuth.instance.login(
+          permissions: ['public_profile', 'email'],
+          loginTracking: defaultTargetPlatform == TargetPlatform.iOS
+              ? LoginTracking.limited
+              : LoginTracking.enabled,
+          nonce: nonce,
+        );
         if (result.status == LoginStatus.cancelled) return null;
         if (result.status != LoginStatus.success) {
-          throw StateError('Connexion Facebook échouée');
+          throw StateError(result.message ?? 'Connexion Facebook échouée');
         }
         final token = result.accessToken;
-        // The backend verifies Graph user access tokens. Limited Login returns an OIDC token.
-        if (token is! ClassicToken) {
-          throw UnsupportedError('Facebook Limited Login non pris en charge');
+        if (token is LimitedToken) {
+          return SocialCredential(token.tokenString, expectedNonce: nonce);
         }
-        return token.tokenString;
+        if (token is ClassicToken) {
+          return SocialCredential(token.tokenString);
+        }
+        throw StateError('Jeton Facebook absent');
       default:
         throw UnsupportedError('Fournisseur indisponible');
     }
