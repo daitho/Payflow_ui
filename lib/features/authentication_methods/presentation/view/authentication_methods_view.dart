@@ -143,12 +143,16 @@ class AuthenticationMethodsView extends StatelessWidget {
       if (currentPassword == null || !context.mounted) return;
       final credential = await SocialCredentialService.instance.acquire(provider.name);
       if (credential == null || !context.mounted) return;
-      await vm.link(provider: provider, credential: credential, currentPassword: currentPassword);
+      await vm.link(provider: provider, credential: credential.token, currentPassword: currentPassword, expectedNonce: credential.expectedNonce);
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Compte associé.')));
     } on DioException catch (error) {
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.response?.data is Map ? ((error.response!.data as Map)['message']?.toString() ?? 'Impossible de lier ce compte.') : 'Impossible de lier ce compte.')));
+    } on StateError catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message.toString())));
+    } on UnsupportedError catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message?.toString() ?? 'Connexion indisponible.')));
     } catch (_) {
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La liaison a échoué. Vérifie la configuration du fournisseur.')));
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La liaison a échoué. Réessaie.')));
     } finally {
       password.dispose();
     }
