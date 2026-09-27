@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+import '../../../auth/data/social/social_credential_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +76,7 @@ class AuthenticationMethodsView extends StatelessWidget {
                       name: 'Google',
                       status: _providerStatus(vm, copy, ExternalProvider.google),
                       linked: vm.provider(ExternalProvider.google)?.linked ?? false,
+                      onTap: _canLink(vm, ExternalProvider.google) ? () => _link(context, vm, ExternalProvider.google) : null,
                     ),
                     const Divider(height: 1, indent: 68),
                     _ProviderTile(
@@ -85,6 +89,7 @@ class AuthenticationMethodsView extends StatelessWidget {
                       name: 'Facebook',
                       status: _providerStatus(vm, copy, ExternalProvider.facebook),
                       linked: vm.provider(ExternalProvider.facebook)?.linked ?? false,
+                      onTap: _canLink(vm, ExternalProvider.facebook) ? () => _link(context, vm, ExternalProvider.facebook) : null,
                     ),
                   ],
                 ),
@@ -121,6 +126,40 @@ class AuthenticationMethodsView extends StatelessWidget {
     if (linked.linked) return copy.linked;
     if (!linked.available) return copy.unavailable;
     return copy.notLinked;
+  }
+
+  bool _canLink(AuthenticationMethodsViewModel vm, ExternalProvider provider) {
+    final state = vm.provider(provider);
+    return state != null && state.available && !state.linked && !vm.providersLoading && !vm.linking;
+  }
+
+  Future<void> _link(BuildContext context, AuthenticationMethodsViewModel vm, ExternalProvider provider) async {
+    final password = TextEditingController();
+    try {
+      final currentPassword = await showDialog<String>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text('Lier ${provider.name}'),
+          content: TextField(controller: password, obscureText: true, autofocus: true,
+            decoration: const InputDecoration(labelText: 'Mot de passe PayFlow actuel')),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Annuler')),
+            FilledButton(onPressed: () { if (password.text.isNotEmpty) Navigator.pop(dialogContext, password.text); }, child: const Text('Continuer')),
+          ],
+        ),
+      );
+      if (currentPassword == null || !context.mounted) return;
+      final credential = await SocialCredentialService.instance.acquire(provider.name);
+      if (credential == null || !context.mounted) return;
+      await vm.link(provider: provider, credential: credential, currentPassword: currentPassword);
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Compte associé.')));
+    } on DioException catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.response?.data is Map ? ((error.response!.data as Map)['message']?.toString() ?? 'Impossible de lier ce compte.') : 'Impossible de lier ce compte.')));
+    } catch (_) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La liaison a échoué. Vérifie la configuration du fournisseur.')));
+    } finally {
+      password.dispose();
+    }
   }
 
   Future<void> _start(
@@ -242,15 +281,18 @@ class _ProviderTile extends StatelessWidget {
   final String name;
   final String status;
   final bool linked;
+  final VoidCallback? onTap;
   const _ProviderTile({
     required this.name,
     required this.status,
     required this.linked,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap,
       leading: CircleAvatar(
         backgroundColor: const Color(0xFFF4F2F1),
         child: Text(
@@ -262,7 +304,7 @@ class _ProviderTile extends StatelessWidget {
       subtitle: Text(status),
       trailing: linked
           ? const Icon(Icons.verified_rounded, color: Color(0xFF2E9B62))
-          : null,
+          : onTap == null ? null : const Icon(Icons.chevron_right_rounded),
     );
   }
 }
