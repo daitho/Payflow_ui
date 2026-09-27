@@ -227,7 +227,7 @@ class LoginViewModel extends ChangeNotifier {
     try {
       final credential = await SocialCredentialService.instance.acquire(provider);
       if (credential == null) return false;
-      final session = await _loginService.socialLogin(provider: provider, credential: credential);
+      final session = await _loginService.socialLogin(provider: provider, credential: credential.token, expectedNonce: credential.expectedNonce);
       await _sessionService.saveSession(session);
       return true;
     } on DioException catch (error) {
@@ -236,8 +236,14 @@ class LoginViewModel extends ChangeNotifier {
           ? body['message'] as String
           : 'Connexion impossible. Vérifie que ce compte est associé à PayFlow.';
       return false;
+    } on StateError catch (error) {
+      socialError = error.message.toString();
+      return false;
+    } on UnsupportedError catch (error) {
+      socialError = error.message?.toString() ?? 'Connexion indisponible.';
+      return false;
     } catch (_) {
-      socialError = 'Connexion impossible. Vérifie la configuration du fournisseur.';
+      socialError = 'Connexion impossible. Réessaie.';
       return false;
     } finally {
       _isLoading = false;
