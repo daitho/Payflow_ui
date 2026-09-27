@@ -93,6 +93,15 @@ class AuthApiService {
     }
   }
 
+  Future<AuthSessionDto> socialLogin({required String provider, required String credential, required String deviceId, required String deviceName}) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.authOAuth(provider.toLowerCase()),
+      data: {provider == 'GOOGLE' ? 'idToken' : 'accessToken': credential, 'deviceId': deviceId, 'deviceName': deviceName},
+    );
+    if (response.data == null) throw const LoginUnexpectedException();
+    return AuthSessionDto.fromJson(response.data!);
+  }
+
   Future<VerificationChallengeDto> register(RegisterRequestDto request) async {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
