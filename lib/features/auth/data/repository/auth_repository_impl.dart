@@ -45,7 +45,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthSessionModel> socialLogin({required String provider, required String credential}) async {
+  Future<AuthSessionModel> socialLogin({required String provider, required String credential, String? expectedNonce}) async {
     final device = await _deviceService.getDeviceContext();
     final response = await _authApiService.socialLogin(provider: provider, credential: credential, deviceId: device.deviceId, deviceName: device.deviceName);
     return response.toModel();
