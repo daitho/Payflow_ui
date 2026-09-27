@@ -101,15 +101,7 @@ class AuthenticationMethodsView extends StatelessWidget {
                     style: const TextStyle(color: Color(0xFFD43C3C)),
                   ),
                 ],
-                const SizedBox(height: 16),
-                Text(
-                  copy.providersLater,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF8B8582),
-                    fontSize: 12.5,
-                  ),
-                ),
+                if (vm.linking) const Center(child: CircularProgressIndicator()),
               ],
             ),
     );
