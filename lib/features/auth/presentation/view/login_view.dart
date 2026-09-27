@@ -710,8 +710,19 @@ class _LoginViewState extends State<LoginView> {
   // =========================================================
   // SOCIAL LOGIN
   // =========================================================
-  void _socialLogin(String provider) {
-    _showMessage(AppLocalizations.of(context).socialLoginMessage(provider));
+  Future<void> _socialLogin(String provider) async {
+    if (provider == 'Apple') {
+      _showMessage(AppLocalizations.of(context).socialLoginMessage(provider));
+      return;
+    }
+    final vm = context.read<LoginViewModel>();
+    final success = await vm.socialLogin(provider.toUpperCase());
+    if (!mounted) return;
+    if (success) {
+      context.go(AppRoutes.home);
+    } else if (vm.socialError != null) {
+      _showMessage(vm.socialError!);
+    }
   }
 
   // =========================================================

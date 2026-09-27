@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+import '../../../auth/data/social/social_credential_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router/app_routes.dart';
 import '../../../auth/domain/model/verification_channel.dart';
+import '../../domain/model/linked_provider.dart';
 import '../view_model/authentication_methods_view_model.dart';
 import 'authentication_methods_copy.dart';
 
@@ -68,11 +72,25 @@ class AuthenticationMethodsView extends StatelessWidget {
                 _Section(copy.linkedAccounts),
                 _Card(
                   children: [
-                    _ProviderTile(name: 'Google', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Google',
+                      status: _providerStatus(vm, copy, ExternalProvider.google),
+                      linked: vm.provider(ExternalProvider.google)?.linked ?? false,
+                      onTap: _canLink(vm, ExternalProvider.google) ? () => _link(context, vm, ExternalProvider.google) : null,
+                    ),
                     const Divider(height: 1, indent: 68),
-                    _ProviderTile(name: 'Apple', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Apple',
+                      status: _providerStatus(vm, copy, ExternalProvider.apple),
+                      linked: vm.provider(ExternalProvider.apple)?.linked ?? false,
+                    ),
                     const Divider(height: 1, indent: 68),
-                    _ProviderTile(name: 'Facebook', status: copy.notLinked),
+                    _ProviderTile(
+                      name: 'Facebook',
+                      status: _providerStatus(vm, copy, ExternalProvider.facebook),
+                      linked: vm.provider(ExternalProvider.facebook)?.linked ?? false,
+                      onTap: _canLink(vm, ExternalProvider.facebook) ? () => _link(context, vm, ExternalProvider.facebook) : null,
+                    ),
                   ],
                 ),
                 if (vm.error != null) ...[
@@ -83,18 +101,61 @@ class AuthenticationMethodsView extends StatelessWidget {
                     style: const TextStyle(color: Color(0xFFD43C3C)),
                   ),
                 ],
-                const SizedBox(height: 16),
-                Text(
-                  copy.providersLater,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF8B8582),
-                    fontSize: 12.5,
-                  ),
-                ),
+                if (vm.linking) const Center(child: CircularProgressIndicator()),
               ],
             ),
     );
+  }
+
+  String _providerStatus(
+    AuthenticationMethodsViewModel vm,
+    AuthenticationMethodsCopy copy,
+    ExternalProvider provider,
+  ) {
+    if (vm.providersLoading) return copy.loadingProviders;
+    final linked = vm.provider(provider);
+    if (linked == null) return copy.error;
+    if (linked.linked) return copy.linked;
+    if (!linked.available) return copy.unavailable;
+    return copy.notLinked;
+  }
+
+  bool _canLink(AuthenticationMethodsViewModel vm, ExternalProvider provider) {
+    final state = vm.provider(provider);
+    return state != null && state.available && !state.linked && !vm.providersLoading && !vm.linking;
+  }
+
+  Future<void> _link(BuildContext context, AuthenticationMethodsViewModel vm, ExternalProvider provider) async {
+    final password = TextEditingController();
+    try {
+      final currentPassword = await showDialog<String>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text('Lier ${provider.name}'),
+          content: TextField(controller: password, obscureText: true, autofocus: true,
+            decoration: const InputDecoration(labelText: 'Mot de passe PayFlow actuel')),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Annuler')),
+            FilledButton(onPressed: () { if (password.text.isNotEmpty) Navigator.pop(dialogContext, password.text); }, child: const Text('Continuer')),
+          ],
+        ),
+      );
+      if (currentPassword == null || !context.mounted) return;
+      final credential = await SocialCredentialService.instance.acquire(provider.name);
+      if (credential == null || !context.mounted) return;
+      await vm.link(provider: provider, credential: credential.token, currentPassword: currentPassword, expectedNonce: credential.expectedNonce);
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Compte associé.')));
+    } on DioException catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.response?.data is Map ? ((error.response!.data as Map)['message']?.toString() ?? 'Impossible de lier ce compte.') : 'Impossible de lier ce compte.')));
+    } on StateError catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message.toString())));
+    } on UnsupportedError catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message?.toString() ?? 'Connexion indisponible.')));
+    } catch (_) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La liaison a échoué. Réessaie.')));
+    } finally {
+      password.dispose();
+    }
   }
 
   Future<void> _start(
@@ -142,12 +203,13 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0EDEB)),
+        side: const BorderSide(color: Color(0xFFF0EDEB)),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(children: children),
     );
   }
@@ -215,11 +277,19 @@ class _MethodTile extends StatelessWidget {
 class _ProviderTile extends StatelessWidget {
   final String name;
   final String status;
-  const _ProviderTile({required this.name, required this.status});
+  final bool linked;
+  final VoidCallback? onTap;
+  const _ProviderTile({
+    required this.name,
+    required this.status,
+    required this.linked,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap,
       leading: CircleAvatar(
         backgroundColor: const Color(0xFFF4F2F1),
         child: Text(
@@ -229,10 +299,9 @@ class _ProviderTile extends StatelessWidget {
       ),
       title: Text(name),
       subtitle: Text(status),
-      trailing: const Icon(
-        Icons.chevron_right_rounded,
-        color: Color(0xFFC1BCB9),
-      ),
+      trailing: linked
+          ? const Icon(Icons.verified_rounded, color: Color(0xFF2E9B62))
+          : onTap == null ? null : const Icon(Icons.chevron_right_rounded),
     );
   }
 }

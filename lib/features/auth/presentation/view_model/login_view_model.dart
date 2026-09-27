@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
+import '../../data/social/social_credential_service.dart';
 
 import '../../../../core/service/session_service.dart';
 import '../../domain/exception/login_exception.dart';
@@ -208,6 +210,40 @@ class LoginViewModel extends ChangeNotifier {
       debugPrintStack(stackTrace: stackTrace);
       _loginError = LoginErrorType.unexpected;
 
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  String? socialError;
+
+  Future<bool> socialLogin(String provider) async {
+    if (_isLoading) return false;
+    _isLoading = true;
+    socialError = null;
+    notifyListeners();
+    try {
+      final credential = await SocialCredentialService.instance.acquire(provider);
+      if (credential == null) return false;
+      final session = await _loginService.socialLogin(provider: provider, credential: credential.token, expectedNonce: credential.expectedNonce);
+      await _sessionService.saveSession(session);
+      return true;
+    } on DioException catch (error) {
+      final body = error.response?.data;
+      socialError = body is Map && body['message'] is String
+          ? body['message'] as String
+          : 'Connexion impossible. Vérifie que ce compte est associé à PayFlow.';
+      return false;
+    } on StateError catch (error) {
+      socialError = error.message.toString();
+      return false;
+    } on UnsupportedError catch (error) {
+      socialError = error.message?.toString() ?? 'Connexion indisponible.';
+      return false;
+    } catch (_) {
+      socialError = 'Connexion impossible. Réessaie.';
       return false;
     } finally {
       _isLoading = false;

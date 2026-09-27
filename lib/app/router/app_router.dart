@@ -75,6 +75,9 @@ import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/service/home_service.dart';
 import '../../features/home/presentation/view_model/home_view_model.dart';
 import '../../features/profile/presentation/view/security_privacy_view.dart';
+import '../../features/authentication_methods/data/repository/linked_provider_repository_impl.dart';
+import '../../features/authentication_methods/data/service_api/linked_provider_api_service.dart';
+import '../../features/authentication_methods/domain/service/linked_provider_service.dart';
 import '../../features/authentication_methods/presentation/view/authentication_methods_view.dart';
 import '../../features/authentication_methods/presentation/view_model/authentication_methods_view_model.dart';
 import '../../features/profile/presentation/view_model/profile_view_model.dart';
@@ -115,6 +118,9 @@ final RefreshService _refreshService = RefreshService(
 );
 final VerificationService _verificationService = VerificationService(
   authRepository: _authRepository,
+);
+final LinkedProviderService _linkedProviderService = LinkedProviderService(
+  LinkedProviderRepositoryImpl(LinkedProviderApiService(_dioClient.dio)),
 );
 final PasswordResetApiService _passwordResetApiService =
     PasswordResetApiService(dio: _dioClient.dio);
@@ -476,6 +482,7 @@ GoRouter _createRouter() {
           return ChangeNotifierProvider(
             create: (_) => AuthenticationMethodsViewModel(
               verificationService: _verificationService,
+              linkedProviderService: _linkedProviderService,
               sessionService: _sessionService,
             )..load(),
             child: const AuthenticationMethodsView(),

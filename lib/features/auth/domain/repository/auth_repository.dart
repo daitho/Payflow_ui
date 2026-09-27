@@ -7,6 +7,7 @@ import '../model/identifier_verification_status_model.dart';
 
 abstract interface class AuthRepository {
   Future<AuthSessionModel> login(LoginCredentials credentials);
+  Future<AuthSessionModel> socialLogin({required String provider, required String credential, String? expectedNonce});
   Future<VerificationChallengeModel> register(RegisterCommand command);
 
   Future<VerificationChallengeModel> recoverVerification({
