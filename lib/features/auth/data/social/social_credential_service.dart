@@ -9,7 +9,10 @@ class SocialCredentialService {
 
   static const googleIosClientId =
       '1007248328587-5bjni9adknn56hh8oqd96hkppvs7032d.apps.googleusercontent.com';
-  static const googleWebClientId = String.fromEnvironment('GOOGLE_WEB_CLIENT_ID');
+  static const googleWebClientId = String.fromEnvironment(
+    'GOOGLE_WEB_CLIENT_ID',
+    defaultValue: '1007248328587-p36mvuiqe2u4343nn6nr1u674hdki7fq.apps.googleusercontent.com',
+  );
   bool _googleInitialized = false;
 
   Future<String?> acquire(String provider) async {
