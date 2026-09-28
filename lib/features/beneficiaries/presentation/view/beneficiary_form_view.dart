@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/beneficiary_contact.dart';
 import '../view_model/beneficiary_form_view_model.dart';
 import '../widget/beneficiary_avatar.dart';
@@ -191,7 +192,13 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
         .map(
           (o) => DropdownMenuItem(
             value: o.id,
-            child: Text(o.name, overflow: TextOverflow.ellipsis),
+            child: Row(
+              children: [
+                PaymentOperatorLogo(name: o.name),
+                const SizedBox(width: 12),
+                Expanded(child: Text(o.name, overflow: TextOverflow.ellipsis)),
+              ],
+            ),
           ),
         )
         .toList();
@@ -199,9 +206,17 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
       operatorItems.add(
         DropdownMenuItem(
           value: vm.operatorId,
-          child: Text(
-            vm.original!.operatorName ?? l10n.contactUnavailable,
-            overflow: TextOverflow.ellipsis,
+          child: Row(
+            children: [
+              PaymentOperatorLogo(name: vm.original!.operatorName),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  vm.original!.operatorName ?? l10n.contactUnavailable,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ),
       );

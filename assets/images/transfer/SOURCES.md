@@ -1,17 +1,20 @@
 # Visuels des moyens de paiement et opérateurs
 
-Fichiers téléchargés le 29 septembre 2026 depuis les sites des marques. Les
-images SVG d'Apple, de MTN et d'Orange ont été exportées en PNG sans changer
-leurs proportions, pour un affichage Flutter hors ligne. La marge transparente
-du logo MTN a été retirée pour qu'il reste lisible à petite taille.
+Visuels conservés dans l'application pour fonctionner aussi hors ligne.
+Les fichiers des opérateurs MTN Mobile Money, Orange Money et M-Pesa sont
+ceux fournis par le porteur du projet. Le logo Wave est téléchargé depuis
+le site officiel de Wave. Les fichiers des moyens de paiement existants
+proviennent des ressources des marques.
 
 | Fichier | Source officielle |
 | --- | --- |
 | `apple_pay.png` | https://developer.apple.com/apple-pay/marketing/Apple-Pay-Mark.zip |
 | `google_pay.png` | https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png |
 | `paypal.png` | https://www.paypalobjects.com/webstatic/icon/pp258.png |
-| `mtn.png` | https://group.mtn.com/wp-content/themes/mtn-theme/images/MTN_2022_Logo_Yellow_RGB.svg |
-| `orange.png` | https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg |
+| `mtn_mobile_money.jpg` | Image fournie pour Payflow par le porteur du projet |
+| `orange_money.jpg` | Image fournie pour Payflow par le porteur du projet |
+| `mpesa.png` | Image fournie pour Payflow par le porteur du projet |
+| `wave.png` | https://www.wave.com/img/nav-logo.png |
 
 Avant la mise en production, contrôler les consignes de marque actuelles et
 les autorisations contractuelles des opérateurs. Si une marque ne figure pas

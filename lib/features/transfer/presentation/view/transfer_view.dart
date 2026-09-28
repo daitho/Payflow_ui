@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
 import '../../domain/exception/transfer_exception.dart';
@@ -788,12 +789,20 @@ class _TransferReviewSheet extends StatelessWidget {
               label: l10n.contactPhone,
               value: contact.phoneE164 ?? l10n.contactNoPhone,
             ),
-            _ReviewLine(
-              label: l10n.transferOperator,
-              value: contact.operatorName ?? '—',
-              logoAsset: _operatorLogoAsset(contact.operatorName),
-              fallbackIcon: Icons.account_balance_wallet_outlined,
+            const SizedBox(height: 12),
+            _PaymentPartyCard(
+              label: l10n.transferFundingLabel,
+              name: _fundingLabel(l10n, viewModel.fundingMethod),
+              logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
+              fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),
+            const SizedBox(height: 10),
+            _PaymentPartyCard(
+              label: l10n.transferOperator,
+              name: contact.operatorName ?? '—',
+              operatorName: contact.operatorName,
+            ),
+            const SizedBox(height: 12),
             _ReviewLine(
               label: l10n.transferSent,
               value: _money(context, quote.sentAmount, quote.sentCurrency),
@@ -814,12 +823,6 @@ class _TransferReviewSheet extends StatelessWidget {
                 quote.receivedAmount,
                 quote.receivedCurrency,
               ),
-            ),
-            _ReviewLine(
-              label: l10n.transferFundingLabel,
-              value: _fundingLabel(l10n, viewModel.fundingMethod),
-              logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
-              fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),
             _ReviewLine(
               label: l10n.transferTotalAmount,
@@ -889,14 +892,10 @@ class _ReviewLine extends StatelessWidget {
   final String label;
   final String value;
   final bool emphasized;
-  final String? logoAsset;
-  final IconData? fallbackIcon;
   const _ReviewLine({
     required this.label,
     required this.value,
     this.emphasized = false,
-    this.logoAsset,
-    this.fallbackIcon,
   });
   @override
   Widget build(BuildContext context) => Padding(
@@ -915,43 +914,80 @@ class _ReviewLine extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              color: const Color(0xFF2D292E),
+              fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
+              fontSize: emphasized ? 17 : 15,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _PaymentPartyCard extends StatelessWidget {
+  const _PaymentPartyCard({
+    required this.label,
+    required this.name,
+    this.operatorName,
+    this.logoAsset,
+    this.fallbackIcon = Icons.account_balance_wallet_outlined,
+  });
+
+  final String label;
+  final String name;
+  final String? operatorName;
+  final String? logoAsset;
+  final IconData fallbackIcon;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border.all(color: const Color(0xFFE9E5E4)),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (logoAsset != null || fallbackIcon != null) ...[
-                ExcludeSemantics(
-                  child: SizedBox(
-                    width: 48,
-                    height: 32,
-                    child: logoAsset == null
-                        ? Icon(fallbackIcon, size: 24)
-                        : Image.asset(
-                            logoAsset!,
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, _, _) => Icon(
-                              fallbackIcon ??
-                                  Icons.account_balance_wallet_outlined,
-                              size: 24,
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(width: 6),
-              ],
-              Flexible(
-                child: Text(
-                  value,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: const Color(0xFF2D292E),
-                    fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
-                    fontSize: emphasized ? 17 : 15,
-                  ),
-                ),
+              Text(
+                label,
+                style: const TextStyle(color: Color(0xFF777274), fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               ),
             ],
           ),
         ),
+        const SizedBox(width: 12),
+        if (operatorName != null)
+          PaymentOperatorLogo(name: operatorName, width: 94, height: 48)
+        else
+          ExcludeSemantics(
+            child: SizedBox(
+              width: 94,
+              height: 48,
+              child: logoAsset == null
+                  ? Icon(fallbackIcon)
+                  : Image.asset(
+                      logoAsset!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(fallbackIcon),
+                    ),
+            ),
+          ),
       ],
     ),
   );
@@ -1011,18 +1047,6 @@ String _suggestedAmountLabel(num amount, String currency) {
   return symbol == null
       ? '${_editableDecimal(amount)} $code'
       : '$symbol${_editableDecimal(amount)}';
-}
-
-String? _operatorLogoAsset(String? name) {
-  final normalized = name?.trim().toUpperCase();
-  if (normalized == null) return null;
-  if (RegExp(r'(^|[^A-Z])MTN([^A-Z]|$)').hasMatch(normalized)) {
-    return 'assets/images/transfer/mtn.png';
-  }
-  if (RegExp(r'(^|[^A-Z])ORANGE([^A-Z]|$)').hasMatch(normalized)) {
-    return 'assets/images/transfer/orange.png';
-  }
-  return null;
 }
 
 String? _fundingLogoAsset(TransferFundingMethod method) => switch (method) {
