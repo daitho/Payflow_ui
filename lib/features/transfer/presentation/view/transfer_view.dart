@@ -670,33 +670,30 @@ class _SuggestedAmounts extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 10),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final amount in amounts) ...[
-              ChoiceChip(
-                label: Text('${_editableDecimal(amount)} $currency'),
-                selected: selectedAmount == amount,
-                onSelected: enabled ? (_) => onSelected(amount) : null,
-                selectedColor: const Color(0xFFFFE4BA),
-                side: BorderSide(
-                  color: selectedAmount == amount
-                      ? const Color(0xFFFF9400)
-                      : const Color(0xFFE0DCDD),
-                ),
-                labelStyle: TextStyle(
-                  color: selectedAmount == amount
-                      ? const Color(0xFFC86E00)
-                      : const Color(0xFF514B4D),
-                  fontWeight: FontWeight.w600,
-                ),
-                showCheckmark: false,
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final amount in amounts)
+            ChoiceChip(
+              label: Text(_suggestedAmountLabel(amount, currency)),
+              selected: selectedAmount == amount,
+              onSelected: enabled ? (_) => onSelected(amount) : null,
+              selectedColor: const Color(0xFFFFE4BA),
+              side: BorderSide(
+                color: selectedAmount == amount
+                    ? const Color(0xFFFF9400)
+                    : const Color(0xFFE0DCDD),
               ),
-              const SizedBox(width: 8),
-            ],
-          ],
-        ),
+              labelStyle: TextStyle(
+                color: selectedAmount == amount
+                    ? const Color(0xFFC86E00)
+                    : const Color(0xFF514B4D),
+                fontWeight: FontWeight.w600,
+              ),
+              showCheckmark: false,
+            ),
+        ],
       ),
     ],
   );
@@ -794,6 +791,8 @@ class _TransferReviewSheet extends StatelessWidget {
             _ReviewLine(
               label: l10n.transferOperator,
               value: contact.operatorName ?? '—',
+              logoAsset: _operatorLogoAsset(contact.operatorName),
+              fallbackIcon: Icons.account_balance_wallet_outlined,
             ),
             _ReviewLine(
               label: l10n.transferSent,
@@ -819,6 +818,8 @@ class _TransferReviewSheet extends StatelessWidget {
             _ReviewLine(
               label: l10n.transferFundingLabel,
               value: _fundingLabel(l10n, viewModel.fundingMethod),
+              logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
+              fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),
             _ReviewLine(
               label: l10n.transferTotalAmount,
@@ -888,10 +889,14 @@ class _ReviewLine extends StatelessWidget {
   final String label;
   final String value;
   final bool emphasized;
+  final String? logoAsset;
+  final IconData? fallbackIcon;
   const _ReviewLine({
     required this.label,
     required this.value,
     this.emphasized = false,
+    this.logoAsset,
+    this.fallbackIcon,
   });
   @override
   Widget build(BuildContext context) => Padding(
@@ -910,14 +915,41 @@ class _ReviewLine extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              color: const Color(0xFF2D292E),
-              fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
-              fontSize: emphasized ? 17 : 15,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (logoAsset != null || fallbackIcon != null) ...[
+                ExcludeSemantics(
+                  child: SizedBox(
+                    width: 48,
+                    height: 32,
+                    child: logoAsset == null
+                        ? Icon(fallbackIcon, size: 24)
+                        : Image.asset(
+                            logoAsset!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, _, _) => Icon(
+                              fallbackIcon ??
+                                  Icons.account_balance_wallet_outlined,
+                              size: 24,
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+              ],
+              Flexible(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: const Color(0xFF2D292E),
+                    fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
+                    fontSize: emphasized ? 17 : 15,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -959,6 +991,46 @@ String _editableDecimal(num value) {
       ? decimal.toStringAsFixed(0)
       : decimal.toStringAsFixed(2);
 }
+
+String _suggestedAmountLabel(num amount, String currency) {
+  final code = currency.trim().toUpperCase();
+  final symbol = switch (code) {
+    'EUR' => '€',
+    'USD' => r'$',
+    'GBP' => '£',
+    'JPY' || 'CNY' => '¥',
+    'KRW' => '₩',
+    'INR' => '₹',
+    'CAD' => r'CA$',
+    'AUD' => r'A$',
+    'NZD' => r'NZ$',
+    'HKD' => r'HK$',
+    'SGD' => r'S$',
+    _ => null,
+  };
+  return symbol == null
+      ? '${_editableDecimal(amount)} $code'
+      : '$symbol${_editableDecimal(amount)}';
+}
+
+String? _operatorLogoAsset(String? name) {
+  final normalized = name?.trim().toUpperCase();
+  if (normalized == null) return null;
+  if (RegExp(r'(^|[^A-Z])MTN([^A-Z]|$)').hasMatch(normalized)) {
+    return 'assets/images/transfer/mtn.png';
+  }
+  if (RegExp(r'(^|[^A-Z])ORANGE([^A-Z]|$)').hasMatch(normalized)) {
+    return 'assets/images/transfer/orange.png';
+  }
+  return null;
+}
+
+String? _fundingLogoAsset(TransferFundingMethod method) => switch (method) {
+  TransferFundingMethod.applePay => 'assets/images/transfer/apple_pay.png',
+  TransferFundingMethod.googlePay => 'assets/images/transfer/google_pay.png',
+  TransferFundingMethod.paypal => 'assets/images/transfer/paypal.png',
+  TransferFundingMethod.card => null,
+};
 
 String _decimal(num value) {
   final asDouble = value.toDouble();

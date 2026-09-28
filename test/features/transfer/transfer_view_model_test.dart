@@ -220,7 +220,15 @@ void main() {
       beneficiaryService: BeneficiaryService(BeneficiariesFake()),
       seed: const TransferDraftSeed(sentCurrency: 'EUR'),
     );
-    expect(eur.suggestedAmounts, [20, 50, 100, 150, 200]);
+    expect(eur.suggestedAmounts, [20, 50, 100, 250, 500]);
     eur.dispose();
+
+    final usd = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(sentCurrency: 'USD'),
+    );
+    expect(usd.suggestedAmounts, [20, 50, 100, 250, 500]);
+    usd.dispose();
   });
 }
