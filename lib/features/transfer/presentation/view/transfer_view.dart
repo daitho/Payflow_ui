@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
 import '../../domain/exception/transfer_exception.dart';
+import '../../domain/model/paypal_return_link.dart';
 import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
 import '../../domain/service/transfer_funding_availability.dart';
@@ -23,6 +25,7 @@ class TransferView extends StatefulWidget {
 }
 
 class _TransferViewState extends State<TransferView> {
+  late final AppLinks _appLinks;
   late final TextEditingController _sentAmount;
   late final TextEditingController _receivedAmount;
   String? _synchronizedQuoteId;
@@ -30,6 +33,7 @@ class _TransferViewState extends State<TransferView> {
   @override
   void initState() {
     super.initState();
+    _appLinks = AppLinks();
     _sentAmount = TextEditingController(
       text: context.read<TransferViewModel>().initialAmountText,
     );
@@ -126,53 +130,104 @@ class _TransferViewState extends State<TransferView> {
     }
 
     final payment = await viewModel.startPaypalPayment();
-    if (!mounted || payment == null) {
+    if (!mounted) return null;
+    if (payment == null) {
       _showError(viewModel.error);
       return null;
     }
 
     final approvalUrl = Uri.tryParse(payment.approvalUrl ?? '');
-    if (approvalUrl == null ||
-        !await launchUrl(
-          approvalUrl,
-          mode: LaunchMode.externalApplication,
-        )) {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(content: Text(l10n.transferPaypalLaunchError)),
-          );
-      }
+    if (approvalUrl == null || !payment.requiresPayerAction) {
+      _showPaypalLaunchError();
       return null;
     }
 
-    if (!mounted) return null;
-    final l10n = AppLocalizations.of(context);
-    final shouldVerify = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.transferPaypalReturnTitle),
-        content: Text(l10n.transferPaypalReturnMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.transferPaypalVerify),
-          ),
-        ],
-      ),
-    );
+    BuildContext? returnDialog;
+    bool? callbackResult;
+    final subscription = _appLinks.uriLinkStream.listen((uri) {
+      final action = paypalReturnAction(uri, payment.id);
+      if (action == null || callbackResult != null) return;
+      callbackResult = action == PaypalReturnAction.approved;
+      final dialog = returnDialog;
+      if (dialog != null && dialog.mounted) {
+        returnDialog = null;
+        Navigator.of(dialog).pop(callbackResult);
+      }
+    });
 
-    if (shouldVerify != true || !mounted) return null;
-    final result = await viewModel.capturePaypalAndConfirm();
-    if (result == null && mounted) _showError(viewModel.error);
-    return result;
+    try {
+      bool launched;
+      try {
+        launched = await launchUrl(
+          approvalUrl,
+          mode: LaunchMode.externalApplication,
+        );
+      } catch (_) {
+        launched = false;
+      }
+      if (!launched) {
+        if (mounted) _showPaypalLaunchError();
+        return null;
+      }
+
+      if (!mounted) return null;
+      final l10n = AppLocalizations.of(context);
+      bool? shouldVerify = callbackResult;
+      if (shouldVerify == null) {
+        shouldVerify = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) {
+            returnDialog = dialogContext;
+            // A callback may arrive between opening and building the dialog.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (callbackResult != null &&
+                  returnDialog == dialogContext &&
+                  dialogContext.mounted) {
+                returnDialog = null;
+                Navigator.of(dialogContext).pop(callbackResult);
+              }
+            });
+            return AlertDialog(
+              title: Text(l10n.transferPaypalReturnTitle),
+              content: Text(l10n.transferPaypalReturnMessage),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    returnDialog = null;
+                    Navigator.of(dialogContext).pop(false);
+                  },
+                  child: Text(l10n.cancel),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    returnDialog = null;
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: Text(l10n.transferPaypalVerify),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      returnDialog = null;
+      if (shouldVerify != true || !mounted) return null;
+      final result = await viewModel.capturePaypalAndConfirm();
+      if (result == null && mounted) _showError(viewModel.error);
+      return result;
+    } finally {
+      await subscription.cancel();
+    }
+  }
+
+  void _showPaypalLaunchError() {
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(l10n.transferPaypalLaunchError)),
+      );
   }
 
   void _showError(TransferFailure? failure) {
@@ -763,7 +818,7 @@ class _TransferReviewSheet extends StatelessWidget {
             ),
             _ReviewLine(
               label: l10n.transferFundingLabel,
-              value: l10n.transferFundingCard,
+              value: _fundingLabel(l10n, viewModel.fundingMethod),
             ),
             _ReviewLine(
               label: l10n.transferTotalAmount,
