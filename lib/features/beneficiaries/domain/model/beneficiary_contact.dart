@@ -39,7 +39,7 @@ class BeneficiaryOperator {
     this.name,
     this.currencyCode, {
     this.networkIndependent = false,
-  );
+  });
 }
 
 class BeneficiaryCatalog {
