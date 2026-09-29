@@ -351,7 +351,28 @@ class _TransferViewState extends State<TransferView> {
                         onSelected: (amount) =>
                             _selectSuggestedAmount(vm, amount),
                       ),
-                      const SizedBox(height: 26),
+                      if (contact != null && vm.payoutOptions.isNotEmpty) ...[
+                        const SizedBox(height: 24),
+                        Text(
+                          l10n.transferOperator.toUpperCase(),
+                          style: const TextStyle(
+                            color: Color(0xFF777274),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        for (final option in vm.payoutOptions) ...[
+                          _PayoutOptionTile(
+                            name: option.name,
+                            selected: option.id == vm.selectedPayoutOperatorId,
+                            enabled: !vm.confirming,
+                            onTap: () => vm.selectPayoutOperator(option.id),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      ],
+                      const SizedBox(height: 18),
                       Text(
                         l10n.transferFundingLabel.toUpperCase(),
                         style: const TextStyle(
@@ -578,8 +599,6 @@ class _BeneficiaryCard extends StatelessWidget {
                       [
                         if (contact!.phoneE164?.isNotEmpty == true)
                           contact!.phoneE164!,
-                        if (contact!.operatorName?.isNotEmpty == true)
-                          contact!.operatorName!,
                       ].join('  '),
                       style: const TextStyle(
                         color: Color(0xFF898487),
@@ -592,6 +611,62 @@ class _BeneficiaryCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PayoutOptionTile extends StatelessWidget {
+  const _PayoutOptionTile({
+    required this.name,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final String name;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    selected: selected,
+    button: true,
+    child: Material(
+      color: selected ? const Color(0xFFFFF8EC) : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(
+          color: selected ? const Color(0xFFFF9400) : const Color(0xFFE8E5E4),
+          width: selected ? 1.5 : 1,
+        ),
+      ),
+      child: InkWell(
+        onTap: enabled ? onTap : null,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              PaymentOperatorLogo(name: name, width: 96, height: 58),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Icon(
+                selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                color: selected ? const Color(0xFFFF9400) : const Color(0xFFB9B4B3),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _AmountField extends StatelessWidget {
@@ -799,8 +874,8 @@ class _TransferReviewSheet extends StatelessWidget {
             const SizedBox(height: 10),
             _PaymentPartyCard(
               label: l10n.transferOperator,
-              name: contact.operatorName ?? '—',
-              operatorName: contact.operatorName,
+              name: viewModel.selectedPayoutName ?? '—',
+              operatorName: viewModel.selectedPayoutName,
             ),
             const SizedBox(height: 12),
             _ReviewLine(
@@ -972,7 +1047,7 @@ class _PaymentPartyCard extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         if (operatorName != null)
-          PaymentOperatorLogo(name: operatorName, width: 94, height: 48)
+          PaymentOperatorLogo(name: operatorName, width: 110, height: 60)
         else
           ExcludeSemantics(
             child: SizedBox(

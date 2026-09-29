@@ -33,6 +33,10 @@ class TransferViewModel extends ChangeNotifier {
        _sentCurrency = (seed.sentCurrency ?? 'EUR').toUpperCase();
 
   BeneficiaryContact? _beneficiary;
+  BeneficiaryCatalog? _catalog;
+  String? _selectedOperatorId;
+  String? _quotedOperatorId;
+  final Map<String, Future<String>> _alternativeDestinations = {};
   TransferQuote? _quote;
   TransferFailure? _error;
   num _sentAmount;
@@ -52,6 +56,35 @@ class TransferViewModel extends ChangeNotifier {
   String? _captureIdempotencyKey;
 
   BeneficiaryContact? get beneficiary => _beneficiary;
+  String? get selectedPayoutOperatorId => _selectedOperatorId;
+  String? get selectedPayoutName {
+    for (final option in payoutOptions) {
+      if (option.id == _selectedOperatorId) return option.name;
+    }
+    return _beneficiary?.operatorName;
+  }
+
+  List<BeneficiaryOperator> get payoutOptions {
+    final contact = _beneficiary;
+    if (contact == null) return const [];
+    final options = <BeneficiaryOperator>[];
+    if (contact.operatorId != null) {
+      options.add(BeneficiaryOperator(
+        contact.operatorId!,
+        contact.countryId,
+        contact.operatorName ?? '',
+        contact.currencyCode ?? '',
+      ));
+    }
+    for (final option in _catalog?.operators ?? const <BeneficiaryOperator>[]) {
+      if (option.countryId == contact.countryId &&
+          option.id != contact.operatorId &&
+          !options.any((existing) => existing.id == option.id)) {
+        options.add(option);
+      }
+    }
+    return options;
+  }
   TransferQuote? get quote => _quote;
   TransferFailure? get error => _error;
   num get sentAmount => _sentAmount;
@@ -67,7 +100,9 @@ class TransferViewModel extends ChangeNotifier {
   bool get confirming => _confirming;
   bool get busy => _initializing || _quoting || _confirming;
   bool get hasUsableDestination =>
-      _beneficiary?.destinationId?.trim().isNotEmpty == true;
+      _beneficiary?.destinationId?.trim().isNotEmpty == true &&
+      (_selectedOperatorId == _beneficiary?.operatorId ||
+          _beneficiary?.phoneE164?.trim().isNotEmpty == true);
   num get _activeAmount => _amountInput == TransferAmountInput.sent
       ? _sentAmount
       : _receivedAmount;
@@ -91,7 +126,11 @@ class TransferViewModel extends ChangeNotifier {
 
   Future<void> initialize() async {
     final id = seed.beneficiaryId?.trim();
-    if (id == null || id.isEmpty || _initializing || _disposed) return;
+    if (_initializing || _disposed) return;
+    if (id == null || id.isEmpty) {
+      await _loadCatalog();
+      return;
+    }
     _initializing = true;
     _error = null;
     _notify();
@@ -99,6 +138,7 @@ class TransferViewModel extends ChangeNotifier {
       final contact = await _beneficiaries.get(id);
       if (_disposed) return;
       _beneficiary = contact;
+      _selectedOperatorId = contact.operatorId;
       await _requestQuote();
     } on BeneficiaryException {
       if (!_disposed) _error = TransferFailure.notFound;
@@ -110,11 +150,36 @@ class TransferViewModel extends ChangeNotifier {
         _notify();
       }
     }
+    await _loadCatalog();
+  }
+
+  Future<void> _loadCatalog() async {
+    if (_catalog != null || _disposed) return;
+    try {
+      final catalog = await _beneficiaries.catalog();
+      if (!_disposed) {
+        _catalog = catalog;
+        _notify();
+      }
+    } catch (_) {
+      // The saved primary destination remains usable if the catalog is down.
+    }
   }
 
   void selectBeneficiary(BeneficiaryContact contact) {
     if (_disposed) return;
     _beneficiary = contact;
+    _selectedOperatorId = contact.operatorId;
+    _invalidateQuote();
+    _scheduleQuote();
+    _notify();
+    if (_catalog == null) _loadCatalog();
+  }
+
+  void selectPayoutOperator(String operatorId) {
+    if (_disposed || _confirming || _selectedOperatorId == operatorId ||
+        !payoutOptions.any((option) => option.id == operatorId)) return;
+    _selectedOperatorId = operatorId;
     _invalidateQuote();
     _scheduleQuote();
     _notify();
@@ -166,6 +231,7 @@ class TransferViewModel extends ChangeNotifier {
         : _quote?.receivedAmount == _receivedAmount;
     if (_quote?.isUsable == true &&
         quoteMatchesInput &&
+        _quotedOperatorId == _selectedOperatorId &&
         _quote!.beneficiaryId == _beneficiary?.id) {
       return _quote;
     }
@@ -281,11 +347,11 @@ class TransferViewModel extends ChangeNotifier {
 
   Future<void> _requestQuote() async {
     final contact = _beneficiary;
-    final destinationId = contact?.destinationId;
+    final operatorId = _selectedOperatorId;
     if (_disposed ||
         contact == null ||
-        destinationId == null ||
-        destinationId.trim().isEmpty ||
+        operatorId == null ||
+        !hasUsableDestination ||
         _activeAmount <= 0) {
       return;
     }
@@ -294,6 +360,10 @@ class TransferViewModel extends ChangeNotifier {
     _error = null;
     _notify();
     try {
+      final destinationId = operatorId == contact.operatorId
+          ? contact.destinationId!
+          : await _resolveAlternativeDestination(contact, operatorId);
+      if (_disposed || generation != _quoteGeneration) return;
       final result = await _transfers.createQuote(
         beneficiaryId: contact.id,
         destinationId: destinationId,
@@ -306,10 +376,18 @@ class TransferViewModel extends ChangeNotifier {
         sentCurrency: _sentCurrency,
       );
       if (!_disposed && generation == _quoteGeneration) {
+        if (result.destinationId != destinationId) {
+          throw const TransferException(TransferFailure.invalidResponse);
+        }
         _quote = result;
+        _quotedOperatorId = operatorId;
         _sentAmount = result.sentAmount;
         _receivedAmount = result.receivedAmount;
         _idempotencyKey = _uuid.v4();
+      }
+    } on BeneficiaryException {
+      if (!_disposed && generation == _quoteGeneration) {
+        _error = TransferFailure.unavailable;
       }
     } on TransferException catch (error) {
       if (!_disposed && generation == _quoteGeneration) {
@@ -327,6 +405,28 @@ class TransferViewModel extends ChangeNotifier {
     }
   }
 
+  Future<String> _resolveAlternativeDestination(
+    BeneficiaryContact contact,
+    String operatorId,
+  ) async {
+    final phone = contact.phoneE164!;
+    final key = '${contact.id}:$operatorId:$phone';
+    final request = _alternativeDestinations.putIfAbsent(
+      key,
+      () => _beneficiaries.ensureSecondaryDestination(
+        beneficiaryId: contact.id,
+        operatorId: operatorId,
+        phoneE164: phone,
+      ),
+    );
+    try {
+      return await request;
+    } catch (_) {
+      _alternativeDestinations.remove(key);
+      rethrow;
+    }
+  }
+
   num _parseAmount(String rawValue) {
     final normalized = rawValue.trim().replaceAll(',', '.');
     return num.tryParse(normalized) ?? 0;
@@ -335,6 +435,8 @@ class TransferViewModel extends ChangeNotifier {
   void _invalidateQuote() {
     _quoteGeneration++;
     _quote = null;
+    _quotedOperatorId = null;
+    _quoting = false;
     _idempotencyKey = null;
     _paymentIdempotencyKey = null;
     _captureIdempotencyKey = null;

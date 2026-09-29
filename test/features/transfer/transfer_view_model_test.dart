@@ -23,12 +23,32 @@ const contact = BeneficiaryContact(
 );
 
 class BeneficiariesFake implements BeneficiaryRepository {
+  int alternativeCreates = 0;
+  @override
+  Future<String> ensureSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) async {
+    alternativeCreates++;
+    expect(beneficiaryId, contact.id);
+    expect(operatorId, 'wave');
+    expect(phoneE164, contact.phoneE164);
+    return 'wave-destination';
+  }
   @override
   Future<BeneficiaryContact> get(String id) async => contact;
   @override
   Future<List<BeneficiaryContact>> list() async => [contact];
   @override
-  Future<BeneficiaryCatalog> catalog() => throw UnimplementedError();
+  Future<BeneficiaryCatalog> catalog() async => BeneficiaryCatalog(
+    [const BeneficiaryCountry('country-cm', 'Cameroun', 'CM', '237')],
+    [
+      const BeneficiaryOperator('mtn', 'country-cm', 'MTN', 'XAF'),
+      const BeneficiaryOperator('wave', 'country-cm', 'Wave', 'XAF'),
+      const BeneficiaryOperator('other', 'country-sn', 'Other', 'XOF'),
+    ],
+  );
   @override
   Future<BeneficiaryContact> save(
     BeneficiaryContactInput input, {
@@ -168,6 +188,40 @@ void main() {
     expect(transfer!.id, 'transfer-1');
     expect(transfers.confirmedFundingMethod, TransferFundingMethod.paypal);
     expect(transfers.confirmedPaymentIntentId, 'payment-1');
+    vm.dispose();
+  });
+
+  test('alternative payout uses Wave without changing the saved default', () async {
+    final transfers = TransfersFake();
+    final beneficiaries = BeneficiariesFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(beneficiaries),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+    expect(vm.selectedPayoutOperatorId, 'mtn');
+    expect(vm.payoutOptions.map((o) => o.id), ['mtn', 'wave']);
+    expect(transfers.destinationId, 'destination-1');
+    vm.selectPayoutOperator('other');
+    expect(vm.selectedPayoutOperatorId, 'mtn');
+
+    vm.selectPayoutOperator('wave');
+    expect(vm.quote, isNull);
+    await vm.ensureQuote();
+    expect(beneficiaries.alternativeCreates, 1);
+    expect(transfers.destinationId, 'wave-destination');
+    expect(vm.selectedPayoutName, 'Wave');
+    expect(vm.beneficiary!.operatorId, 'mtn');
+
+    vm.setSentAmount('50');
+    await vm.ensureQuote();
+    expect(beneficiaries.alternativeCreates, 1);
+    expect(transfers.destinationId, 'wave-destination');
+
+    vm.selectPayoutOperator('mtn');
+    await vm.ensureQuote();
+    expect(transfers.destinationId, 'destination-1');
     vm.dispose();
   });
 

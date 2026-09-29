@@ -24,6 +24,12 @@ class FakeRepository implements BeneficiaryRepository {
   BeneficiaryContactInput? savedInput;
   final pending = Completer<BeneficiaryContact>();
   @override
+  Future<String> ensureSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) => throw UnimplementedError();
+  @override
   Future<BeneficiaryCatalog> catalog() async => BeneficiaryCatalog(
     [
       const BeneficiaryCountry('cm', 'Cameroun', 'CM', '237'),

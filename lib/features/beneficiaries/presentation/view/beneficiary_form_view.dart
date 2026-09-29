@@ -399,27 +399,9 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        LayoutBuilder(
-                          builder: (context, constraints) =>
-                              constraints.maxWidth < 300 ||
-                                  MediaQuery.textScalerOf(context).scale(14) >
-                                      20
-                              ? Column(
-                                  children: [
-                                    countryField,
-                                    const SizedBox(height: 16),
-                                    operatorField,
-                                  ],
-                                )
-                              : Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(child: countryField),
-                                    const SizedBox(width: 8),
-                                    Expanded(child: operatorField),
-                                  ],
-                                ),
-                        ),
+                        countryField,
+                        const SizedBox(height: 16),
+                        operatorField,
                         const SizedBox(height: 16),
                         DropdownButtonFormField<int>(
                           initialValue: switch (vm.gender) {
