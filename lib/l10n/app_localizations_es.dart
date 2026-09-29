@@ -682,7 +682,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferCountry => 'País';
 
   @override
-  String get transferOperator => 'Operador';
+  String get transferOperator => 'Método de recepción';
 
   @override
   String get transferDestination => 'Destino';
@@ -804,7 +804,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get contactCountry => 'País';
 
   @override
-  String get contactOperator => 'Operador';
+  String get contactOperator => 'Método de recepción';
 
   @override
   String get contactGender => 'Género';
@@ -842,7 +842,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get contactNoOperators =>
-      'No hay operadores de dinero móvil disponibles.';
+      'No hay servicios de dinero móvil disponibles.';
 
   @override
   String get contactNetworkError => 'Conexión no disponible. Comprueba tu red.';

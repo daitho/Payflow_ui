@@ -1341,7 +1341,7 @@ abstract class AppLocalizations {
   /// No description provided for @transferOperator.
   ///
   /// In en, this message translates to:
-  /// **'Operator'**
+  /// **'Receiving method'**
   String get transferOperator;
 
   /// No description provided for @transferDestination.
@@ -1569,7 +1569,7 @@ abstract class AppLocalizations {
   /// No description provided for @contactOperator.
   ///
   /// In en, this message translates to:
-  /// **'Operator'**
+  /// **'Receiving method'**
   String get contactOperator;
 
   /// No description provided for @contactGender.
@@ -1641,7 +1641,7 @@ abstract class AppLocalizations {
   /// No description provided for @contactNoOperators.
   ///
   /// In en, this message translates to:
-  /// **'No Mobile Money operators available.'**
+  /// **'No Mobile Money services available.'**
   String get contactNoOperators;
 
   /// No description provided for @contactNetworkError.

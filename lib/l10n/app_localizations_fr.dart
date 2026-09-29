@@ -680,7 +680,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transferCountry => 'Pays';
 
   @override
-  String get transferOperator => 'Opérateur';
+  String get transferOperator => 'Mode de réception';
 
   @override
   String get transferDestination => 'Destination';
@@ -802,7 +802,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get contactCountry => 'Pays';
 
   @override
-  String get contactOperator => 'Opérateur';
+  String get contactOperator => 'Mode de réception';
 
   @override
   String get contactGender => 'Genre';
@@ -839,7 +839,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Saisissez le numéro avec son indicatif, par exemple +237…';
 
   @override
-  String get contactNoOperators => 'Aucun opérateur Mobile Money disponible.';
+  String get contactNoOperators => 'Aucun service Mobile Money disponible.';
 
   @override
   String get contactNetworkError =>
