@@ -36,9 +36,11 @@ class PaymentOperatorLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final asset = paymentOperatorLogoAsset(name);
     final normalized = name?.toUpperCase() ?? '';
-    final accent = normalized.contains('MTN')
+    final isOrange = normalized.contains('ORANGE');
+    final isMtn = normalized.contains('MTN');
+    final accent = isMtn
         ? const Color(0xFFE8B900)
-        : normalized.contains('ORANGE')
+        : isOrange
         ? const Color(0xFFFF7900)
         : normalized.contains('WAVE')
         ? const Color(0xFF13B9E8)
@@ -49,7 +51,7 @@ class PaymentOperatorLogo extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        padding: EdgeInsets.all(asset?.endsWith('mtn_mobile_money.jpg') == true ? 2 : 5),
+        padding: EdgeInsets.all(isMtn || isOrange ? 2 : 5),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -66,12 +68,24 @@ class PaymentOperatorLogo extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: asset == null
               ? Icon(Icons.account_balance_wallet_outlined, color: accent)
-              : Image.asset(
-                  asset,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Icon(Icons.account_balance_wallet_outlined, color: accent),
+              : Transform.scale(
+                  // Focus on the Orange Money mark and the MTN Mobile Money
+                  // lockup; the source images include generous outer margins.
+                  scale: isOrange
+                      ? 1.75
+                      : isMtn
+                      ? 1.12
+                      : 1,
+                  alignment: isOrange
+                      ? Alignment.centerRight
+                      : Alignment.center,
+                  child: Image.asset(
+                    asset,
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.high,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Icon(Icons.account_balance_wallet_outlined, color: accent),
+                  ),
                 ),
         ),
       ),

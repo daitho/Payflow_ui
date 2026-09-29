@@ -77,7 +77,8 @@ class TransferViewModel extends ChangeNotifier {
       ));
     }
     for (final option in _catalog?.operators ?? const <BeneficiaryOperator>[]) {
-      if (option.countryId == contact.countryId &&
+      if (contact.phoneE164?.trim().isNotEmpty == true &&
+          option.countryId == contact.countryId &&
           option.id != contact.operatorId &&
           !options.any((existing) => existing.id == option.id)) {
         options.add(option);
