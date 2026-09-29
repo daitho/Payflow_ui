@@ -68,22 +68,45 @@ class TransferViewModel extends ChangeNotifier {
     final contact = _beneficiary;
     if (contact == null) return const [];
     final options = <BeneficiaryOperator>[];
-    if (contact.operatorId != null) {
-      options.add(BeneficiaryOperator(
-        contact.operatorId!,
-        contact.countryId,
-        contact.operatorName ?? '',
-        contact.currencyCode ?? '',
-      ));
+    BeneficiaryOperator? primary;
+    for (final option in _catalog?.operators ?? const <BeneficiaryOperator>[]) {
+      if (option.countryId == contact.countryId &&
+          option.id == contact.operatorId) {
+        primary = option;
+        break;
+      }
     }
+    if (contact.operatorId != null) {
+      options.add(
+        primary ??
+            BeneficiaryOperator(
+              contact.operatorId!,
+              contact.countryId,
+              contact.operatorName ?? '',
+              contact.currencyCode ?? '',
+              networkIndependent:
+                  contact.operatorName?.trim().toUpperCase() == 'WAVE',
+            ),
+      );
+    }
+    final independentOptions = <BeneficiaryOperator>[];
     for (final option in _catalog?.operators ?? const <BeneficiaryOperator>[]) {
       if (contact.phoneE164?.trim().isNotEmpty == true &&
           option.countryId == contact.countryId &&
           option.id != contact.operatorId &&
-          !options.any((existing) => existing.id == option.id)) {
-        options.add(option);
+          option.networkIndependent &&
+          !independentOptions.any((existing) => existing.id == option.id)) {
+        independentOptions.add(option);
       }
     }
+    // Wave is the first alternative; later independent services follow it.
+    independentOptions.sort((a, b) {
+      final aWave = a.name.trim().toUpperCase() == 'WAVE';
+      final bWave = b.name.trim().toUpperCase() == 'WAVE';
+      if (aWave != bWave) return aWave ? -1 : 1;
+      return a.name.compareTo(b.name);
+    });
+    options.addAll(independentOptions);
     return options;
   }
   TransferQuote? get quote => _quote;
