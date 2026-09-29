@@ -76,7 +76,7 @@ class TransferViewModel extends ChangeNotifier {
         break;
       }
     }
-    if (contact.operatorId != null) {
+    if (contact.operatorId != null && (_catalog == null || primary != null)) {
       options.add(
         primary ??
             BeneficiaryOperator(
@@ -124,6 +124,9 @@ class TransferViewModel extends ChangeNotifier {
   bool get confirming => _confirming;
   bool get busy => _initializing || _quoting || _confirming;
   bool get hasUsableDestination =>
+      _selectedOperatorId != null &&
+      (_catalog == null ||
+          payoutOptions.any((option) => option.id == _selectedOperatorId)) &&
       _beneficiary?.destinationId?.trim().isNotEmpty == true &&
       (_selectedOperatorId == _beneficiary?.operatorId ||
           _beneficiary?.phoneE164?.trim().isNotEmpty == true);
@@ -183,6 +186,13 @@ class TransferViewModel extends ChangeNotifier {
       final catalog = await _beneficiaries.catalog();
       if (!_disposed) {
         _catalog = catalog;
+        if (_beneficiary != null &&
+            !payoutOptions.any((option) => option.id == _selectedOperatorId)) {
+          final options = payoutOptions;
+          _selectedOperatorId = options.isEmpty ? null : options.first.id;
+          _invalidateQuote();
+          _scheduleQuote();
+        }
         _notify();
       }
     } catch (_) {

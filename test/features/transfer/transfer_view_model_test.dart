@@ -303,6 +303,41 @@ void main() {
     );
   });
 
+  test('a removed country mode is no longer available for a saved contact', () async {
+    final vm = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(
+        BeneficiariesFake(catalogOperators: [
+          const BeneficiaryOperator('orange', 'country-cm', 'Orange Money', 'XAF'),
+        ]),
+      ),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+
+    await vm.initialize();
+    expect(vm.payoutOptions, isEmpty);
+    expect(vm.selectedPayoutOperatorId, isNull);
+    expect(vm.canContinue, isFalse);
+    vm.dispose();
+
+    final waveVm = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(
+        BeneficiariesFake(catalogOperators: [
+          const BeneficiaryOperator(
+            'wave', 'country-cm', 'Wave', 'XAF',
+            networkIndependent: true,
+          ),
+        ]),
+      ),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await waveVm.initialize();
+    expect(waveVm.payoutOptions.map((option) => option.id), ['wave']);
+    expect(waveVm.selectedPayoutOperatorId, 'wave');
+    waveVm.dispose();
+  });
+
   test('received amount requests a backend reverse quote', () async {
     final transfers = TransfersFake();
     final vm = TransferViewModel(

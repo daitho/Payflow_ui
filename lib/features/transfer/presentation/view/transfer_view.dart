@@ -372,6 +372,10 @@ class _TransferViewState extends State<TransferView> {
                           const SizedBox(height: 8),
                         ],
                       ],
+                      if (contact != null && vm.payoutOptions.isEmpty) ...[
+                        const SizedBox(height: 24),
+                        _InlineError(message: l10n.transferBeneficiaryUnavailable),
+                      ],
                       const SizedBox(height: 18),
                       Text(
                         l10n.transferFundingLabel.toUpperCase(),
@@ -382,39 +386,37 @@ class _TransferViewState extends State<TransferView> {
                         ),
                       ),
                       const SizedBox(height: 9),
-                      DropdownButtonFormField<TransferFundingMethod>(
-                        initialValue: vm.fundingMethod,
-                        decoration: _fieldDecoration().copyWith(
-                          prefixIcon: Icon(
-                            _fundingIcon(vm.fundingMethod),
-                            color: const Color(0xFF24466E),
-                          ),
-                        ),
-                        items: fundingMethods
-                            .map(
-                              (method) => DropdownMenuItem(
-                                value: method,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      _fundingIcon(method),
-                                      size: 20,
-                                      color: const Color(0xFF24466E),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(_fundingLabel(l10n, method)),
-                                  ],
+                      SizedBox(
+                        height: _transferMethodFieldHeight,
+                        child: DropdownButtonFormField<TransferFundingMethod>(
+                          initialValue: vm.fundingMethod,
+                          decoration: _methodFieldDecoration(),
+                          items: fundingMethods
+                              .map(
+                                (method) => DropdownMenuItem(
+                                  value: method,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        _fundingIcon(method),
+                                        size: 20,
+                                        color: const Color(0xFF24466E),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(_fundingLabel(l10n, method)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(growable: false),
-                        onChanged: vm.confirming
-                            ? null
-                            : (value) {
-                                if (value != null) {
-                                  vm.selectFundingMethod(value);
-                                }
-                              },
+                              )
+                              .toList(growable: false),
+                          onChanged: vm.confirming
+                              ? null
+                              : (value) {
+                                  if (value != null) {
+                                    vm.selectFundingMethod(value);
+                                  }
+                                },
+                        ),
                       ),
                       const SizedBox(height: 24),
                       if (quote != null) ...[
@@ -639,29 +641,32 @@ class _PayoutOptionTile extends StatelessWidget {
           width: selected ? 1.5 : 1,
         ),
       ),
-      child: InkWell(
-        onTap: enabled ? onTap : null,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          child: Row(
-            children: [
-              PaymentOperatorLogo(name: name, width: 96, height: 58),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
+      child: SizedBox(
+        height: _transferMethodFieldHeight,
+        child: InkWell(
+          onTap: enabled ? onTap : null,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              children: [
+                PaymentOperatorLogo(name: name, width: 64, height: 40),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              Icon(
-                selected ? Icons.check_circle_rounded : Icons.circle_outlined,
-                color: selected ? const Color(0xFFFF9400) : const Color(0xFFB9B4B3),
-              ),
-            ],
+                Icon(
+                  selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                  color: selected ? const Color(0xFFFF9400) : const Color(0xFFB9B4B3),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -871,12 +876,6 @@ class _TransferReviewSheet extends StatelessWidget {
               logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
               fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),
-            const SizedBox(height: 10),
-            _PaymentPartyCard(
-              label: l10n.transferOperator,
-              name: viewModel.selectedPayoutName ?? '—',
-              operatorName: viewModel.selectedPayoutName,
-            ),
             const SizedBox(height: 12),
             _ReviewLine(
               label: l10n.transferSent,
@@ -903,6 +902,12 @@ class _TransferReviewSheet extends StatelessWidget {
               label: l10n.transferTotalAmount,
               value: _money(context, quote.totalDebited, quote.sentCurrency),
               emphasized: true,
+            ),
+            const SizedBox(height: 12),
+            _PaymentPartyCard(
+              label: l10n.transferOperator,
+              name: viewModel.selectedPayoutName ?? '—',
+              operatorName: viewModel.selectedPayoutName,
             ),
             const SizedBox(height: 20),
             Container(
@@ -1047,12 +1052,22 @@ class _PaymentPartyCard extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         if (operatorName != null)
-          PaymentOperatorLogo(name: operatorName, width: 110, height: 60)
+          PaymentOperatorLogo(
+            name: operatorName,
+            width: _reviewLogoWidth,
+            height: _reviewLogoHeight,
+          )
         else
           ExcludeSemantics(
-            child: SizedBox(
-              width: 94,
-              height: 48,
+            child: Container(
+              width: _reviewLogoWidth,
+              height: _reviewLogoHeight,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE9E5E4)),
+              ),
               child: logoAsset == null
                   ? Icon(fallbackIcon)
                   : Image.asset(
@@ -1067,6 +1082,14 @@ class _PaymentPartyCard extends StatelessWidget {
     ),
   );
 }
+
+const double _transferMethodFieldHeight = 64;
+const double _reviewLogoWidth = 96;
+const double _reviewLogoHeight = 56;
+
+InputDecoration _methodFieldDecoration() => _fieldDecoration().copyWith(
+  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+);
 
 InputDecoration _fieldDecoration() => InputDecoration(
   filled: true,
