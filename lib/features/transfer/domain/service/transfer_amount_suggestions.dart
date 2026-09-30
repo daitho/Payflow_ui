@@ -1,5 +1,5 @@
 abstract final class TransferAmountSuggestions {
-  static const List<num> _standard = [20, 50, 100, 150, 200];
+  static const List<num> _standard = [20, 50, 100, 250, 500];
 
   static const Map<String, List<num>> _byCurrency = {
     'EUR': _standard,
@@ -14,7 +14,7 @@ abstract final class TransferAmountSuggestions {
     'INR': [1000, 2500, 5000, 7500, 10000],
     'JPY': [2000, 5000, 10000, 15000, 20000],
     'KRW': [20000, 50000, 100000, 150000, 200000],
-    'SGD': [20, 50, 100, 150, 200],
+    'SGD': _standard,
   };
 
   static List<num> forCurrency(String currencyCode) =>

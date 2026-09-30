@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/home_beneficiary_model.dart';
 import '../util/beneficiary_avatar_util.dart';
 import '../util/country_flag_util.dart';
@@ -217,6 +218,14 @@ class _SelectedBeneficiaryCard extends StatelessWidget {
                   ),
                 ),
               ),
+              if (beneficiary!.operatorName?.trim().isNotEmpty == true) ...[
+                const SizedBox(width: 8),
+                PaymentOperatorLogo(
+                  name: beneficiary!.operatorName,
+                  width: 64,
+                  height: 44,
+                ),
+              ],
             ],
           ),
 

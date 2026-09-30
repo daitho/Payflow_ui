@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/transfer_detail_model.dart';
 import 'transfer_format.dart';
 import 'transfer_status_chip.dart';
@@ -42,6 +43,14 @@ class TransferDetailHeader extends StatelessWidget {
           style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 12),
+        if (detail.operatorName.trim().isNotEmpty) ...[
+          PaymentOperatorLogo(
+            name: detail.operatorName,
+            width: 110,
+            height: 60,
+          ),
+          const SizedBox(height: 12),
+        ],
         if (recipientDetails.isNotEmpty)
           Text(
             recipientDetails,

@@ -44,6 +44,10 @@ class BeneficiaryCatalogDto {
             r['countryId'] as String,
             r['name'] as String,
             r['currencyCode'] as String,
+            // Older backends do not expose this flag. Wave is the sole
+            // independent service until the catalog migration is deployed.
+            networkIndependent: r['networkIndependent'] as bool? ??
+                (r['name'] as String).trim().toUpperCase() == 'WAVE',
           ),
         )
         .toList(),

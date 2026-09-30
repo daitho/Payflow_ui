@@ -23,12 +23,41 @@ const contact = BeneficiaryContact(
 );
 
 class BeneficiariesFake implements BeneficiaryRepository {
+  BeneficiariesFake({this.savedContact = contact, this.catalogOperators});
+  final BeneficiaryContact savedContact;
+  final List<BeneficiaryOperator>? catalogOperators;
+  int alternativeCreates = 0;
   @override
-  Future<BeneficiaryContact> get(String id) async => contact;
+  Future<String> ensureSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) async {
+    alternativeCreates++;
+    expect(beneficiaryId, savedContact.id);
+    expect(operatorId, 'wave');
+    expect(phoneE164, savedContact.phoneE164);
+    return 'wave-destination';
+  }
   @override
-  Future<List<BeneficiaryContact>> list() async => [contact];
+  Future<BeneficiaryContact> get(String id) async => savedContact;
   @override
-  Future<BeneficiaryCatalog> catalog() => throw UnimplementedError();
+  Future<List<BeneficiaryContact>> list() async => [savedContact];
+  @override
+  Future<BeneficiaryCatalog> catalog() async => BeneficiaryCatalog(
+    [const BeneficiaryCountry('country-cm', 'Cameroun', 'CM', '237')],
+    catalogOperators ?? [
+      const BeneficiaryOperator('mtn', 'country-cm', 'MTN', 'XAF'),
+      const BeneficiaryOperator(
+        'wave',
+        'country-cm',
+        'Wave',
+        'XAF',
+        networkIndependent: true,
+      ),
+      const BeneficiaryOperator('other', 'country-sn', 'Other', 'XOF'),
+    ],
+  );
   @override
   Future<BeneficiaryContact> save(
     BeneficiaryContactInput input, {
@@ -171,6 +200,144 @@ void main() {
     vm.dispose();
   });
 
+  test('alternative payout uses Wave without changing the saved default', () async {
+    final transfers = TransfersFake();
+    final beneficiaries = BeneficiariesFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(beneficiaries),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+    expect(vm.selectedPayoutOperatorId, 'mtn');
+    expect(vm.payoutOptions.map((o) => o.id), ['mtn', 'wave']);
+    expect(transfers.destinationId, 'destination-1');
+    vm.selectPayoutOperator('other');
+    expect(vm.selectedPayoutOperatorId, 'mtn');
+
+    vm.selectPayoutOperator('wave');
+    expect(vm.quote, isNull);
+    await vm.ensureQuote();
+    expect(beneficiaries.alternativeCreates, 1);
+    expect(transfers.destinationId, 'wave-destination');
+    expect(vm.selectedPayoutName, 'Wave');
+    expect(vm.beneficiary!.operatorId, 'mtn');
+
+    vm.setSentAmount('50');
+    await vm.ensureQuote();
+    expect(beneficiaries.alternativeCreates, 1);
+    expect(transfers.destinationId, 'wave-destination');
+
+    vm.selectPayoutOperator('mtn');
+    await vm.ensureQuote();
+    expect(transfers.destinationId, 'destination-1');
+    vm.dispose();
+  });
+
+  test('the phone network is exclusive; independent modes keep their order', () async {
+    const orange = BeneficiaryContact(
+      id: 'beneficiary-1', fullName: 'Amina Test', countryId: 'country-cm',
+      countryName: 'Cameroun', countryCode: 'CM',
+      destinationId: 'orange-destination', operatorId: 'orange',
+      operatorName: 'Orange Money', phoneE164: '+237690000000',
+      currencyCode: 'XAF',
+    );
+    const wave = BeneficiaryContact(
+      id: 'beneficiary-1', fullName: 'Amina Test', countryId: 'country-cm',
+      countryName: 'Cameroun', countryCode: 'CM',
+      destinationId: 'wave-destination', operatorId: 'wave',
+      operatorName: 'Wave', phoneE164: '+237690000000',
+      currencyCode: 'XAF',
+    );
+    const wallet = BeneficiaryContact(
+      id: 'beneficiary-1', fullName: 'Amina Test', countryId: 'country-cm',
+      countryName: 'Cameroun', countryCode: 'CM',
+      destinationId: 'wallet-destination', operatorId: 'wallet',
+      operatorName: 'Other Wallet', phoneE164: '+237690000000',
+      currencyCode: 'XAF',
+    );
+    const operators = <BeneficiaryOperator>[
+      BeneficiaryOperator('mtn', 'country-cm', 'MTN', 'XAF'),
+      BeneficiaryOperator('orange', 'country-cm', 'Orange Money', 'XAF'),
+      BeneficiaryOperator(
+        'wave', 'country-cm', 'Wave', 'XAF',
+        networkIndependent: true,
+      ),
+      BeneficiaryOperator(
+        'wallet', 'country-cm', 'Other Wallet', 'XAF',
+        networkIndependent: true,
+      ),
+    ];
+
+    Future<List<String>> optionsFor(
+      BeneficiaryContact saved,
+      List<BeneficiaryOperator> catalog,
+    ) async {
+      final vm = TransferViewModel(
+        transferService: TransferService(TransfersFake()),
+        beneficiaryService: BeneficiaryService(BeneficiariesFake(
+          savedContact: saved, catalogOperators: catalog,
+        )),
+        seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+      );
+      await vm.initialize();
+      final result = vm.payoutOptions.map((o) => o.id).toList();
+      vm.dispose();
+      return result;
+    }
+
+    expect(await optionsFor(orange, operators), ['orange', 'wave', 'wallet']);
+    expect(await optionsFor(wave, operators), ['wave', 'wallet']);
+    expect(await optionsFor(wallet, operators), ['wallet', 'wave']);
+    expect(
+      await optionsFor(orange, operators.where((o) => o.id != 'wave').toList()),
+      ['orange', 'wallet'],
+    );
+    expect(
+      await optionsFor(orange, operators.where((o) => o.id == 'orange').toList()),
+      ['orange'],
+    );
+    expect(
+      await optionsFor(wave, operators.where((o) => o.id == 'wave').toList()),
+      ['wave'],
+    );
+  });
+
+  test('a removed country mode is no longer available for a saved contact', () async {
+    final vm = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(
+        BeneficiariesFake(catalogOperators: [
+          const BeneficiaryOperator('orange', 'country-cm', 'Orange Money', 'XAF'),
+        ]),
+      ),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+
+    await vm.initialize();
+    expect(vm.payoutOptions, isEmpty);
+    expect(vm.selectedPayoutOperatorId, isNull);
+    expect(vm.canContinue, isFalse);
+    vm.dispose();
+
+    final waveVm = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(
+        BeneficiariesFake(catalogOperators: [
+          const BeneficiaryOperator(
+            'wave', 'country-cm', 'Wave', 'XAF',
+            networkIndependent: true,
+          ),
+        ]),
+      ),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await waveVm.initialize();
+    expect(waveVm.payoutOptions.map((option) => option.id), ['wave']);
+    expect(waveVm.selectedPayoutOperatorId, 'wave');
+    waveVm.dispose();
+  });
+
   test('received amount requests a backend reverse quote', () async {
     final transfers = TransfersFake();
     final vm = TransferViewModel(
@@ -220,7 +387,15 @@ void main() {
       beneficiaryService: BeneficiaryService(BeneficiariesFake()),
       seed: const TransferDraftSeed(sentCurrency: 'EUR'),
     );
-    expect(eur.suggestedAmounts, [20, 50, 100, 150, 200]);
+    expect(eur.suggestedAmounts, [20, 50, 100, 250, 500]);
     eur.dispose();
+
+    final usd = TransferViewModel(
+      transferService: TransferService(TransfersFake()),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(sentCurrency: 'USD'),
+    );
+    expect(usd.suggestedAmounts, [20, 50, 100, 250, 500]);
+    usd.dispose();
   });
 }

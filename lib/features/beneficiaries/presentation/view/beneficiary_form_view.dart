@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/beneficiary_contact.dart';
 import '../view_model/beneficiary_form_view_model.dart';
 import '../widget/beneficiary_avatar.dart';
@@ -191,7 +192,13 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
         .map(
           (o) => DropdownMenuItem(
             value: o.id,
-            child: Text(o.name, overflow: TextOverflow.ellipsis),
+            child: Row(
+              children: [
+                PaymentOperatorLogo(name: o.name),
+                const SizedBox(width: 12),
+                Expanded(child: Text(o.name, overflow: TextOverflow.ellipsis)),
+              ],
+            ),
           ),
         )
         .toList();
@@ -199,9 +206,17 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
       operatorItems.add(
         DropdownMenuItem(
           value: vm.operatorId,
-          child: Text(
-            vm.original!.operatorName ?? l10n.contactUnavailable,
-            overflow: TextOverflow.ellipsis,
+          child: Row(
+            children: [
+              PaymentOperatorLogo(name: vm.original!.operatorName),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  vm.original!.operatorName ?? l10n.contactUnavailable,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -384,27 +399,9 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        LayoutBuilder(
-                          builder: (context, constraints) =>
-                              constraints.maxWidth < 300 ||
-                                  MediaQuery.textScalerOf(context).scale(14) >
-                                      20
-                              ? Column(
-                                  children: [
-                                    countryField,
-                                    const SizedBox(height: 16),
-                                    operatorField,
-                                  ],
-                                )
-                              : Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(child: countryField),
-                                    const SizedBox(width: 8),
-                                    Expanded(child: operatorField),
-                                  ],
-                                ),
-                        ),
+                        countryField,
+                        const SizedBox(height: 16),
+                        operatorField,
                         const SizedBox(height: 16),
                         DropdownButtonFormField<int>(
                           initialValue: switch (vm.gender) {
