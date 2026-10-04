@@ -8,6 +8,9 @@ import 'package:pay_flow_ui/features/transfer/domain/model/transfer_quote.dart';
 import 'package:pay_flow_ui/features/transfer/domain/repository/transfer_repository.dart';
 import 'package:pay_flow_ui/features/transfer/domain/service/transfer_service.dart';
 import 'package:pay_flow_ui/features/transfer/presentation/view_model/transfer_view_model.dart';
+import 'package:pay_flow_ui/features/payment_cards/domain/model/saved_payment_card.dart';
+import 'package:pay_flow_ui/features/payment_cards/domain/repository/saved_payment_card_repository.dart';
+import 'package:pay_flow_ui/features/payment_cards/domain/service/saved_payment_card_service.dart';
 
 const contact = BeneficiaryContact(
   id: 'beneficiary-1',
@@ -70,6 +73,7 @@ class TransfersFake implements TransferRepository {
   String? beneficiaryId, destinationId, sentCurrency, idempotencyKey;
   TransferFundingMethod? confirmedFundingMethod;
   String? confirmedPaymentIntentId;
+  String? confirmedCardId;
   num? sentAmount, receivedAmount;
   TransferFailure? quoteFailure;
 
@@ -131,12 +135,32 @@ class TransfersFake implements TransferRepository {
     required String quoteId,
     required TransferFundingMethod fundingMethod,
     String? paymentIntentId,
+    String? cardId,
     required String idempotencyKey,
   }) async {
     this.idempotencyKey = idempotencyKey;
     confirmedFundingMethod = fundingMethod;
     confirmedPaymentIntentId = paymentIntentId;
+    confirmedCardId = cardId;
     return const ConfirmedTransfer(id: 'transfer-1', status: 'COMPLETED');
+  }
+}
+
+class CardsFake implements SavedPaymentCardRepository {
+  List<SavedPaymentCard> saved = [
+    const SavedPaymentCard(id: 'card-1', holderName: 'Amina Test',
+        brand: 'VISA', lastFour: '4242', expiryMonth: 12, expiryYear: 2030),
+    const SavedPaymentCard(id: 'card-2', holderName: 'Amina Test',
+        brand: 'MASTERCARD', lastFour: '4444', expiryMonth: 12, expiryYear: 2030),
+  ];
+
+  @override
+  Future<List<SavedPaymentCard>> list() async => saved;
+  @override
+  Future<SavedPaymentCard> add(NewSavedPaymentCard card) => throw UnimplementedError();
+  @override
+  Future<void> remove(String id) async {
+    saved = saved.where((card) => card.id != id).toList();
   }
 }
 
@@ -197,6 +221,33 @@ void main() {
     expect(transfer!.id, 'transfer-1');
     expect(transfers.confirmedFundingMethod, TransferFundingMethod.paypal);
     expect(transfers.confirmedPaymentIntentId, 'payment-1');
+    vm.dispose();
+  });
+
+  test('saved card selection is sent and deleted cards cannot fund transfers', () async {
+    final transfers = TransfersFake();
+    final cards = CardsFake();
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      savedCardService: SavedPaymentCardService(cards),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+    expect(vm.hasSavedCard, isTrue);
+    vm.selectFundingMethod(TransferFundingMethod.card);
+    vm.selectCard('card-2');
+    await vm.confirm();
+    expect(transfers.confirmedFundingMethod, TransferFundingMethod.card);
+    expect(transfers.confirmedCardId, 'card-2');
+
+    await cards.remove('card-2');
+    await vm.refreshCards();
+    expect(vm.selectedCardId, 'card-1');
+    await cards.remove('card-1');
+    await vm.refreshCards();
+    expect(vm.hasSavedCard, isFalse);
+    expect(vm.fundingMethod, TransferFundingMethod.applePay);
     vm.dispose();
   });
 

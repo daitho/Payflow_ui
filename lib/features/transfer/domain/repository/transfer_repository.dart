@@ -23,6 +23,7 @@ abstract interface class TransferRepository {
     required String quoteId,
     required TransferFundingMethod fundingMethod,
     String? paymentIntentId,
+    String? cardId,
     required String idempotencyKey,
   });
 }

@@ -54,12 +54,14 @@ class TransferRepositoryImpl implements TransferRepository {
     required String quoteId,
     required TransferFundingMethod fundingMethod,
     String? paymentIntentId,
+    String? cardId,
     required String idempotencyKey,
   }) => _guard(
     () async => (await _api.confirm(
       quoteId: quoteId,
       fundingMethod: fundingMethod,
       paymentIntentId: paymentIntentId,
+      cardId: cardId,
       idempotencyKey: idempotencyKey,
     )).toDomain(),
   );
@@ -76,8 +78,11 @@ class TransferRepositoryImpl implements TransferRepository {
           TransferFailure.amountAboveMaximum,
         TransferErrorCodes.paymentProviderUnavailable ||
         TransferErrorCodes.paymentProviderError ||
-        TransferErrorCodes.paymentCaptureFailed =>
+        TransferErrorCodes.paymentCaptureFailed ||
+        TransferErrorCodes.cardNotFound =>
           TransferFailure.unavailable,
+        TransferErrorCodes.cardInvalid ||
+        TransferErrorCodes.cardRequired => TransferFailure.invalid,
         TransferErrorCodes.paymentIntentNotFound =>
           TransferFailure.notFound,
         TransferErrorCodes.paymentNotReady ||

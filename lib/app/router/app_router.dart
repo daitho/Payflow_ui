@@ -82,6 +82,11 @@ import '../../features/authentication_methods/presentation/view/authentication_m
 import '../../features/authentication_methods/presentation/view_model/authentication_methods_view_model.dart';
 import '../../features/profile/presentation/view_model/profile_view_model.dart';
 import '../../features/profile/presentation/view_model/security_privacy_view_model.dart';
+import '../../features/payment_cards/data/service_api/saved_payment_card_api_service.dart';
+import '../../features/payment_cards/data/repository/saved_payment_card_repository_impl.dart';
+import '../../features/payment_cards/domain/service/saved_payment_card_service.dart';
+import '../../features/payment_cards/presentation/view/saved_payment_cards_view.dart';
+import '../../features/payment_cards/presentation/view_model/saved_payment_cards_view_model.dart';
 import '../../homepage.dart';
 import 'app_routes.dart';
 import 'routes/change_password_route.dart';
@@ -176,6 +181,9 @@ final BeneficiaryService _beneficiaryService = BeneficiaryService(
 
 final TransferService _transferService = TransferService(
   TransferRepositoryImpl(TransferApiService(_dioClient.dio)),
+);
+final SavedPaymentCardService _savedCardService = SavedPaymentCardService(
+  SavedPaymentCardRepositoryImpl(SavedPaymentCardApiService(_dioClient.dio)),
 );
 
 final AuthGuard _authGuard = AuthGuard(sessionService: _sessionService);
@@ -272,6 +280,7 @@ GoRouter _createRouter() {
             create: (_) => TransferViewModel(
               transferService: _transferService,
               beneficiaryService: _beneficiaryService,
+              savedCardService: _savedCardService,
               seed: seed,
             )..initialize(),
             child: const TransferView(),
@@ -476,6 +485,13 @@ GoRouter _createRouter() {
         },
       ),
       buildChangePasswordRoute(dio: _dioClient.dio),
+      GoRoute(
+        path: AppRoutes.paymentCards,
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => SavedPaymentCardsViewModel(_savedCardService)..load(),
+          child: const SavedPaymentCardsView(),
+        ),
+      ),
       GoRoute(
         path: AppRoutes.authenticationMethods,
         builder: (context, state) {

@@ -33,6 +33,7 @@ abstract final class AppRoutes {
   // PROFILE
   // =========================================================
   static const String profileSecurity = '/profile/security';
+  static const String paymentCards = '/profile/payment-cards';
   static const String changePassword = '/profile/security/password';
   static const String authenticationMethods =
       '/profile/security/authentication-methods';

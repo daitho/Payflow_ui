@@ -6,6 +6,8 @@ import 'package:uuid/uuid.dart';
 import '../../../beneficiaries/domain/exception/beneficiary_exception.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/domain/service/beneficiary_service.dart';
+import '../../../payment_cards/domain/model/saved_payment_card.dart';
+import '../../../payment_cards/domain/service/saved_payment_card_service.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/transfer_draft_seed.dart';
 import '../../domain/model/transfer_amount_input.dart';
@@ -16,18 +18,19 @@ import '../../domain/service/transfer_amount_suggestions.dart';
 class TransferViewModel extends ChangeNotifier {
   final TransferService _transfers;
   final BeneficiaryService _beneficiaries;
+  final SavedPaymentCardService? _savedCardService;
   final TransferDraftSeed seed;
-  final bool hasSavedCard;
   final Uuid _uuid;
 
   TransferViewModel({
     required TransferService transferService,
     required BeneficiaryService beneficiaryService,
+    SavedPaymentCardService? savedCardService,
     this.seed = const TransferDraftSeed(),
-    this.hasSavedCard = false,
     Uuid uuid = const Uuid(),
   }) : _transfers = transferService,
        _beneficiaries = beneficiaryService,
+       _savedCardService = savedCardService,
        _uuid = uuid,
        _sentAmount = seed.sentAmount ?? 10,
        _sentCurrency = (seed.sentCurrency ?? 'EUR').toUpperCase();
@@ -45,6 +48,8 @@ class TransferViewModel extends ChangeNotifier {
   final String _sentCurrency;
   TransferFundingMethod _fundingMethod = TransferFundingMethod.applePay;
   PaypalPaymentIntent? _paypalPayment;
+  List<SavedPaymentCard> _savedCards = const [];
+  String? _selectedCardId;
   bool _initializing = false;
   bool _quoting = false;
   bool _confirming = false;
@@ -118,6 +123,16 @@ class TransferViewModel extends ChangeNotifier {
   List<num> get suggestedAmounts =>
       TransferAmountSuggestions.forCurrency(_sentCurrency);
   TransferFundingMethod get fundingMethod => _fundingMethod;
+  bool get hasSavedCard => savedCards.isNotEmpty;
+  List<SavedPaymentCard> get savedCards =>
+      _savedCards.where((card) => !card.expired).toList(growable: false);
+  String? get selectedCardId => _selectedCardId;
+  SavedPaymentCard? get selectedCard {
+    for (final card in savedCards) {
+      if (card.id == _selectedCardId) return card;
+    }
+    return null;
+  }
   PaypalPaymentIntent? get paypalPayment => _paypalPayment;
   bool get initializing => _initializing;
   bool get quoting => _quoting;
@@ -141,6 +156,7 @@ class TransferViewModel extends ChangeNotifier {
       _beneficiary != null &&
       hasUsableDestination &&
       _activeAmount > 0 &&
+      (_fundingMethod != TransferFundingMethod.card || selectedCard != null) &&
       !busy &&
       !hasBlockingAmountError;
 
@@ -156,6 +172,7 @@ class TransferViewModel extends ChangeNotifier {
     if (_initializing || _disposed) return;
     if (id == null || id.isEmpty) {
       await _loadCatalog();
+      await refreshCards();
       return;
     }
     _initializing = true;
@@ -178,6 +195,33 @@ class TransferViewModel extends ChangeNotifier {
       }
     }
     await _loadCatalog();
+    await refreshCards();
+  }
+
+  Future<void> refreshCards() async {
+    final service = _savedCardService;
+    if (service == null || _disposed) return;
+    try {
+      final cards = await service.list();
+      if (_disposed) return;
+      _savedCards = cards;
+      final available = savedCards;
+      if (!available.any((card) => card.id == _selectedCardId)) {
+        _selectedCardId = available.isEmpty ? null : available.first.id;
+      }
+      if (available.isEmpty && _fundingMethod == TransferFundingMethod.card) {
+        selectFundingMethod(TransferFundingMethod.applePay);
+      }
+      _notify();
+    } catch (_) {
+      // Other funding methods remain available if card listing fails.
+    }
+  }
+
+  void selectCard(String id) {
+    if (_disposed || !savedCards.any((card) => card.id == id)) return;
+    _selectedCardId = id;
+    _notify();
   }
 
   Future<void> _loadCatalog() async {
@@ -250,7 +294,8 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void selectFundingMethod(TransferFundingMethod method) {
-    if (_disposed || _fundingMethod == method) return;
+    if (_disposed || _fundingMethod == method ||
+        method == TransferFundingMethod.card && !hasSavedCard) return;
     _fundingMethod = method;
     _paypalPayment = null;
     _paymentIdempotencyKey = null;
@@ -345,6 +390,11 @@ class TransferViewModel extends ChangeNotifier {
       return capturePaypalAndConfirm();
     }
     if (_confirming || _disposed) return null;
+    if (_fundingMethod == TransferFundingMethod.card && selectedCard == null) {
+      _error = TransferFailure.invalid;
+      _notify();
+      return null;
+    }
     final currentQuote = await ensureQuote();
     if (currentQuote == null || _disposed) return null;
     _confirming = true;
@@ -354,6 +404,8 @@ class TransferViewModel extends ChangeNotifier {
       final result = await _transfers.confirm(
         quoteId: currentQuote.id,
         fundingMethod: _fundingMethod,
+        cardId: _fundingMethod == TransferFundingMethod.card
+            ? _selectedCardId : null,
         idempotencyKey: _idempotencyKey ??= _uuid.v4(),
       );
       return _disposed ? null : result;

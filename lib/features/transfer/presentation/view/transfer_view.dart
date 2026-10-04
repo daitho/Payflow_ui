@@ -12,6 +12,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
+import '../../../payment_cards/presentation/view/card_text.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/paypal_return_link.dart';
 import '../../domain/model/transfer_amount_input.dart';
@@ -389,6 +390,7 @@ class _TransferViewState extends State<TransferView> {
                       SizedBox(
                         height: _transferMethodFieldHeight,
                         child: DropdownButtonFormField<TransferFundingMethod>(
+                          key: ValueKey(vm.fundingMethod),
                           initialValue: vm.fundingMethod,
                           decoration: _methodFieldDecoration(),
                           items: fundingMethods
@@ -416,6 +418,37 @@ class _TransferViewState extends State<TransferView> {
                                     vm.selectFundingMethod(value);
                                   }
                                 },
+                        ),
+                      ),
+                      if (vm.fundingMethod == TransferFundingMethod.card &&
+                          vm.savedCards.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        DropdownButtonFormField<String>(
+                          key: ValueKey(vm.selectedCardId),
+                          initialValue: vm.selectedCardId,
+                          decoration: _fieldDecoration().copyWith(
+                            labelText: cardText(context, 'choose'),
+                          ),
+                          items: vm.savedCards.map((card) => DropdownMenuItem(
+                            value: card.id,
+                            child: Text('${card.brand}  ${card.maskedNumber}  ·  ${card.expiry}'),
+                          )).toList(),
+                          onChanged: vm.confirming ? null : (id) {
+                            if (id != null) vm.selectCard(id);
+                          },
+                        ),
+                      ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: vm.confirming ? null : () async {
+                            await context.push(AppRoutes.paymentCards);
+                            if (mounted) await vm.refreshCards();
+                          },
+                          icon: Icon(vm.hasSavedCard ? Icons.credit_card_rounded
+                              : Icons.add_circle_outline_rounded),
+                          label: Text(cardText(context,
+                              vm.hasSavedCard ? 'manage' : 'add')),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -872,7 +905,10 @@ class _TransferReviewSheet extends StatelessWidget {
             const SizedBox(height: 12),
             _PaymentPartyCard(
               label: l10n.transferFundingLabel,
-              name: _fundingLabel(l10n, viewModel.fundingMethod),
+              name: viewModel.fundingMethod == TransferFundingMethod.card &&
+                      viewModel.selectedCard != null
+                  ? '${viewModel.selectedCard!.brand}  ${viewModel.selectedCard!.maskedNumber}'
+                  : _fundingLabel(l10n, viewModel.fundingMethod),
               logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
               fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),

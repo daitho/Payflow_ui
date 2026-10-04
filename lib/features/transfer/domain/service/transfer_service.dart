@@ -61,18 +61,22 @@ class TransferService {
     required String quoteId,
     required TransferFundingMethod fundingMethod,
     String? paymentIntentId,
+    String? cardId,
     required String idempotencyKey,
   }) {
     if (quoteId.trim().isEmpty ||
         idempotencyKey.trim().isEmpty ||
         (fundingMethod == TransferFundingMethod.paypal &&
-            (paymentIntentId == null || paymentIntentId.trim().isEmpty))) {
+            (paymentIntentId == null || paymentIntentId.trim().isEmpty)) ||
+        (fundingMethod == TransferFundingMethod.card &&
+            (cardId == null || cardId.trim().isEmpty))) {
       throw const TransferException(TransferFailure.invalid);
     }
     return _repository.confirm(
       quoteId: quoteId,
       fundingMethod: fundingMethod,
       paymentIntentId: paymentIntentId,
+      cardId: cardId,
       idempotencyKey: idempotencyKey,
     );
   }
