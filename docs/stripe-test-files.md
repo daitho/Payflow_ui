@@ -18,5 +18,7 @@ A = ajouté, M = modifié.
 - **A** `lib/features/payments/domain/test_funding_service.dart`
 - **M** `lib/features/transfer/presentation/view/transfer_view.dart`
 - **M** `lib/features/transfer/presentation/view_model/transfer_view_model.dart`
+- **M** `lib/features/transfer/domain/service/transfer_funding_availability.dart`
+- **M** `test/features/transfer/transfer_funding_availability_test.dart`
 - **M** `pubspec.yaml`
 - **A** `test/features/transfer/stripe_transfer_view_model_test.dart`
