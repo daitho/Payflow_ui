@@ -7,6 +7,9 @@ String cardText(BuildContext context, String key) {
 
 const _labels = <String, Map<String, String>>{
   'fr': {
+    'paymentLoading': 'Chargement des moyens de paiement…',
+    'applePayIosOnly': 'Apple Pay nécessite un iPhone ou un iPad dans cette application.',
+    'applePayUnavailable': 'Apple Pay est indisponible pour le moment. Choisissez un autre moyen de paiement.',
     'stripeNotice': 'Test Stripe : utilisez des cartes de test. Aucun débit réel.',
     'stripeUnsupported': 'Le paiement Stripe nécessite l’application iOS ou Android.',
     'stripeUnavailable': 'Configuration du paiement indisponible. Réessayez.',
@@ -32,6 +35,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Expirée',
   },
   'en': {
+    'paymentLoading': 'Loading payment methods…',
+    'applePayIosOnly': 'Apple Pay requires an iPhone or iPad in this app.',
+    'applePayUnavailable': 'Apple Pay is currently unavailable. Choose another payment method.',
     'stripeNotice': 'Stripe test: use test cards. No real charge.',
     'stripeUnsupported': 'Stripe payments require the iOS or Android app.',
     'stripeUnavailable': 'Payment configuration unavailable. Try again.',
@@ -57,6 +63,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Expired',
   },
   'es': {
+    'paymentLoading': 'Cargando métodos de pago…',
+    'applePayIosOnly': 'Apple Pay requiere un iPhone o iPad en esta aplicación.',
+    'applePayUnavailable': 'Apple Pay no está disponible por el momento. Elige otro método de pago.',
     'stripeNotice': 'Prueba Stripe: usa tarjetas de prueba. Sin cargos reales.',
     'stripeUnsupported': 'Stripe requiere la aplicación iOS o Android.',
     'stripeUnavailable': 'Configuración de pago no disponible. Inténtalo de nuevo.',
@@ -73,6 +82,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Vencida',
   },
   'zh': {
+    'paymentLoading': '正在加载付款方式…',
+    'applePayIosOnly': '此应用中的 Apple Pay 需要 iPhone 或 iPad。',
+    'applePayUnavailable': 'Apple Pay 暂时不可用，请选择其他付款方式。',
     'stripeNotice': 'Stripe 测试：请使用测试卡，不会实际扣款。',
     'stripeUnsupported': 'Stripe 支付需要 iOS 或 Android 应用。',
     'stripeUnavailable': '无法加载支付配置，请重试。',
@@ -86,6 +98,9 @@ const _labels = <String, Map<String, String>>{
     'expired': '已过期',
   },
   'hi': {
+    'paymentLoading': 'भुगतान विधियाँ लोड हो रही हैं…',
+    'applePayIosOnly': 'इस ऐप में Apple Pay के लिए iPhone या iPad आवश्यक है।',
+    'applePayUnavailable': 'Apple Pay अभी उपलब्ध नहीं है। कोई अन्य भुगतान विधि चुनें।',
     'stripeNotice': 'Stripe परीक्षण: टेस्ट कार्ड का उपयोग करें। वास्तविक शुल्क नहीं।',
     'stripeUnsupported': 'Stripe भुगतान के लिए iOS या Android ऐप आवश्यक है।',
     'stripeUnavailable': 'भुगतान कॉन्फ़िगरेशन उपलब्ध नहीं है। फिर प्रयास करें।',
