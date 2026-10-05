@@ -60,6 +60,7 @@ class TransferApiService {
     required String quoteId,
     required TransferFundingMethod fundingMethod,
     String? paymentIntentId,
+    String? cardId,
     required String idempotencyKey,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
@@ -68,6 +69,7 @@ class TransferApiService {
         'quoteId': quoteId,
         'paymentMethod': fundingMethod.apiValue,
         if (paymentIntentId != null) 'paymentIntentId': paymentIntentId,
+        if (cardId != null) 'cardId': cardId,
       },
       options: Options(headers: {'Idempotency-Key': idempotencyKey}),
     );

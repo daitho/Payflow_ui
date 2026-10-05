@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +9,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
+import '../../../payment_cards/presentation/view/card_text.dart';
 import '../../domain/exception/transfer_exception.dart';
+import '../../domain/model/paypal_return_link.dart';
 import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
 import '../../domain/service/transfer_funding_availability.dart';
@@ -23,6 +27,7 @@ class TransferView extends StatefulWidget {
 }
 
 class _TransferViewState extends State<TransferView> {
+  late final AppLinks _appLinks;
   late final TextEditingController _sentAmount;
   late final TextEditingController _receivedAmount;
   String? _synchronizedQuoteId;
@@ -30,6 +35,7 @@ class _TransferViewState extends State<TransferView> {
   @override
   void initState() {
     super.initState();
+    _appLinks = AppLinks();
     _sentAmount = TextEditingController(
       text: context.read<TransferViewModel>().initialAmountText,
     );
@@ -126,53 +132,104 @@ class _TransferViewState extends State<TransferView> {
     }
 
     final payment = await viewModel.startPaypalPayment();
-    if (!mounted || payment == null) {
+    if (!mounted) return null;
+    if (payment == null) {
       _showError(viewModel.error);
       return null;
     }
 
     final approvalUrl = Uri.tryParse(payment.approvalUrl ?? '');
-    if (approvalUrl == null ||
-        !await launchUrl(
-          approvalUrl,
-          mode: LaunchMode.externalApplication,
-        )) {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(content: Text(l10n.transferPaypalLaunchError)),
-          );
-      }
+    if (approvalUrl == null || !payment.requiresPayerAction) {
+      _showPaypalLaunchError();
       return null;
     }
 
-    if (!mounted) return null;
-    final l10n = AppLocalizations.of(context);
-    final shouldVerify = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.transferPaypalReturnTitle),
-        content: Text(l10n.transferPaypalReturnMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.transferPaypalVerify),
-          ),
-        ],
-      ),
-    );
+    BuildContext? returnDialog;
+    bool? callbackResult;
+    final subscription = _appLinks.uriLinkStream.listen((uri) {
+      final action = paypalReturnAction(uri, payment.id);
+      if (action == null || callbackResult != null) return;
+      callbackResult = action == PaypalReturnAction.approved;
+      final dialog = returnDialog;
+      if (dialog != null && dialog.mounted) {
+        returnDialog = null;
+        Navigator.of(dialog).pop(callbackResult);
+      }
+    });
 
-    if (shouldVerify != true || !mounted) return null;
-    final result = await viewModel.capturePaypalAndConfirm();
-    if (result == null && mounted) _showError(viewModel.error);
-    return result;
+    try {
+      bool launched;
+      try {
+        launched = await launchUrl(
+          approvalUrl,
+          mode: LaunchMode.externalApplication,
+        );
+      } catch (_) {
+        launched = false;
+      }
+      if (!launched) {
+        if (mounted) _showPaypalLaunchError();
+        return null;
+      }
+
+      if (!mounted) return null;
+      final l10n = AppLocalizations.of(context);
+      bool? shouldVerify = callbackResult;
+      if (shouldVerify == null) {
+        shouldVerify = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) {
+            returnDialog = dialogContext;
+            // A callback may arrive between opening and building the dialog.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (callbackResult != null &&
+                  returnDialog == dialogContext &&
+                  dialogContext.mounted) {
+                returnDialog = null;
+                Navigator.of(dialogContext).pop(callbackResult);
+              }
+            });
+            return AlertDialog(
+              title: Text(l10n.transferPaypalReturnTitle),
+              content: Text(l10n.transferPaypalReturnMessage),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    returnDialog = null;
+                    Navigator.of(dialogContext).pop(false);
+                  },
+                  child: Text(l10n.cancel),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    returnDialog = null;
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: Text(l10n.transferPaypalVerify),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      returnDialog = null;
+      if (shouldVerify != true || !mounted) return null;
+      final result = await viewModel.capturePaypalAndConfirm();
+      if (result == null && mounted) _showError(viewModel.error);
+      return result;
+    } finally {
+      await subscription.cancel();
+    }
+  }
+
+  void _showPaypalLaunchError() {
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(l10n.transferPaypalLaunchError)),
+      );
   }
 
   void _showError(TransferFailure? failure) {
@@ -295,7 +352,32 @@ class _TransferViewState extends State<TransferView> {
                         onSelected: (amount) =>
                             _selectSuggestedAmount(vm, amount),
                       ),
-                      const SizedBox(height: 26),
+                      if (contact != null && vm.payoutOptions.isNotEmpty) ...[
+                        const SizedBox(height: 24),
+                        Text(
+                          l10n.transferOperator.toUpperCase(),
+                          style: const TextStyle(
+                            color: Color(0xFF777274),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        for (final option in vm.payoutOptions) ...[
+                          _PayoutOptionTile(
+                            name: option.name,
+                            selected: option.id == vm.selectedPayoutOperatorId,
+                            enabled: !vm.confirming,
+                            onTap: () => vm.selectPayoutOperator(option.id),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      ],
+                      if (contact != null && vm.payoutOptions.isEmpty) ...[
+                        const SizedBox(height: 24),
+                        _InlineError(message: l10n.transferBeneficiaryUnavailable),
+                      ],
+                      const SizedBox(height: 18),
                       Text(
                         l10n.transferFundingLabel.toUpperCase(),
                         style: const TextStyle(
@@ -305,39 +387,69 @@ class _TransferViewState extends State<TransferView> {
                         ),
                       ),
                       const SizedBox(height: 9),
-                      DropdownButtonFormField<TransferFundingMethod>(
-                        initialValue: vm.fundingMethod,
-                        decoration: _fieldDecoration().copyWith(
-                          prefixIcon: Icon(
-                            _fundingIcon(vm.fundingMethod),
-                            color: const Color(0xFF24466E),
-                          ),
-                        ),
-                        items: fundingMethods
-                            .map(
-                              (method) => DropdownMenuItem(
-                                value: method,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      _fundingIcon(method),
-                                      size: 20,
-                                      color: const Color(0xFF24466E),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(_fundingLabel(l10n, method)),
-                                  ],
+                      SizedBox(
+                        height: _transferMethodFieldHeight,
+                        child: DropdownButtonFormField<TransferFundingMethod>(
+                          key: ValueKey(vm.fundingMethod),
+                          initialValue: vm.fundingMethod,
+                          decoration: _methodFieldDecoration(),
+                          items: fundingMethods
+                              .map(
+                                (method) => DropdownMenuItem(
+                                  value: method,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        _fundingIcon(method),
+                                        size: 20,
+                                        color: const Color(0xFF24466E),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(_fundingLabel(l10n, method)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(growable: false),
-                        onChanged: vm.confirming
-                            ? null
-                            : (value) {
-                                if (value != null) {
-                                  vm.selectFundingMethod(value);
-                                }
-                              },
+                              )
+                              .toList(growable: false),
+                          onChanged: vm.confirming
+                              ? null
+                              : (value) {
+                                  if (value != null) {
+                                    vm.selectFundingMethod(value);
+                                  }
+                                },
+                        ),
+                      ),
+                      if (vm.fundingMethod == TransferFundingMethod.card &&
+                          vm.savedCards.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        DropdownButtonFormField<String>(
+                          key: ValueKey(vm.selectedCardId),
+                          initialValue: vm.selectedCardId,
+                          decoration: _fieldDecoration().copyWith(
+                            labelText: cardText(context, 'choose'),
+                          ),
+                          items: vm.savedCards.map((card) => DropdownMenuItem(
+                            value: card.id,
+                            child: Text('${card.brand}  ${card.maskedNumber}  ·  ${card.expiry}'),
+                          )).toList(),
+                          onChanged: vm.confirming ? null : (id) {
+                            if (id != null) vm.selectCard(id);
+                          },
+                        ),
+                      ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: vm.confirming ? null : () async {
+                            await context.push(AppRoutes.paymentCards);
+                            if (mounted) await vm.refreshCards();
+                          },
+                          icon: Icon(vm.hasSavedCard ? Icons.credit_card_rounded
+                              : Icons.add_circle_outline_rounded),
+                          label: Text(cardText(context,
+                              vm.hasSavedCard ? 'manage' : 'add')),
+                        ),
                       ),
                       const SizedBox(height: 24),
                       if (quote != null) ...[
@@ -522,8 +634,6 @@ class _BeneficiaryCard extends StatelessWidget {
                       [
                         if (contact!.phoneE164?.isNotEmpty == true)
                           contact!.phoneE164!,
-                        if (contact!.operatorName?.isNotEmpty == true)
-                          contact!.operatorName!,
                       ].join('  '),
                       style: const TextStyle(
                         color: Color(0xFF898487),
@@ -536,6 +646,65 @@ class _BeneficiaryCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PayoutOptionTile extends StatelessWidget {
+  const _PayoutOptionTile({
+    required this.name,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final String name;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    selected: selected,
+    button: true,
+    child: Material(
+      color: selected ? const Color(0xFFFFF8EC) : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(
+          color: selected ? const Color(0xFFFF9400) : const Color(0xFFE8E5E4),
+          width: selected ? 1.5 : 1,
+        ),
+      ),
+      child: SizedBox(
+        height: _transferMethodFieldHeight,
+        child: InkWell(
+          onTap: enabled ? onTap : null,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              children: [
+                PaymentOperatorLogo(name: name, width: 64, height: 40),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Icon(
+                  selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                  color: selected ? const Color(0xFFFF9400) : const Color(0xFFB9B4B3),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _AmountField extends StatelessWidget {
@@ -615,33 +784,30 @@ class _SuggestedAmounts extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 10),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final amount in amounts) ...[
-              ChoiceChip(
-                label: Text('${_editableDecimal(amount)} $currency'),
-                selected: selectedAmount == amount,
-                onSelected: enabled ? (_) => onSelected(amount) : null,
-                selectedColor: const Color(0xFFFFE4BA),
-                side: BorderSide(
-                  color: selectedAmount == amount
-                      ? const Color(0xFFFF9400)
-                      : const Color(0xFFE0DCDD),
-                ),
-                labelStyle: TextStyle(
-                  color: selectedAmount == amount
-                      ? const Color(0xFFC86E00)
-                      : const Color(0xFF514B4D),
-                  fontWeight: FontWeight.w600,
-                ),
-                showCheckmark: false,
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final amount in amounts)
+            ChoiceChip(
+              label: Text(_suggestedAmountLabel(amount, currency)),
+              selected: selectedAmount == amount,
+              onSelected: enabled ? (_) => onSelected(amount) : null,
+              selectedColor: const Color(0xFFFFE4BA),
+              side: BorderSide(
+                color: selectedAmount == amount
+                    ? const Color(0xFFFF9400)
+                    : const Color(0xFFE0DCDD),
               ),
-              const SizedBox(width: 8),
-            ],
-          ],
-        ),
+              labelStyle: TextStyle(
+                color: selectedAmount == amount
+                    ? const Color(0xFFC86E00)
+                    : const Color(0xFF514B4D),
+                fontWeight: FontWeight.w600,
+              ),
+              showCheckmark: false,
+            ),
+        ],
       ),
     ],
   );
@@ -736,10 +902,17 @@ class _TransferReviewSheet extends StatelessWidget {
               label: l10n.contactPhone,
               value: contact.phoneE164 ?? l10n.contactNoPhone,
             ),
-            _ReviewLine(
-              label: l10n.transferOperator,
-              value: contact.operatorName ?? '—',
+            const SizedBox(height: 12),
+            _PaymentPartyCard(
+              label: l10n.transferFundingLabel,
+              name: viewModel.fundingMethod == TransferFundingMethod.card &&
+                      viewModel.selectedCard != null
+                  ? '${viewModel.selectedCard!.brand}  ${viewModel.selectedCard!.maskedNumber}'
+                  : _fundingLabel(l10n, viewModel.fundingMethod),
+              logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
+              fallbackIcon: _fundingIcon(viewModel.fundingMethod),
             ),
+            const SizedBox(height: 12),
             _ReviewLine(
               label: l10n.transferSent,
               value: _money(context, quote.sentAmount, quote.sentCurrency),
@@ -762,13 +935,15 @@ class _TransferReviewSheet extends StatelessWidget {
               ),
             ),
             _ReviewLine(
-              label: l10n.transferFundingLabel,
-              value: l10n.transferFundingCard,
-            ),
-            _ReviewLine(
               label: l10n.transferTotalAmount,
               value: _money(context, quote.totalDebited, quote.sentCurrency),
               emphasized: true,
+            ),
+            const SizedBox(height: 12),
+            _PaymentPartyCard(
+              label: l10n.transferOperator,
+              name: viewModel.selectedPayoutName ?? '—',
+              operatorName: viewModel.selectedPayoutName,
             ),
             const SizedBox(height: 20),
             Container(
@@ -870,6 +1045,88 @@ class _ReviewLine extends StatelessWidget {
   );
 }
 
+class _PaymentPartyCard extends StatelessWidget {
+  const _PaymentPartyCard({
+    required this.label,
+    required this.name,
+    this.operatorName,
+    this.logoAsset,
+    this.fallbackIcon = Icons.account_balance_wallet_outlined,
+  });
+
+  final String label;
+  final String name;
+  final String? operatorName;
+  final String? logoAsset;
+  final IconData fallbackIcon;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border.all(color: const Color(0xFFE9E5E4)),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(color: Color(0xFF777274), fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        if (operatorName != null)
+          PaymentOperatorLogo(
+            name: operatorName,
+            width: _reviewLogoWidth,
+            height: _reviewLogoHeight,
+          )
+        else
+          ExcludeSemantics(
+            child: Container(
+              width: _reviewLogoWidth,
+              height: _reviewLogoHeight,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE9E5E4)),
+              ),
+              child: logoAsset == null
+                  ? Icon(fallbackIcon)
+                  : Image.asset(
+                      logoAsset!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(fallbackIcon),
+                    ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+const double _transferMethodFieldHeight = 64;
+const double _reviewLogoWidth = 96;
+const double _reviewLogoHeight = 56;
+
+InputDecoration _methodFieldDecoration() => _fieldDecoration().copyWith(
+  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+);
+
 InputDecoration _fieldDecoration() => InputDecoration(
   filled: true,
   fillColor: Colors.white,
@@ -904,6 +1161,34 @@ String _editableDecimal(num value) {
       ? decimal.toStringAsFixed(0)
       : decimal.toStringAsFixed(2);
 }
+
+String _suggestedAmountLabel(num amount, String currency) {
+  final code = currency.trim().toUpperCase();
+  final symbol = switch (code) {
+    'EUR' => '€',
+    'USD' => r'$',
+    'GBP' => '£',
+    'JPY' || 'CNY' => '¥',
+    'KRW' => '₩',
+    'INR' => '₹',
+    'CAD' => r'CA$',
+    'AUD' => r'A$',
+    'NZD' => r'NZ$',
+    'HKD' => r'HK$',
+    'SGD' => r'S$',
+    _ => null,
+  };
+  return symbol == null
+      ? '${_editableDecimal(amount)} $code'
+      : '$symbol${_editableDecimal(amount)}';
+}
+
+String? _fundingLogoAsset(TransferFundingMethod method) => switch (method) {
+  TransferFundingMethod.applePay => 'assets/images/transfer/apple_pay.png',
+  TransferFundingMethod.googlePay => 'assets/images/transfer/google_pay.png',
+  TransferFundingMethod.paypal => 'assets/images/transfer/paypal.png',
+  TransferFundingMethod.card => null,
+};
 
 String _decimal(num value) {
   final asDouble = value.toDouble();

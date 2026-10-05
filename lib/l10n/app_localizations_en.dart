@@ -670,7 +670,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferCountry => 'Country';
 
   @override
-  String get transferOperator => 'Operator';
+  String get transferOperator => 'Receiving method';
 
   @override
   String get transferDestination => 'Destination';
@@ -791,7 +791,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactCountry => 'Country';
 
   @override
-  String get contactOperator => 'Operator';
+  String get contactOperator => 'Receiving method';
 
   @override
   String get contactGender => 'Gender';
@@ -828,7 +828,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter the number with its country code, e.g. +237…';
 
   @override
-  String get contactNoOperators => 'No Mobile Money operators available.';
+  String get contactNoOperators => 'No Mobile Money services available.';
 
   @override
   String get contactNetworkError =>

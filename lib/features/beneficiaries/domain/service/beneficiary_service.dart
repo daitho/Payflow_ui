@@ -8,6 +8,15 @@ class BeneficiaryService {
   Future<List<BeneficiaryContact>> list() => repository.list();
   Future<BeneficiaryContact> get(String id) => repository.get(id);
   Future<BeneficiaryCatalog> catalog() => repository.catalog();
+  Future<String> ensureSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) => repository.ensureSecondaryDestination(
+    beneficiaryId: beneficiaryId,
+    operatorId: operatorId,
+    phoneE164: phoneE164,
+  );
   Future<BeneficiaryContact> save(BeneficiaryContactInput input, {String? id}) {
     final name = input.fullName.trim().replaceAll(RegExp(r'\s+'), ' ');
     final phone = input.phoneE164.replaceAll(RegExp(r'[\s().-]'), '');

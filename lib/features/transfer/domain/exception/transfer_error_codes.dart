@@ -9,4 +9,7 @@ abstract final class TransferErrorCodes {
   static const String paymentAmountMismatch = 'PAYMENT_006';
   static const String paymentRequired = 'PAYMENT_007';
   static const String paymentNotCompleted = 'PAYMENT_008';
+  static const String cardNotFound = 'CARD_001';
+  static const String cardInvalid = 'CARD_002';
+  static const String cardRequired = 'CARD_003';
 }

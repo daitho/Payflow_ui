@@ -36,4 +36,27 @@ class BeneficiaryApiService {
           );
     return BeneficiaryContactDto(response.data!);
   }
+
+  Future<List<Map<String, dynamic>>> destinations(String beneficiaryId) async {
+    final response = await dio.get<List<dynamic>>(
+      '/api/v1/beneficiaries/${Uri.encodeComponent(beneficiaryId)}/destinations/all',
+    );
+    return response.data!.cast<Map<String, dynamic>>();
+  }
+
+  Future<Map<String, dynamic>> createSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) async {
+    final response = await dio.post<Map<String, dynamic>>(
+      '/api/v1/beneficiaries/${Uri.encodeComponent(beneficiaryId)}/destinations/create',
+      data: {
+        'operatorId': operatorId,
+        'phoneE164': phoneE164,
+        'primaryDestination': false,
+      },
+    );
+    return response.data!;
+  }
 }

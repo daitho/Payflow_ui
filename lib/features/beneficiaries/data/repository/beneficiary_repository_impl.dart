@@ -34,6 +34,27 @@ class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     }, id: id)).toModel(),
   );
 
+  @override
+  Future<String> ensureSecondaryDestination({
+    required String beneficiaryId,
+    required String operatorId,
+    required String phoneE164,
+  }) => _guard(() async {
+    final existing = await api.destinations(beneficiaryId);
+    for (final destination in existing) {
+      if (destination['operatorId'] == operatorId &&
+          destination['phoneE164'] == phoneE164) {
+        return destination['id'] as String;
+      }
+    }
+    final created = await api.createSecondaryDestination(
+      beneficiaryId: beneficiaryId,
+      operatorId: operatorId,
+      phoneE164: phoneE164,
+    );
+    return created['id'] as String;
+  });
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

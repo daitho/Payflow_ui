@@ -668,7 +668,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferCountry => 'देश';
 
   @override
-  String get transferOperator => 'ऑपरेटर';
+  String get transferOperator => 'प्राप्ति का माध्यम';
 
   @override
   String get transferDestination => 'गंतव्य';
@@ -789,7 +789,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get contactCountry => 'देश';
 
   @override
-  String get contactOperator => 'ऑपरेटर';
+  String get contactOperator => 'प्राप्ति का माध्यम';
 
   @override
   String get contactGender => 'लिंग';
@@ -825,7 +825,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get contactPhoneInvalid => 'देश कोड सहित नंबर दर्ज करें, जैसे +237…';
 
   @override
-  String get contactNoOperators => 'कोई मोबाइल मनी ऑपरेटर उपलब्ध नहीं है।';
+  String get contactNoOperators => 'कोई मोबाइल मनी सेवा उपलब्ध नहीं है।';
 
   @override
   String get contactNetworkError =>

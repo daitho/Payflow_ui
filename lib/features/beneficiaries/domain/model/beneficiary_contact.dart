@@ -32,12 +32,14 @@ class BeneficiaryCountry {
 
 class BeneficiaryOperator {
   final String id, countryId, name, currencyCode;
+  final bool networkIndependent;
   const BeneficiaryOperator(
     this.id,
     this.countryId,
     this.name,
-    this.currencyCode,
-  );
+    this.currencyCode, {
+    this.networkIndependent = false,
+  });
 }
 
 class BeneficiaryCatalog {

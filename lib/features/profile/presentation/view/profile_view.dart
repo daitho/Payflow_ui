@@ -8,6 +8,7 @@ import '../../../../app/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../active_sessions/domain/exception/active_sessions_exception.dart';
 import '../../../active_sessions/presentation/view_model/current_device_view_model.dart';
+import '../../../payment_cards/presentation/view/card_text.dart';
 import '../view_model/profile_view_model.dart';
 import '../widget/profile_header_card.dart';
 import '../widget/profile_menu_tile.dart';
@@ -67,6 +68,15 @@ class ProfileView extends StatelessWidget {
                     title: l10n.verificationAndLimits,
                     subtitle: l10n.verificationAndLimitsSubtitle,
                     onTap: () {},
+                  ),
+                  const _Divider(),
+                  ProfileMenuTile(
+                    icon: Icons.credit_card_rounded,
+                    iconColor: const Color(0xFF24466E),
+                    iconBackgroundColor: const Color(0xFFEAF1F8),
+                    title: cardText(context, 'title'),
+                    subtitle: cardText(context, 'intro'),
+                    onTap: () => context.push(AppRoutes.paymentCards),
                   ),
                 ],
               ),

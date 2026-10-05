@@ -637,7 +637,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferCountry => '国家';
 
   @override
-  String get transferOperator => '运营商';
+  String get transferOperator => '收款方式';
 
   @override
   String get transferDestination => '收款方式';
@@ -753,7 +753,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get contactCountry => '国家';
 
   @override
-  String get contactOperator => '运营商';
+  String get contactOperator => '收款方式';
 
   @override
   String get contactGender => '性别';
@@ -789,7 +789,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get contactPhoneInvalid => '请输入带国家/地区代码的号码，例如 +237…';
 
   @override
-  String get contactNoOperators => '没有可用的移动钱包运营商。';
+  String get contactNoOperators => '没有可用的移动钱包服务。';
 
   @override
   String get contactNetworkError => '网络连接不可用，请检查网络。';
