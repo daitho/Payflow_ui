@@ -69,6 +69,39 @@ STRIPE_APPLE_MERCHANT_ID=merchant.<identifiant-configure-dans-xcode>
 
 Le même identifiant doit être autorisé dans les entitlements/signatures de l'application. Aucune valeur fictive n'est ajoutée au projet Xcode. Sans Merchant ID configuré, Apple Pay ne figure pas dans le sélecteur Stripe. Tester sur un appareil Apple compatible ; Apple Wallet n'accepte pas les numéros de carte de test Stripe ordinaires. Les clés Stripe de test garantissent un paiement fictif même lorsqu'une carte du wallet est utilisée.
 
+## Sélecteur de paiement et disponibilité Apple Pay
+
+Le ViewModel fournit la même liste de méthodes au sélecteur et à la validation.
+Pendant le chargement de la configuration et des cartes, le champ affiche
+« Chargement des moyens de paiement… » et la confirmation est désactivée.
+Si un wallet devient indisponible ou si la carte choisie est supprimée, le choix
+revient à une méthode disponible. La valeur du champ est absente pendant cette
+transition et sa clé change avec les options ; elle ne peut pas désigner un item
+supprimé. Les cartes sont distinguées par ID et les ID répétés sont dédupliqués.
+
+En mode Stripe, Apple Pay natif n'est proposé que sur iOS si un Merchant ID est
+configuré et si le SDK confirme la disponibilité. Sur Android, cette intégration
+propose Google Pay ; le parcours Apple Pay par QR n'est pas inclus dans cette V1.
+Un message explique l'indisponibilité d'Apple Pay au lieu de masquer le wallet
+sans explication. Le mode de simulation historique conserve ses options.
+
+Pour diagnostiquer Apple Pay sur iOS : vérifier que la réponse authentifiée de
+`GET /api/v1/payments/stripe-test/config` contient `enabled: true` et un
+`appleMerchantId` non vide. La variable back `STRIPE_APPLE_MERCHANT_ID` doit
+correspondre au Merchant ID sélectionné dans la capacité Apple Pay de la cible
+Runner dans Xcode. Configurer le certificat Stripe et un Wallet compatible, puis
+redémarrer complètement l'application après modification de la configuration.
+
+Régressions ajoutées :
+
+```bash
+flutter test test/features/transfer/stripe_transfer_view_model_test.dart test/features/transfer/transfer_funding_availability_test.dart
+```
+
+Ces tests couvrent le vrai écran avant/pendant/après le chargement, la disparition
+et le retour d'Apple Pay, le refus d'une méthode indisponible, la déduplication
+et la suppression de la carte choisie. Ils restent à exécuter avec le SDK Flutter.
+
 ## Google Pay
 
 Utiliser un téléphone Android compatible, connecté à un compte Google. L'API est activée dans le manifeste et le SDK utilise `testEnv: true`. Le bouton n'est proposé que lorsque le SDK confirme sa disponibilité. Tester avec la suite de cartes de test Google Pay/Stripe et la configuration de wallet requise par Google.
