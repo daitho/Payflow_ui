@@ -1,3 +1,4 @@
+import '../../features/payments/data/stripe_test_funding_service.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../features/beneficiaries/data/service_api/beneficiary_api_service.dart';
@@ -182,6 +183,8 @@ final BeneficiaryService _beneficiaryService = BeneficiaryService(
 final TransferService _transferService = TransferService(
   TransferRepositoryImpl(TransferApiService(_dioClient.dio)),
 );
+final _stripeFundingService = StripeTestFundingService(_dioClient.dio);
+
 final SavedPaymentCardService _savedCardService = SavedPaymentCardService(
   SavedPaymentCardRepositoryImpl(SavedPaymentCardApiService(_dioClient.dio)),
 );
@@ -281,6 +284,7 @@ GoRouter _createRouter() {
               transferService: _transferService,
               beneficiaryService: _beneficiaryService,
               savedCardService: _savedCardService,
+              fundingService: _stripeFundingService,
               seed: seed,
             )..initialize(),
             child: const TransferView(),
@@ -488,7 +492,7 @@ GoRouter _createRouter() {
       GoRoute(
         path: AppRoutes.paymentCards,
         builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => SavedPaymentCardsViewModel(_savedCardService)..load(),
+          create: (_) => SavedPaymentCardsViewModel(_savedCardService, funding: _stripeFundingService)..load(),
           child: const SavedPaymentCardsView(),
         ),
       ),

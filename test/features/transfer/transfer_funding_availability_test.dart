@@ -3,6 +3,15 @@ import 'package:pay_flow_ui/features/transfer/domain/model/transfer_quote.dart';
 import 'package:pay_flow_ui/features/transfer/domain/service/transfer_funding_availability.dart';
 
 void main() {
+  test('native Apple Pay is excluded when the wallet is unavailable', () {
+    final methods = TransferFundingAvailability.resolve(
+      supportsApplePay: false,
+      supportsGooglePay: true,
+      hasSavedCard: false,
+    );
+    expect(methods, [TransferFundingMethod.googlePay, TransferFundingMethod.paypal]);
+    expect(methods.toSet().length, methods.length);
+  });
   test('Apple Pay and PayPal are always visible', () {
     final methods = TransferFundingAvailability.resolve(
       supportsGooglePay: false,

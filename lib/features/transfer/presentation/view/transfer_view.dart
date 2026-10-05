@@ -1,5 +1,4 @@
 import 'package:app_links/app_links.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +16,6 @@ import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/paypal_return_link.dart';
 import '../../domain/model/transfer_amount_input.dart';
 import '../../domain/model/transfer_quote.dart';
-import '../../domain/service/transfer_funding_availability.dart';
 import '../view_model/transfer_view_model.dart';
 
 class TransferView extends StatefulWidget {
@@ -127,7 +125,7 @@ class _TransferViewState extends State<TransferView> {
   Future<ConfirmedTransfer?> _confirmPayment(
     TransferViewModel viewModel,
   ) async {
-    if (viewModel.fundingMethod != TransferFundingMethod.paypal) {
+    if (viewModel.stripeEnabled || viewModel.fundingMethod != TransferFundingMethod.paypal) {
       return viewModel.confirm();
     }
 
@@ -246,10 +244,14 @@ class _TransferViewState extends State<TransferView> {
     final contact = vm.beneficiary;
     final quote = vm.quote;
     final flag = contact == null ? '' : beneficiaryFlag(contact.countryCode);
-    final fundingMethods = TransferFundingAvailability.resolve(
-      supportsGooglePay: _supportsGooglePay,
-      hasSavedCard: vm.hasSavedCard,
-    );
+    final fundingMethods = vm.availableFundingMethods;
+    final cards = vm.savedCards;
+    final fundingValue = vm.fundingSelectionValue;
+    final fundingValues = [
+      for (final method in fundingMethods)
+        if (method != TransferFundingMethod.card) method.apiValue,
+      for (final card in cards) 'card:${card.id}',
+    ];
     _synchronizeQuotedAmount(vm);
     return PopScope(
       canPop: !vm.confirming,
@@ -387,57 +389,54 @@ class _TransferViewState extends State<TransferView> {
                         ),
                       ),
                       const SizedBox(height: 9),
+                      if (vm.paymentConfigurationFailed)
+                        _InlineError(message: cardText(context, 'stripeUnavailable'), onRetry: vm.refreshCards),
+                      if (vm.stripeUnsupported)
+                        _InlineError(message: cardText(context, 'stripeUnsupported')),
+                      if (vm.stripeEnabled && !vm.paymentConfigurationLoading &&
+                          !vm.paymentConfigurationFailed && !vm.supportsStripeApplePay)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(cardText(context, vm.applePayRequiresIos
+                              ? 'applePayIosOnly' : 'applePayUnavailable'),
+                            style: const TextStyle(color: Color(0xFF777274))),
+                        ),
                       SizedBox(
                         height: _transferMethodFieldHeight,
-                        child: DropdownButtonFormField<TransferFundingMethod>(
-                          key: ValueKey(vm.fundingMethod),
-                          initialValue: vm.fundingMethod,
+                        child: DropdownButtonFormField<String>(
+                          key: ValueKey('$fundingValue:${fundingValues.join(',')}'),
+                          initialValue: fundingValues.contains(fundingValue) ? fundingValue : null,
+                          hint: vm.paymentConfigurationLoading
+                              ? Text(cardText(context, 'paymentLoading')) : null,
                           decoration: _methodFieldDecoration(),
-                          items: fundingMethods
-                              .map(
-                                (method) => DropdownMenuItem(
-                                  value: method,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        _fundingIcon(method),
-                                        size: 20,
-                                        color: const Color(0xFF24466E),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(_fundingLabel(l10n, method)),
-                                    ],
-                                  ),
-                                ),
-                              )
-                              .toList(growable: false),
-                          onChanged: vm.confirming
-                              ? null
-                              : (value) {
-                                  if (value != null) {
-                                    vm.selectFundingMethod(value);
+                          isExpanded: true,
+                          items: [
+                            for (final method in fundingMethods)
+                              if (method != TransferFundingMethod.card)
+                                DropdownMenuItem(value: method.apiValue,
+                                  child: Row(children: [Icon(_fundingIcon(method), size: 20,
+                                    color: const Color(0xFF24466E)), const SizedBox(width: 10),
+                                    Text(_fundingLabel(l10n, method))])),
+                            for (final card in cards)
+                              DropdownMenuItem(value: 'card:${card.id}',
+                                child: Row(children: [const Icon(Icons.credit_card_rounded,
+                                  size: 20, color: Color(0xFF24466E)), const SizedBox(width: 10),
+                                  Text(card.displayLabel)])),
+                          ],
+                          onChanged: vm.confirming || vm.paymentConfigurationLoading ||
+                              vm.stripeUnsupported || vm.paymentConfigurationFailed
+                              ? null : (value) {
+                                  if (value == null) return;
+                                  if (value.startsWith('card:')) {
+                                    vm.selectCard(value.substring(5));
+                                    vm.selectFundingMethod(TransferFundingMethod.card);
+                                  } else {
+                                    vm.selectFundingMethod(TransferFundingMethod.values.firstWhere(
+                                      (method) => method.apiValue == value));
                                   }
                                 },
                         ),
                       ),
-                      if (vm.fundingMethod == TransferFundingMethod.card &&
-                          vm.savedCards.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        DropdownButtonFormField<String>(
-                          key: ValueKey(vm.selectedCardId),
-                          initialValue: vm.selectedCardId,
-                          decoration: _fieldDecoration().copyWith(
-                            labelText: cardText(context, 'choose'),
-                          ),
-                          items: vm.savedCards.map((card) => DropdownMenuItem(
-                            value: card.id,
-                            child: Text('${card.brand}  ${card.maskedNumber}  ·  ${card.expiry}'),
-                          )).toList(),
-                          onChanged: vm.confirming ? null : (id) {
-                            if (id != null) vm.selectCard(id);
-                          },
-                        ),
-                      ],
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton.icon(
@@ -907,7 +906,7 @@ class _TransferReviewSheet extends StatelessWidget {
               label: l10n.transferFundingLabel,
               name: viewModel.fundingMethod == TransferFundingMethod.card &&
                       viewModel.selectedCard != null
-                  ? '${viewModel.selectedCard!.brand}  ${viewModel.selectedCard!.maskedNumber}'
+                  ? viewModel.selectedCard!.displayLabel
                   : _fundingLabel(l10n, viewModel.fundingMethod),
               logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
               fallbackIcon: _fundingIcon(viewModel.fundingMethod),
@@ -1225,17 +1224,6 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       null => l10n.contactServerError,
     };
 
-
-bool get _supportsGooglePay {
-  if (kIsWeb) return true;
-  return switch (defaultTargetPlatform) {
-    TargetPlatform.android ||
-    TargetPlatform.windows ||
-    TargetPlatform.linux ||
-    TargetPlatform.macOS => true,
-    TargetPlatform.iOS || TargetPlatform.fuchsia => false,
-  };
-}
 
 String _fundingLabel(
   AppLocalizations l10n,

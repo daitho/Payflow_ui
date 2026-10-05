@@ -6,6 +6,7 @@ class SavedPaymentCard {
     required this.lastFour,
     required this.expiryMonth,
     required this.expiryYear,
+    this.tokenized = false,
   });
 
   final String id;
@@ -14,6 +15,9 @@ class SavedPaymentCard {
   final String lastFour;
   final int expiryMonth;
   final int expiryYear;
+  final bool tokenized;
+
+  String get displayLabel => '${brand == 'VISA' ? 'Visa' : brand == 'MASTERCARD' ? 'Mastercard' : brand} •••• $lastFour';
 
   String get maskedNumber => '•••• $lastFour';
   String get expiry {
