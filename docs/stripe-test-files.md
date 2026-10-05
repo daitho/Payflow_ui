@@ -2,6 +2,7 @@
 
 A = ajouté, M = modifié.
 
+- **M** `android/build.gradle.kts`
 - **M** `android/app/src/main/AndroidManifest.xml`
 - **M** `android/app/src/main/res/values-night/styles.xml`
 - **M** `android/app/src/main/res/values/styles.xml`
