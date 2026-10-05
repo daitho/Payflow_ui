@@ -33,6 +33,32 @@ flutter run
 
 Les thèmes Android sont maintenant compatibles AppCompat. L'activité utilisait déjà FlutterFragmentActivity. Google Pay et le retour `payflow://stripe-return` sont déclarés dans AndroidManifest.xml ; le schéma `payflow` existe déjà sur iOS.
 
+## Compilation Android : cibles JVM Stripe
+
+Le module `:app` et le Java du plugin Stripe ciblent JVM 17. La configuration
+racine `android/build.gradle.kts` fixe aussi les tâches Kotlin de
+`:stripe_android` à `JvmTarget.JVM_17`. Le JDK 21 du daemon Gradle peut être
+conservé : il ne doit pas changer la cible de bytecode du plugin.
+
+Après récupération du correctif, depuis la racine Flutter :
+
+```bash
+flutter clean
+flutter pub get
+flutter build apk --debug
+flutter run
+```
+
+L'alignement est limité au plugin Stripe pour respecter les cibles des autres
+plugins. Il s'applique à ses variantes debug et release. La validation de
+compatibilité JVM reste active ; ne pas la remplacer par `ignore` ou `warning`.
+Le correctif ne modifie pas les fichiers du cache Pub.
+
+Références :
+
+- https://kotlinlang.org/docs/gradle-configure-project.html#check-for-jvm-target-compatibility-of-related-compile-tasks
+- https://kotlinlang.org/docs/gradle-compiler-options.html
+
 ## Apple Pay
 
 Configurer dans Apple Developer/Xcode un Merchant ID appartenant au projet, la capacité Apple Pay et le certificat de traitement demandé par Stripe. Définir côté backend :
