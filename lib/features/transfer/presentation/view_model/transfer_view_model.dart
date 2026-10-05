@@ -1,3 +1,4 @@
+import '../../../payments/domain/test_funding_service.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -19,6 +20,13 @@ class TransferViewModel extends ChangeNotifier {
   final TransferService _transfers;
   final BeneficiaryService _beneficiaries;
   final SavedPaymentCardService? _savedCardService;
+  final TestFundingService? _fundingService;
+  bool _paymentConfigurationFailed = false;
+  bool get paymentConfigurationFailed => _paymentConfigurationFailed;
+  bool get stripeEnabled => _fundingService?.enabled == true;
+  bool get stripeUnsupported => stripeEnabled && _fundingService?.supported != true;
+  bool get supportsStripeApplePay => _fundingService?.supportsApplePay == true;
+  bool get supportsStripeGooglePay => _fundingService?.supportsGooglePay == true;
   final TransferDraftSeed seed;
   final Uuid _uuid;
 
@@ -26,11 +34,13 @@ class TransferViewModel extends ChangeNotifier {
     required TransferService transferService,
     required BeneficiaryService beneficiaryService,
     SavedPaymentCardService? savedCardService,
+    TestFundingService? fundingService,
     this.seed = const TransferDraftSeed(),
     Uuid uuid = const Uuid(),
   }) : _transfers = transferService,
        _beneficiaries = beneficiaryService,
        _savedCardService = savedCardService,
+       _fundingService = fundingService,
        _uuid = uuid,
        _sentAmount = seed.sentAmount ?? 10,
        _sentCurrency = (seed.sentCurrency ?? 'EUR').toUpperCase();
@@ -125,7 +135,7 @@ class TransferViewModel extends ChangeNotifier {
   TransferFundingMethod get fundingMethod => _fundingMethod;
   bool get hasSavedCard => savedCards.isNotEmpty;
   List<SavedPaymentCard> get savedCards =>
-      _savedCards.where((card) => !card.expired).toList(growable: false);
+      _savedCards.where((card) => !card.expired && (!stripeEnabled || card.tokenized)).toList(growable: false);
   String? get selectedCardId => _selectedCardId;
   SavedPaymentCard? get selectedCard {
     for (final card in savedCards) {
@@ -158,6 +168,8 @@ class TransferViewModel extends ChangeNotifier {
       _activeAmount > 0 &&
       (_fundingMethod != TransferFundingMethod.card || selectedCard != null) &&
       !busy &&
+      !stripeUnsupported &&
+      !_paymentConfigurationFailed &&
       !hasBlockingAmountError;
 
   String get initialAmountText {
@@ -202,6 +214,8 @@ class TransferViewModel extends ChangeNotifier {
     final service = _savedCardService;
     if (service == null || _disposed) return;
     try {
+      await _fundingService?.initialize();
+      _paymentConfigurationFailed = false;
       final cards = await service.list();
       if (_disposed) return;
       _savedCards = cards;
@@ -209,18 +223,27 @@ class TransferViewModel extends ChangeNotifier {
       if (!available.any((card) => card.id == _selectedCardId)) {
         _selectedCardId = available.isEmpty ? null : available.first.id;
       }
+      if (stripeEnabled &&
+          (_fundingMethod == TransferFundingMethod.applePay && !supportsStripeApplePay ||
+           _fundingMethod == TransferFundingMethod.googlePay && !supportsStripeGooglePay)) {
+        selectFundingMethod(TransferFundingMethod.paypal);
+      }
       if (available.isEmpty && _fundingMethod == TransferFundingMethod.card) {
-        selectFundingMethod(TransferFundingMethod.applePay);
+        selectFundingMethod(stripeEnabled ? TransferFundingMethod.paypal : TransferFundingMethod.applePay);
       }
       _notify();
     } catch (_) {
-      // Other funding methods remain available if card listing fails.
+      _paymentConfigurationFailed = true;
+      _notify();
     }
   }
 
   void selectCard(String id) {
     if (_disposed || !savedCards.any((card) => card.id == id)) return;
+    if (_confirming) return;
     _selectedCardId = id;
+    _invalidateQuote();
+    _scheduleQuote();
     _notify();
   }
 
@@ -297,6 +320,8 @@ class TransferViewModel extends ChangeNotifier {
     if (_disposed || _fundingMethod == method ||
         method == TransferFundingMethod.card && !hasSavedCard) return;
     _fundingMethod = method;
+    _invalidateQuote();
+    _scheduleQuote();
     _paypalPayment = null;
     _paymentIdempotencyKey = null;
     _captureIdempotencyKey = null;
@@ -386,10 +411,10 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   Future<ConfirmedTransfer?> confirm() async {
-    if (_fundingMethod == TransferFundingMethod.paypal) {
+    if (!stripeEnabled && _fundingMethod == TransferFundingMethod.paypal) {
       return capturePaypalAndConfirm();
     }
-    if (_confirming || _disposed) return null;
+    if (_confirming || _disposed || _paymentConfigurationFailed || stripeUnsupported) return null;
     if (_fundingMethod == TransferFundingMethod.card && selectedCard == null) {
       _error = TransferFailure.invalid;
       _notify();
@@ -401,12 +426,21 @@ class TransferViewModel extends ChangeNotifier {
     _error = null;
     _notify();
     try {
+      String? stripePaymentId;
+      if (stripeEnabled) {
+        stripePaymentId = await _fundingService!.pay(
+          quoteId: currentQuote.id, method: _fundingMethod,
+          cardId: _fundingMethod == TransferFundingMethod.card ? _selectedCardId : null,
+          idempotencyKey: _paymentIdempotencyKey ??= _uuid.v4());
+        if (stripePaymentId == null || _disposed) return null;
+      }
       final result = await _transfers.confirm(
         quoteId: currentQuote.id,
         fundingMethod: _fundingMethod,
+        paymentIntentId: stripePaymentId,
         cardId: _fundingMethod == TransferFundingMethod.card
             ? _selectedCardId : null,
-        idempotencyKey: _idempotencyKey ??= _uuid.v4(),
+        idempotencyKey: stripePaymentId == null ? (_idempotencyKey ??= _uuid.v4()) : 'stripe-$stripePaymentId',
       );
       return _disposed ? null : result;
     } on TransferException catch (error) {

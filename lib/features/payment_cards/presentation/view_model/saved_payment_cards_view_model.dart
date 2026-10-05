@@ -1,10 +1,14 @@
 import 'package:flutter/foundation.dart';
+import '../../../payments/domain/test_funding_service.dart';
 
 import '../../domain/model/saved_payment_card.dart';
 import '../../domain/service/saved_payment_card_service.dart';
 
 class SavedPaymentCardsViewModel extends ChangeNotifier {
-  SavedPaymentCardsViewModel(this._service);
+  SavedPaymentCardsViewModel(this._service, {TestFundingService? funding}) : _funding = funding;
+  final TestFundingService? _funding;
+  bool get stripeEnabled => _funding?.enabled == true;
+  bool get stripeSupported => _funding?.supported == true;
   final SavedPaymentCardService _service;
 
   List<SavedPaymentCard> _cards = const [];
@@ -23,6 +27,7 @@ class SavedPaymentCardsViewModel extends ChangeNotifier {
     failed = false;
     _notify();
     try {
+      await _funding?.initialize();
       final cards = await _service.list();
       if (!_disposed) _cards = cards;
     } catch (_) {
@@ -31,6 +36,18 @@ class SavedPaymentCardsViewModel extends ChangeNotifier {
       loading = false;
       _notify();
     }
+  }
+
+  Future<void> addStripeCard() async {
+    if (saving) return;
+    saving = true; failed = false; _notify();
+    try {
+      final saved = await _funding?.saveCard();
+      if (!_disposed && saved != null) {
+        _cards = [saved, ..._cards.where((card) => card.id != saved.id)];
+      }
+    } catch (_) { failed = true; }
+    finally { saving = false; _notify(); }
   }
 
   Future<bool> add(NewSavedPaymentCard card) async {

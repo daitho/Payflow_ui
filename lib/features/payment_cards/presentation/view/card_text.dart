@@ -7,6 +7,9 @@ String cardText(BuildContext context, String key) {
 
 const _labels = <String, Map<String, String>>{
   'fr': {
+    'stripeNotice': 'Test Stripe : utilisez des cartes de test. Aucun débit réel.',
+    'stripeUnsupported': 'Le paiement Stripe nécessite l’application iOS ou Android.',
+    'stripeUnavailable': 'Configuration du paiement indisponible. Réessayez.',
     'title': 'Mes cartes bancaires',
     'intro': 'Choisissez une carte de test pour simuler un transfert.',
     'empty': 'Aucune carte enregistrée',
@@ -29,6 +32,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Expirée',
   },
   'en': {
+    'stripeNotice': 'Stripe test: use test cards. No real charge.',
+    'stripeUnsupported': 'Stripe payments require the iOS or Android app.',
+    'stripeUnavailable': 'Payment configuration unavailable. Try again.',
     'title': 'My payment cards',
     'intro': 'Choose a test card to simulate a transfer.',
     'empty': 'No saved cards',
@@ -51,6 +57,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Expired',
   },
   'es': {
+    'stripeNotice': 'Prueba Stripe: usa tarjetas de prueba. Sin cargos reales.',
+    'stripeUnsupported': 'Stripe requiere la aplicación iOS o Android.',
+    'stripeUnavailable': 'Configuración de pago no disponible. Inténtalo de nuevo.',
     'title': 'Mis tarjetas', 'intro': 'Elige una tarjeta de prueba para simular el envío.',
     'empty': 'No hay tarjetas guardadas', 'add': 'Añadir tarjeta',
     'holder': 'Titular', 'brand': 'Red de la tarjeta',
@@ -64,6 +73,9 @@ const _labels = <String, Map<String, String>>{
     'expired': 'Vencida',
   },
   'zh': {
+    'stripeNotice': 'Stripe 测试：请使用测试卡，不会实际扣款。',
+    'stripeUnsupported': 'Stripe 支付需要 iOS 或 Android 应用。',
+    'stripeUnavailable': '无法加载支付配置，请重试。',
     'title': '我的银行卡', 'intro': '选择测试卡来模拟转账。', 'empty': '暂无已保存的卡',
     'add': '添加卡', 'holder': '持卡人姓名', 'brand': '卡组织', 'lastFour': '末四位',
     'month': '到期月份', 'year': '到期年份', 'save': '保存', 'remove': '删除',
@@ -74,6 +86,9 @@ const _labels = <String, Map<String, String>>{
     'expired': '已过期',
   },
   'hi': {
+    'stripeNotice': 'Stripe परीक्षण: टेस्ट कार्ड का उपयोग करें। वास्तविक शुल्क नहीं।',
+    'stripeUnsupported': 'Stripe भुगतान के लिए iOS या Android ऐप आवश्यक है।',
+    'stripeUnavailable': 'भुगतान कॉन्फ़िगरेशन उपलब्ध नहीं है। फिर प्रयास करें।',
     'title': 'मेरे कार्ड', 'intro': 'ट्रांसफ़र का परीक्षण करने के लिए टेस्ट कार्ड चुनें।',
     'empty': 'कोई कार्ड सहेजा नहीं गया', 'add': 'कार्ड जोड़ें', 'holder': 'कार्डधारक का नाम',
     'brand': 'कार्ड नेटवर्क', 'lastFour': 'अंतिम चार अंक', 'month': 'समाप्ति माह',

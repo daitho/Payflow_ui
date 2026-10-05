@@ -40,5 +40,6 @@ class SavedPaymentCardApiService {
     lastFour: json['lastFour'] as String,
     expiryMonth: json['expiryMonth'] as int,
     expiryYear: json['expiryYear'] as int,
+    tokenized: json['tokenized'] == true,
   );
 }

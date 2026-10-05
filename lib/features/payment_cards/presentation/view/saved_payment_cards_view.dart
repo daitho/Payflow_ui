@@ -22,8 +22,12 @@ class SavedPaymentCardsView extends StatelessWidget {
               children: [
                 Text(cardText(context, 'intro')),
                 const SizedBox(height: 8),
-                Text(cardText(context, 'notice'),
+                Text(cardText(context, vm.stripeEnabled ? 'stripeNotice' : 'notice'),
                     style: const TextStyle(color: Color(0xFF777274), fontSize: 12)),
+                if (vm.stripeEnabled && !vm.stripeSupported) ...[
+                  const SizedBox(height: 12),
+                  Text(cardText(context, 'stripeUnsupported')),
+                ],
                 if (vm.failed) ...[
                   const SizedBox(height: 12),
                   Text(cardText(context, 'error'),
@@ -42,7 +46,7 @@ class SavedPaymentCardsView extends StatelessWidget {
                       contentPadding: const EdgeInsets.all(12),
                       leading: const Icon(Icons.credit_card_rounded,
                           color: Color(0xFF167C73), size: 32),
-                      title: Text('${card.brand}  ${card.maskedNumber}',
+                      title: Text(card.displayLabel,
                           style: const TextStyle(fontWeight: FontWeight.w700)),
                       subtitle: Text([
                         card.holderName,
@@ -58,7 +62,8 @@ class SavedPaymentCardsView extends StatelessWidget {
                   ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
-                  onPressed: vm.saving ? null : () => _add(context, vm),
+                  onPressed: vm.saving || vm.loading || (vm.stripeEnabled && !vm.stripeSupported)
+                      ? null : () => _add(context, vm),
                   icon: const Icon(Icons.add_rounded),
                   label: Text(cardText(context, 'add')),
                   style: FilledButton.styleFrom(
@@ -72,6 +77,10 @@ class SavedPaymentCardsView extends StatelessWidget {
   }
 
   Future<void> _add(BuildContext context, SavedPaymentCardsViewModel vm) async {
+    if (vm.stripeEnabled) {
+      await vm.addStripeCard();
+      return;
+    }
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -87,7 +96,7 @@ class SavedPaymentCardsView extends StatelessWidget {
       context: context,
       builder: (dialog) => AlertDialog(
         title: Text(cardText(dialog, 'confirmRemove')),
-        content: Text('${card.brand}  ${card.maskedNumber}'),
+        content: Text(card.displayLabel),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialog, false),
               child: Text(cardText(dialog, 'cancel'))),
