@@ -1,3 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+plugins {
+    // Make the Kotlin task API available without applying KGP to the root project.
+    id("org.jetbrains.kotlin.android") apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -17,6 +25,16 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
+}
+
+subprojects {
+    if (name == "stripe_android") {
+        // Stripe's Java tasks target 17. Do not inherit Kotlin's JVM target
+        // from the Gradle daemon/toolchain (21 in this project).
+        tasks.withType<KotlinJvmCompile>().configureEach {
+            compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
