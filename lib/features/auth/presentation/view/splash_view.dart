@@ -64,6 +64,20 @@ class _SplashViewState extends State<SplashView> {
     }
   }
 
+  Future<void> _useLogin() async {
+    final destination = await context.read<SplashViewModel>().useLogin();
+    if (mounted && destination == SplashDestination.login) {
+      context.go(AppRoutes.login);
+    }
+  }
+
+  Widget _loginFallback(SplashViewModel viewModel, AppLocalizations l10n) {
+    return TextButton(
+      onPressed: viewModel.isLoading ? null : _useLogin,
+      child: Text(l10n.signIn),
+    );
+  }
+
   // =========================================================
   // BUILD
   // =========================================================
@@ -134,6 +148,7 @@ class _SplashViewState extends State<SplashView> {
             onPressed: viewModel.isLoading ? null : _initializeApplication,
             child: Text(l10n.retry),
           ),
+          _loginFallback(viewModel, l10n),
         ],
       );
     }
@@ -142,7 +157,8 @@ class _SplashViewState extends State<SplashView> {
     // BIOMETRIC AUTHENTICATION FAILED / CANCELLED
     // ---------------------------------------------------------
 
-    if (viewModel.biometricState == SplashBiometricState.failed) {
+    if (viewModel.biometricState == SplashBiometricState.failed ||
+        viewModel.biometricState == SplashBiometricState.technicalError) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -159,7 +175,9 @@ class _SplashViewState extends State<SplashView> {
           const SizedBox(height: 18),
 
           Text(
-            l10n.biometricUnlockFailed,
+            viewModel.biometricState == SplashBiometricState.technicalError
+                ? l10n.biometricTechnicalError
+                : l10n.biometricUnlockFailed,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 15,
@@ -177,6 +195,7 @@ class _SplashViewState extends State<SplashView> {
 
             label: Text(l10n.retryBiometric),
           ),
+          _loginFallback(viewModel, l10n),
         ],
       );
     }
