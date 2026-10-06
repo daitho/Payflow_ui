@@ -55,6 +55,8 @@ class SecurityPrivacyView extends StatelessWidget {
 
                 subtitle: viewModel.isInitializing
                     ? l10n.checkingBiometrics
+                    : viewModel.hasInitializationError
+                    ? l10n.biometricTechnicalError
                     : viewModel.biometricsAvailable
                     ? l10n.biometricsSubtitle
                     : l10n.biometricsUnavailable,
@@ -64,6 +66,8 @@ class SecurityPrivacyView extends StatelessWidget {
 
                   onChanged:
                       viewModel.isInitializing ||
+                          viewModel.hasInitializationError ||
+                          !viewModel.biometricsAvailable ||
                           viewModel.isBiometricActionLoading
                       ? null
                       : (bool value) async {
