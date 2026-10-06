@@ -11,6 +11,8 @@ import '../view_model/login_view_model.dart';
 import '../../domain/model/verification_challenge_model.dart';
 import 'verification_copy.dart';
 import 'password_reset_copy.dart';
+import '../widget/social_provider_logo.dart';
+import '../../data/social/social_credential_service.dart';
 
 class LoginView extends StatefulWidget {
   final bool passwordResetCompleted;
@@ -531,18 +533,16 @@ class _LoginViewState extends State<LoginView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _SocialButton(
-          asset: 'assets/images/login/apple_logo.png',
-          imageSize: 31,
-          onTap: () {
-            _socialLogin('Apple');
-          },
+          provider: 'APPLE',
+          onTap: SocialCredentialService.supportsProvider('APPLE')
+              ? () => _socialLogin('Apple')
+              : null,
         ),
 
         const SizedBox(width: 19),
 
         _SocialButton(
-          asset: 'assets/images/login/google_logo.png',
-          imageSize: 32,
+          provider: 'GOOGLE',
           onTap: () {
             _socialLogin('Google');
           },
@@ -551,8 +551,7 @@ class _LoginViewState extends State<LoginView> {
         const SizedBox(width: 19),
 
         _SocialButton(
-          asset: 'assets/images/login/facebook_logo.png',
-          imageSize: 31,
+          provider: 'FACEBOOK',
           onTap: () {
             _socialLogin('Facebook');
           },
@@ -711,10 +710,6 @@ class _LoginViewState extends State<LoginView> {
   // SOCIAL LOGIN
   // =========================================================
   Future<void> _socialLogin(String provider) async {
-    if (provider == 'Apple') {
-      _showMessage(AppLocalizations.of(context).socialLoginMessage(provider));
-      return;
-    }
     final vm = context.read<LoginViewModel>();
     final success = await vm.socialLogin(provider.toUpperCase());
     if (!mounted) return;
@@ -783,13 +778,11 @@ class _OrDivider extends StatelessWidget {
 // ===========================================================
 
 class _SocialButton extends StatelessWidget {
-  final String asset;
-  final double imageSize;
-  final VoidCallback onTap;
+  final String provider;
+  final VoidCallback? onTap;
 
   const _SocialButton({
-    required this.asset,
-    required this.imageSize,
+    required this.provider,
     required this.onTap,
   });
 
@@ -809,12 +802,7 @@ class _SocialButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: const Color(0xFFE4E2E0)),
           ),
-          child: Image.asset(
-            asset,
-            width: imageSize,
-            height: imageSize,
-            fit: BoxFit.contain,
-          ),
+          child: SocialProviderLogo(provider: provider),
         ),
       ),
     );

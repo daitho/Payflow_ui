@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 import '../../../auth/data/social/social_credential_service.dart';
+import '../../../auth/presentation/widget/social_provider_logo.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,15 @@ import '../../domain/model/linked_provider.dart';
 import '../view_model/authentication_methods_view_model.dart';
 import 'authentication_methods_copy.dart';
 
-class AuthenticationMethodsView extends StatelessWidget {
+class AuthenticationMethodsView extends StatefulWidget {
   const AuthenticationMethodsView({super.key});
+
+  @override
+  State<AuthenticationMethodsView> createState() => _AuthenticationMethodsViewState();
+}
+
+class _AuthenticationMethodsViewState extends State<AuthenticationMethodsView> {
+  bool _linkInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +91,7 @@ class AuthenticationMethodsView extends StatelessWidget {
                       name: 'Apple',
                       status: _providerStatus(vm, copy, ExternalProvider.apple),
                       linked: vm.provider(ExternalProvider.apple)?.linked ?? false,
+                      onTap: _canLink(vm, ExternalProvider.apple) ? () => _link(context, vm, ExternalProvider.apple) : null,
                     ),
                     const Divider(height: 1, indent: 68),
                     _ProviderTile(
@@ -116,16 +125,20 @@ class AuthenticationMethodsView extends StatelessWidget {
     final linked = vm.provider(provider);
     if (linked == null) return copy.error;
     if (linked.linked) return copy.linked;
-    if (!linked.available) return copy.unavailable;
+    if (!linked.available || !SocialCredentialService.supportsProvider(provider.apiValue)) return copy.unavailable;
     return copy.notLinked;
   }
 
   bool _canLink(AuthenticationMethodsViewModel vm, ExternalProvider provider) {
     final state = vm.provider(provider);
-    return state != null && state.available && !state.linked && !vm.providersLoading && !vm.linking;
+    return state != null && state.available && !state.linked &&
+        SocialCredentialService.supportsProvider(provider.apiValue) &&
+        !vm.providersLoading && !vm.linking && !_linkInProgress;
   }
 
   Future<void> _link(BuildContext context, AuthenticationMethodsViewModel vm, ExternalProvider provider) async {
+    if (!_canLink(vm, provider)) return;
+    setState(() => _linkInProgress = true);
     final password = TextEditingController();
     try {
       final currentPassword = await showDialog<String>(
@@ -155,6 +168,7 @@ class AuthenticationMethodsView extends StatelessWidget {
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La liaison a échoué. Réessaie.')));
     } finally {
       password.dispose();
+      if (mounted) setState(() => _linkInProgress = false);
     }
   }
 
@@ -291,11 +305,8 @@ class _ProviderTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: CircleAvatar(
-        backgroundColor: const Color(0xFFF4F2F1),
-        child: Text(
-          name.substring(0, 1),
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
+        backgroundColor: Colors.white,
+        child: SocialProviderLogo(provider: name),
       ),
       title: Text(name),
       subtitle: Text(status),

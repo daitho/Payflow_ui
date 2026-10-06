@@ -4,18 +4,20 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'apple_credential_service.dart';
+import 'social_credential.dart';
 
-class SocialCredential {
-  final String token;
-  final String? expectedNonce;
-
-  const SocialCredential(this.token, {this.expectedNonce});
-}
+export 'social_credential.dart';
 
 /// Obtains a short-lived provider credential. Never persist or log these tokens.
 class SocialCredentialService {
-  SocialCredentialService._();
-  static final instance = SocialCredentialService._();
+  SocialCredentialService({AppleCredentialService? appleCredentialService})
+    : _apple = appleCredentialService ?? AppleCredentialService();
+  static final instance = SocialCredentialService();
+  final AppleCredentialService _apple;
+
+  static bool supportsProvider(String provider) =>
+      provider.toUpperCase() != 'APPLE' || AppleCredentialService.supportsPlatform;
 
   static const googleIosClientId =
       '1007248328587-5bjni9adknn56hh8oqd96hkppvs7032d.apps.googleusercontent.com';
@@ -27,6 +29,8 @@ class SocialCredentialService {
 
   Future<SocialCredential?> acquire(String provider) async {
     switch (provider.toUpperCase()) {
+      case 'APPLE':
+        return _apple.acquire();
       case 'GOOGLE':
         if (googleWebClientId.isEmpty) {
           throw StateError('GOOGLE_WEB_CLIENT_ID manquant');
