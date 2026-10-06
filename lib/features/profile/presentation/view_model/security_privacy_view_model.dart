@@ -26,6 +26,7 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
   bool _biometricsAvailable = false;
 
   bool _biometricsEnabled = false;
+  bool _hasInitializationError = false;
 
   // =========================================================
   // GETTERS
@@ -38,6 +39,7 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
   bool get biometricsAvailable => _biometricsAvailable;
 
   bool get biometricsEnabled => _biometricsEnabled;
+  bool get hasInitializationError => _hasInitializationError;
 
   // =========================================================
   // INITIALIZE
@@ -45,6 +47,7 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
 
   Future<void> initialize() async {
     _isInitializing = true;
+    _hasInitializationError = false;
 
     notifyListeners();
 
@@ -57,20 +60,10 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
 
       debugPrint('[BIOMETRIC] enabled=$_biometricsEnabled');
 
-      /*
-       * Cas :
-       *
-       * préférence enregistrée = true
-       * mais l'utilisateur a supprimé
-       * Face ID / empreinte du téléphone.
-       *
-       * L'UI ne doit pas prétendre que
-       * la biométrie est utilisable.
-       */
-
-      if (!_biometricsAvailable && _biometricsEnabled) {
-        _biometricsEnabled = false;
-      }
+      // Keep the stored choice visible even if biometrics became unavailable.
+      // Startup will require a fresh login in that situation.
+    } catch (_) {
+      _hasInitializationError = true;
     } finally {
       _isInitializing = false;
 
@@ -86,7 +79,7 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
     required bool enabled,
     required String localizedReason,
   }) async {
-    if (_isBiometricActionLoading) {
+    if (_isInitializing || _hasInitializationError || _isBiometricActionLoading) {
       return BiometricToggleResult.technicalError;
     }
 
@@ -99,20 +92,21 @@ class SecurityPrivacyViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final bool success;
-
-      if (enabled) {
-        success = await _biometricService.enable(
-          localizedReason: localizedReason,
-        );
-      } else {
-        success = await _biometricService.disable(
-          localizedReason: localizedReason,
-        );
-      }
-
-      if (!success) {
-        return BiometricToggleResult.authenticationFailed;
+      final result = await _biometricService.setEnabled(
+        enabled: enabled,
+        localizedReason: localizedReason,
+      );
+      switch (result) {
+        case BiometricAuthResult.success:
+          break;
+        case BiometricAuthResult.unavailable:
+          return BiometricToggleResult.unavailable;
+        case BiometricAuthResult.technicalError:
+          return BiometricToggleResult.technicalError;
+        case BiometricAuthResult.failed:
+        case BiometricAuthResult.canceled:
+        case BiometricAuthResult.lockedOut:
+          return BiometricToggleResult.authenticationFailed;
       }
 
       _biometricsEnabled = enabled;
