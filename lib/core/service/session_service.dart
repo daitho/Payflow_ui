@@ -27,6 +27,7 @@ class SessionService extends ChangeNotifier {
   AuthSessionModel? _currentSession;
   UserAuthModel? _currentUser;
   SessionStatus _status = SessionStatus.unknown;
+  bool _restorationAuthorized = false;
 
   // =========================================================
   // GETTERS
@@ -51,11 +52,15 @@ class SessionService extends ChangeNotifier {
   // INITIALIZATION
   // =========================================================
   Future<void> initialize() async {
-    final String? refreshToken = await readRefreshToken();
-    if (refreshToken == null || refreshToken.isEmpty) {
-      _currentSession = null;
-      _status = SessionStatus.unauthenticated;
-      notifyListeners();
+    if (isAuthenticated) {
+      return;
+    }
+
+    // Inspect only session metadata. The refresh token must not be read
+    // before the startup biometric gate has been resolved.
+    final String? storedSessionId = await readStoredSessionId();
+    if (storedSessionId == null || storedSessionId.isEmpty) {
+      await clearSession();
       return;
     }
 
@@ -101,6 +106,7 @@ class SessionService extends ChangeNotifier {
      */
     _currentSession = session;
     _currentUser = session.user;
+    _restorationAuthorized = true;
     _status = SessionStatus.authenticated;
     notifyListeners();
   }
@@ -108,7 +114,17 @@ class SessionService extends ChangeNotifier {
   // =========================================================
   // REFRESH TOKEN
   // =========================================================
+  void authorizeSessionRestoration() {
+    if (_status != SessionStatus.refreshRequired) {
+      throw StateError('No stored session is awaiting restoration');
+    }
+    _restorationAuthorized = true;
+  }
+
   Future<String?> readRefreshToken() {
+    if (!_restorationAuthorized) {
+      throw StateError('Stored session has not been unlocked');
+    }
     return _secureStorage.read(key: _refreshTokenKey);
   }
 
@@ -131,15 +147,16 @@ class SessionService extends ChangeNotifier {
   // =========================================================
 
   Future<void> clearSession() async {
+    _restorationAuthorized = false;
+    _currentSession = null;
+    _currentUser = null;
+    _status = SessionStatus.unauthenticated;
+    notifyListeners();
     await Future.wait([
       _secureStorage.delete(key: _refreshTokenKey),
       _secureStorage.delete(key: _refreshExpiresAtKey),
       _secureStorage.delete(key: _sessionIdKey),
     ]);
 
-    _currentSession = null;
-    _currentUser = null;
-    _status = SessionStatus.unauthenticated;
-    notifyListeners();
   }
 }
