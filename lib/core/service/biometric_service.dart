@@ -114,62 +114,44 @@ class BiometricService {
   // AUTHENTICATE
   // =========================================================
   Future<bool> authenticate({required String localizedReason}) async {
-    final bool available = await isBiometricsAvailable();
-
-    if (!available) {
-      return false;
-    }
-    try {
-      return await _localAuthentication.authenticate(
-        localizedReason: localizedReason,
-        biometricOnly: true,
-        persistAcrossBackgrounding: true,
-      );
-    } on LocalAuthException {
-      return false;
-    } catch (_) {
-      return false;
-    }
+    return await authenticateForAppUnlock(localizedReason: localizedReason) ==
+        BiometricAuthResult.success;
   }
 
   // =========================================================
   // ENABLE
   // =========================================================
   Future<bool> enable({required String localizedReason}) async {
-    /*
-     * On n'active jamais simplement un booléen.
-     *
-     * L'utilisateur doit d'abord réussir
-     * une vraie authentification biométrique.
-     */
-    final bool authenticated = await authenticate(
-      localizedReason: localizedReason,
-    );
-    if (!authenticated) {
-      return false;
-    }
-
-    await _secureStorage.write(key: _biometricsEnabledKey, value: 'true');
-    return true;
+    return await setEnabled(enabled: true, localizedReason: localizedReason) ==
+        BiometricAuthResult.success;
   }
 
   // =========================================================
   // DISABLE
   // =========================================================
   Future<bool> disable({required String localizedReason}) async {
-    /*
-     * Désactiver une protection de sécurité
-     * est également une opération sensible.
-     *
-     * On demande donc une authentification.
-     */
-    final bool authenticated = await authenticate(
+    return await setEnabled(enabled: false, localizedReason: localizedReason) ==
+        BiometricAuthResult.success;
+  }
+
+  Future<BiometricAuthResult> setEnabled({
+    required bool enabled,
+    required String localizedReason,
+  }) async {
+    final result = await authenticateForAppUnlock(
       localizedReason: localizedReason,
     );
-    if (!authenticated) {
-      return false;
+    if (result != BiometricAuthResult.success) {
+      return result;
     }
-    await _secureStorage.write(key: _biometricsEnabledKey, value: 'false');
-    return true;
+    try {
+      await _secureStorage.write(
+        key: _biometricsEnabledKey,
+        value: enabled.toString(),
+      );
+      return BiometricAuthResult.success;
+    } catch (_) {
+      return BiometricAuthResult.technicalError;
+    }
   }
 }
