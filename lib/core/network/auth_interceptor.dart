@@ -91,6 +91,12 @@ class AuthInterceptor extends Interceptor {
       handler.next(error);
       return;
     }
+    // Startup restoration is owned by Splash, after the biometric gate.
+    // A protected request must never restore a locked session via a 401.
+    if (!_sessionService.isAuthenticated) {
+      handler.next(error);
+      return;
+    }
     // =======================================================
     // 3. LA REQUÊTE A DÉJÀ ÉTÉ REJOUÉE
     //
