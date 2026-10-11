@@ -369,6 +369,7 @@ class _TransferViewState extends State<TransferView> {
                         const SizedBox(height: 10),
                         for (final option in vm.payoutOptions) ...[
                           _PayoutOptionTile(
+                            key: ValueKey('transfer-payout-${option.id}'),
                             name: option.name,
                             selected: option.id == vm.selectedPayoutOperatorId,
                             enabled: !vm.confirming,
@@ -404,6 +405,7 @@ class _TransferViewState extends State<TransferView> {
                             style: const TextStyle(color: Color(0xFF777274))),
                         ),
                       SizedBox(
+                        key: const ValueKey('transfer-funding-field'),
                         height: _transferMethodFieldHeight,
                         child: DropdownButtonFormField<String>(
                           key: ValueKey('$fundingValue:${fundingValues.join(',')}'),
@@ -477,7 +479,7 @@ class _TransferViewState extends State<TransferView> {
                         const SizedBox(height: 20),
                         _InlineError(
                           message: _errorText(l10n, vm.error),
-                          onRetry: vm.canContinue ? vm.ensureQuote : null,
+                          onRetry: vm.canRequestQuote ? vm.ensureQuote : null,
                         ),
                       ],
                     ],
@@ -651,6 +653,7 @@ class _BeneficiaryCard extends StatelessWidget {
 
 class _PayoutOptionTile extends StatelessWidget {
   const _PayoutOptionTile({
+    super.key,
     required this.name,
     required this.selected,
     required this.enabled,
@@ -669,7 +672,7 @@ class _PayoutOptionTile extends StatelessWidget {
     child: Material(
       color: selected ? const Color(0xFFFFF8EC) : Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(9),
         side: BorderSide(
           color: selected ? const Color(0xFFFF9400) : const Color(0xFFE8E5E4),
           width: selected ? 1.5 : 1,
@@ -679,7 +682,7 @@ class _PayoutOptionTile extends StatelessWidget {
         height: _transferMethodFieldHeight,
         child: InkWell(
           onTap: enabled ? onTap : null,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(9),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Row(
@@ -689,6 +692,8 @@ class _PayoutOptionTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -1133,6 +1138,7 @@ const double _reviewLogoWidth = 56;
 const double _reviewLogoHeight = 28;
 
 InputDecoration _methodFieldDecoration() => _fieldDecoration().copyWith(
+  constraints: const BoxConstraints.tightFor(height: _transferMethodFieldHeight),
   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
 );
 
@@ -1226,6 +1232,8 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       TransferFailure.amountAboveMaximum =>
         l10n.transferAmountAboveMaximumError,
       TransferFailure.unavailable => l10n.transferUnavailableError,
+      TransferFailure.payoutUnavailable => _payoutUnavailableText(l10n.localeName),
+      TransferFailure.providerUnavailable => _providerUnavailableText(l10n.localeName),
       TransferFailure.network => l10n.contactNetworkError,
       TransferFailure.timeout => l10n.homeTimeoutError,
       TransferFailure.server ||
@@ -1233,6 +1241,22 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       TransferFailure.unexpected ||
       null => l10n.contactServerError,
     };
+
+String _payoutUnavailableText(String locale) => switch (locale.split(RegExp('[-_]')).first) {
+  'fr' => 'Ce moyen de réception est indisponible pour ce pays. Choisissez un autre moyen.',
+  'es' => 'Este método de recepción no está disponible en este país. Elige otro método.',
+  'zh' => '此国家暂不支持该收款方式。请选择其他方式。',
+  'hi' => 'इस देश में यह प्राप्ति विधि उपलब्ध नहीं है। दूसरी विधि चुनें।',
+  _ => 'This receiving method is unavailable for this country. Choose another method.',
+};
+
+String _providerUnavailableText(String locale) => switch (locale.split(RegExp('[-_]')).first) {
+  'fr' => 'Le service de transfert est momentanément indisponible. Réessayez dans un instant.',
+  'es' => 'El servicio de transferencias no está disponible temporalmente. Inténtalo de nuevo en un momento.',
+  'zh' => '转账服务暂时不可用。请稍后重试。',
+  'hi' => 'स्थानांतरण सेवा अस्थायी रूप से अनुपलब्ध है। थोड़ी देर में फिर से प्रयास करें।',
+  _ => 'The transfer service is temporarily unavailable. Please try again shortly.',
+};
 
 
 String _fundingLabel(

@@ -72,19 +72,23 @@ class TransferRepositoryImpl implements TransferRepository {
     } on DioException catch (error) {
       final errorCode = _errorCode(error.response?.data);
       final failure = switch (errorCode) {
+        TransferErrorCodes.beneficiaryNotFound ||
+        TransferErrorCodes.destinationNotFound => TransferFailure.notFound,
+        TransferErrorCodes.paymentOperatorUnavailable ||
+        TransferErrorCodes.paymentOperatorNotFound ||
+        TransferErrorCodes.countryOperatorNotFound => TransferFailure.payoutUnavailable,
         TransferErrorCodes.amountBelowMinimum =>
           TransferFailure.amountBelowMinimum,
         TransferErrorCodes.amountAboveMaximum =>
           TransferFailure.amountAboveMaximum,
         TransferErrorCodes.paymentProviderUnavailable ||
-        TransferErrorCodes.paymentProviderError ||
+        TransferErrorCodes.paymentProviderError => TransferFailure.providerUnavailable,
         TransferErrorCodes.paymentCaptureFailed ||
         TransferErrorCodes.cardNotFound =>
           TransferFailure.unavailable,
         TransferErrorCodes.cardInvalid ||
         TransferErrorCodes.cardRequired => TransferFailure.invalid,
-        TransferErrorCodes.paymentIntentNotFound =>
-          TransferFailure.notFound,
+        TransferErrorCodes.paymentIntentNotFound => TransferFailure.conflict,
         TransferErrorCodes.paymentNotReady ||
         TransferErrorCodes.paymentAmountMismatch ||
         TransferErrorCodes.paymentRequired ||
@@ -93,7 +97,9 @@ class TransferRepositoryImpl implements TransferRepository {
         _ => switch (error.response?.statusCode) {
         400 => TransferFailure.invalid,
         401 => TransferFailure.sessionExpired,
-        404 => TransferFailure.notFound,
+        // Only explicit beneficiary error codes can label a contact as missing.
+        404 => TransferFailure.server,
+        502 || 503 => TransferFailure.providerUnavailable,
         409 => TransferFailure.conflict,
         410 => TransferFailure.quoteExpired,
         422 => TransferFailure.unavailable,

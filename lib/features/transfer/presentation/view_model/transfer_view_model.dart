@@ -184,6 +184,12 @@ class TransferViewModel extends ChangeNotifier {
   bool get hasBlockingAmountError =>
       _error == TransferFailure.amountBelowMinimum ||
       _error == TransferFailure.amountAboveMaximum;
+  bool get canRequestQuote =>
+      _beneficiary != null && hasUsableDestination && _activeAmount > 0 && !busy;
+  bool get hasBlockingDestinationError =>
+      _error == TransferFailure.notFound ||
+      _error == TransferFailure.payoutUnavailable ||
+      (_error == TransferFailure.providerUnavailable && _quote?.isUsable != true);
 
   bool get canContinue =>
       _beneficiary != null &&
@@ -194,7 +200,7 @@ class TransferViewModel extends ChangeNotifier {
       !busy &&
       !stripeUnsupported &&
       !_paymentConfigurationFailed &&
-      !hasBlockingAmountError;
+      !hasBlockingAmountError && !hasBlockingDestinationError;
 
   String get initialAmountText {
     final value = _sentAmount.toDouble();

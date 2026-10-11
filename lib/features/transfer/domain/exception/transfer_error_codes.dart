@@ -1,4 +1,9 @@
 abstract final class TransferErrorCodes {
+  static const String beneficiaryNotFound = 'BENEFICIARY_NOT_FOUND';
+  static const String destinationNotFound = 'BEN_002';
+  static const String paymentOperatorUnavailable = 'PAYMENT_OPERATOR_NOT_AVAILABLE';
+  static const String paymentOperatorNotFound = 'PAYMENT_OPERATOR_NOT_FOUND';
+  static const String countryOperatorNotFound = 'COUNTRY_OPERATOR_NOT_FOUND';
   static const String amountBelowMinimum = 'QUOTE_008';
   static const String amountAboveMaximum = 'QUOTE_009';
   static const String paymentProviderUnavailable = 'PAYMENT_001';
