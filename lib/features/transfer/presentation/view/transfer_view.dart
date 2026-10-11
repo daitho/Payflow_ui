@@ -113,7 +113,9 @@ class _TransferViewState extends State<TransferView> {
         viewModel: vm,
         onConfirm: () => _confirmPayment(vm),
         onConfirmed: (transferId) {
-          Navigator.of(sheetContext).pop(transferId);
+          if (sheetContext.mounted) {
+            Navigator.of(sheetContext).pop(transferId);
+          }
         },
       ),
     );
@@ -867,136 +869,159 @@ class _TransferReviewSheet extends StatelessWidget {
       final l10n = AppLocalizations.of(context);
       final quote = viewModel.quote!;
       final contact = viewModel.beneficiary!;
-      return SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(
-          24,
-          12,
-          24,
-          24 + MediaQuery.paddingOf(context).bottom,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Container(
-                width: 42,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD7D2D3),
-                  borderRadius: BorderRadius.circular(4),
+      return PopScope(
+        canPop: !viewModel.confirming,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            24,
+            12,
+            24,
+            24 + MediaQuery.paddingOf(context).bottom,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD7D2D3),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.transferReviewTitle,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 20),
-            _ReviewLine(
-              label: l10n.transferBeneficiary,
-              value: contact.fullName,
-            ),
-            _ReviewLine(
-              label: l10n.contactPhone,
-              value: contact.phoneE164 ?? l10n.contactNoPhone,
-            ),
-            const SizedBox(height: 12),
-            _PaymentPartyCard(
-              label: l10n.transferFundingLabel,
-              name: viewModel.fundingMethod == TransferFundingMethod.card &&
-                      viewModel.selectedCard != null
-                  ? viewModel.selectedCard!.displayLabel
-                  : _fundingLabel(l10n, viewModel.fundingMethod),
-              logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
-              fallbackIcon: _fundingIcon(viewModel.fundingMethod),
-            ),
-            const SizedBox(height: 12),
-            _ReviewLine(
-              label: l10n.transferSent,
-              value: _money(context, quote.sentAmount, quote.sentCurrency),
-            ),
-            _ReviewLine(
-              label: l10n.transferFee,
-              value: _money(context, quote.fee, quote.sentCurrency),
-            ),
-            _ReviewLine(
-              label: l10n.transferRate,
-              value:
-                  '1 ${quote.sentCurrency} = ${_decimal(quote.customerRate)} ${quote.receivedCurrency}',
-            ),
-            _ReviewLine(
-              label: l10n.transferReceived,
-              value: _money(
-                context,
-                quote.receivedAmount,
-                quote.receivedCurrency,
-              ),
-            ),
-            _ReviewLine(
-              label: l10n.transferTotalAmount,
-              value: _money(context, quote.totalDebited, quote.sentCurrency),
-              emphasized: true,
-            ),
-            const SizedBox(height: 12),
-            _PaymentPartyCard(
-              label: l10n.transferOperator,
-              name: viewModel.selectedPayoutName ?? '—',
-              operatorName: viewModel.selectedPayoutName,
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF2DC),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                l10n.transferTrustWarning,
-                style: const TextStyle(color: Color(0xFF765143), height: 1.4),
-              ),
-            ),
-            if (viewModel.error != null) ...[
-              const SizedBox(height: 14),
-              Text(
-                _errorText(l10n, viewModel.error),
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
-            const SizedBox(height: 20),
-            FilledButton(
-              onPressed: viewModel.confirming
-                  ? null
-                  : () async {
-                      final result = await onConfirm();
-                      if (result != null) onConfirmed(result.id);
-                    },
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(56),
-                backgroundColor: const Color(0xFFFF9400),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
-                ),
-              ),
-              child: viewModel.confirming
-                  ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : Text(
-                      l10n.transferConfirm,
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  IconButton(
+                    key: const ValueKey('transfer-review-back'),
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    icon: const BackButtonIcon(),
+                    onPressed: viewModel.confirming
+                        ? null
+                        : () => Navigator.of(context).pop(),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.transferReviewTitle,
                       style: const TextStyle(
-                        fontSize: 17,
+                        fontSize: 22,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-            ),
-          ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _ReviewLine(
+                label: l10n.transferBeneficiary,
+                value: contact.fullName,
+              ),
+              _ReviewLine(
+                key: const ValueKey('transfer-review-phone'),
+                label: l10n.contactPhone,
+                value: contact.phoneE164 ?? l10n.contactNoPhone,
+              ),
+              _PaymentPartyCard(
+                key: const ValueKey('transfer-review-payout'),
+                label: l10n.transferOperator,
+                name: viewModel.selectedPayoutName ?? '—',
+                operatorName: viewModel.selectedPayoutName,
+              ),
+              _ReviewLine(
+                key: const ValueKey('transfer-review-sent'),
+                label: l10n.transferSent,
+                value: _money(context, quote.sentAmount, quote.sentCurrency),
+              ),
+              _PaymentPartyCard(
+                key: const ValueKey('transfer-review-funding'),
+                label: l10n.transferFundingLabel,
+                name: viewModel.fundingMethod == TransferFundingMethod.card &&
+                        viewModel.selectedCard != null
+                    ? viewModel.selectedCard!.displayLabel
+                    : _fundingLabel(l10n, viewModel.fundingMethod),
+                logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
+                fallbackIcon: _fundingIcon(viewModel.fundingMethod),
+              ),
+              _ReviewLine(
+                key: const ValueKey('transfer-review-fee'),
+                label: l10n.transferFee,
+                value: _money(context, quote.fee, quote.sentCurrency),
+              ),
+              _ReviewLine(
+                label: l10n.transferRate,
+                value:
+                    '1 ${quote.sentCurrency} = ${_decimal(quote.customerRate)} ${quote.receivedCurrency}',
+              ),
+              _ReviewLine(
+                label: l10n.transferReceived,
+                value: _money(
+                  context,
+                  quote.receivedAmount,
+                  quote.receivedCurrency,
+                ),
+              ),
+              _ReviewLine(
+                label: l10n.transferTotalAmount,
+                value: _money(context, quote.totalDebited, quote.sentCurrency),
+                emphasized: true,
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF2DC),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  l10n.transferTrustWarning,
+                  style: const TextStyle(color: Color(0xFF765143), height: 1.4),
+                ),
+              ),
+              if (viewModel.error != null) ...[
+                const SizedBox(height: 14),
+                Text(
+                  _errorText(l10n, viewModel.error),
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ],
+              const SizedBox(height: 20),
+              FilledButton(
+                onPressed: viewModel.confirming
+                    ? null
+                    : () async {
+                        final result = await onConfirm();
+                        if (result != null) onConfirmed(result.id);
+                      },
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(56),
+                  backgroundColor: const Color(0xFFFF9400),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                ),
+                child: viewModel.confirming
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        l10n.transferConfirm,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                    ),
+              ),
+            ],
+          ),
         ),
       );
     },
@@ -1007,45 +1032,62 @@ class _ReviewLine extends StatelessWidget {
   final String label;
   final String value;
   final bool emphasized;
+  final Widget? trailing;
   const _ReviewLine({
+    super.key,
     required this.label,
     required this.value,
     this.emphasized = false,
+    this.trailing,
   });
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Color(0xFF777274),
-              fontWeight: FontWeight.w600,
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: const BoxConstraints(minHeight: 56),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Color(0xFF777274),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              color: const Color(0xFF2D292E),
-              fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
-              fontSize: emphasized ? 17 : 15,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: const Color(0xFF2D292E),
+                      fontWeight: emphasized ? FontWeight.w800 : FontWeight.w600,
+                      fontSize: emphasized ? 17 : 15,
+                    ),
+                  ),
+                ),
+                if (trailing != null) ...[
+                  const SizedBox(width: 8),
+                  trailing!,
+                ],
+              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
 
 class _PaymentPartyCard extends StatelessWidget {
   const _PaymentPartyCard({
+    super.key,
     required this.label,
     required this.name,
     this.operatorName,
@@ -1060,67 +1102,35 @@ class _PaymentPartyCard extends StatelessWidget {
   final IconData fallbackIcon;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: const Color(0xFFE9E5E4)),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(color: Color(0xFF777274), fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                name,
-                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        if (operatorName != null)
-          PaymentOperatorLogo(
+  Widget build(BuildContext context) => _ReviewLine(
+    label: label,
+    value: name,
+    trailing: operatorName != null
+        ? PaymentOperatorLogo(
             name: operatorName,
             width: _reviewLogoWidth,
             height: _reviewLogoHeight,
           )
-        else
-          ExcludeSemantics(
-            child: Container(
+        : ExcludeSemantics(
+            child: SizedBox(
               width: _reviewLogoWidth,
               height: _reviewLogoHeight,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE9E5E4)),
-              ),
               child: logoAsset == null
-                  ? Icon(fallbackIcon)
+                  ? Icon(fallbackIcon, size: 24)
                   : Image.asset(
                       logoAsset!,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) =>
-                          Icon(fallbackIcon),
+                          Icon(fallbackIcon, size: 24),
                     ),
             ),
           ),
-      ],
-    ),
   );
 }
 
 const double _transferMethodFieldHeight = 64;
-const double _reviewLogoWidth = 96;
-const double _reviewLogoHeight = 56;
+const double _reviewLogoWidth = 56;
+const double _reviewLogoHeight = 28;
 
 InputDecoration _methodFieldDecoration() => _fieldDecoration().copyWith(
   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
