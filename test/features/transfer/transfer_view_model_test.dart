@@ -449,4 +449,25 @@ void main() {
     expect(usd.suggestedAmounts, [20, 50, 100, 250, 500]);
     usd.dispose();
   });
+  test('provider outage retains beneficiary and supports quote retry after recovery', () async {
+    final transfers = TransfersFake()..quoteFailure = TransferFailure.providerUnavailable;
+    final vm = TransferViewModel(
+      transferService: TransferService(transfers),
+      beneficiaryService: BeneficiaryService(BeneficiariesFake()),
+      seed: const TransferDraftSeed(beneficiaryId: 'beneficiary-1'),
+    );
+    await vm.initialize();
+    await vm.ensureQuote();
+    expect(vm.error, TransferFailure.providerUnavailable);
+    expect(vm.beneficiary, contact);
+    expect(vm.selectedPayoutOperatorId, 'mtn');
+    expect(vm.canContinue, isFalse);
+    expect(vm.canRequestQuote, isTrue);
+    transfers.quoteFailure = null;
+    expect(await vm.ensureQuote(), isNotNull);
+    expect(vm.error, isNull);
+    expect(vm.beneficiary, contact);
+    expect(vm.canContinue, isTrue);
+    vm.dispose();
+  });
 }

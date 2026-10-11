@@ -7,6 +7,8 @@ enum TransferFailure {
   amountBelowMinimum,
   amountAboveMaximum,
   unavailable,
+  payoutUnavailable,
+  providerUnavailable,
   network,
   timeout,
   server,
