@@ -47,6 +47,26 @@ class PaymentOperatorLogo extends StatelessWidget {
         : normalized.contains('PESA')
         ? const Color(0xFF008F47)
         : const Color(0xFF397F79);
+
+    // These marks already have their own background. A white badge around a
+    // contained image creates empty side borders; render the whole mark alone.
+    if (asset != null && (isMtn || isOrange)) {
+      return ExcludeSemantics(
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Image.asset(
+            asset,
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            filterQuality: FilterQuality.high,
+            errorBuilder: (context, error, stackTrace) =>
+                Icon(Icons.account_balance_wallet_outlined, color: accent),
+          ),
+        ),
+      );
+    }
+
     return ExcludeSemantics(
       child: Container(
         width: width,
@@ -68,18 +88,13 @@ class PaymentOperatorLogo extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: asset == null
               ? Icon(Icons.account_balance_wallet_outlined, color: accent)
-              : Transform.scale(
-                  // Keep Orange Money fully visible at every badge size.
-                  // Only MTN retains its existing adjustment for outer margins.
-                  scale: isMtn ? 1.12 : 1,
+              : Image.asset(
+                  asset,
+                  fit: BoxFit.contain,
                   alignment: Alignment.center,
-                  child: Image.asset(
-                    asset,
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.high,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.account_balance_wallet_outlined, color: accent),
-                  ),
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.account_balance_wallet_outlined, color: accent),
                 ),
         ),
       ),
