@@ -69,16 +69,10 @@ class PaymentOperatorLogo extends StatelessWidget {
           child: asset == null
               ? Icon(Icons.account_balance_wallet_outlined, color: accent)
               : Transform.scale(
-                  // Focus on the Orange Money mark and the MTN Mobile Money
-                  // lockup; the source images include generous outer margins.
-                  scale: isOrange
-                      ? 1.75
-                      : isMtn
-                      ? 1.12
-                      : 1,
-                  alignment: isOrange
-                      ? Alignment.centerRight
-                      : Alignment.center,
+                  // Keep Orange Money fully visible at every badge size.
+                  // Only MTN retains its existing adjustment for outer margins.
+                  scale: isMtn ? 1.12 : 1,
+                  alignment: Alignment.center,
                   child: Image.asset(
                     asset,
                     fit: BoxFit.contain,
