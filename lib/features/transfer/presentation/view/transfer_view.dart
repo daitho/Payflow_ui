@@ -1234,6 +1234,7 @@ String _errorText(AppLocalizations l10n, TransferFailure? failure) =>
       TransferFailure.unavailable => l10n.transferUnavailableError,
       TransferFailure.payoutUnavailable => _payoutUnavailableText(l10n.localeName),
       TransferFailure.providerUnavailable => _providerUnavailableText(l10n.localeName),
+      TransferFailure.paymentNotCompleted => _paymentNotCompletedText(l10n.localeName),
       TransferFailure.network => l10n.contactNetworkError,
       TransferFailure.timeout => l10n.homeTimeoutError,
       TransferFailure.server ||
@@ -1248,6 +1249,14 @@ String _payoutUnavailableText(String locale) => switch (locale.split(RegExp('[-_
   'zh' => '此国家暂不支持该收款方式。请选择其他方式。',
   'hi' => 'इस देश में यह प्राप्ति विधि उपलब्ध नहीं है। दूसरी विधि चुनें।',
   _ => 'This receiving method is unavailable for this country. Choose another method.',
+};
+
+String _paymentNotCompletedText(String locale) => switch (locale.split(RegExp('[-_]')).first) {
+  'fr' => 'La validation du paiement a échoué. Vérifiez votre historique avant de réessayer.',
+  'es' => 'No se pudo validar el pago. Revisa tu historial antes de volver a intentarlo.',
+  'zh' => '付款验证失败。请先查看交易记录，再重试。',
+  'hi' => 'भुगतान सत्यापन विफल हुआ। फिर से प्रयास करने से पहले अपना इतिहास देखें।',
+  _ => 'Payment verification failed. Check your history before trying again.',
 };
 
 String _providerUnavailableText(String locale) => switch (locale.split(RegExp('[-_]')).first) {

@@ -55,4 +55,9 @@ void main() {
     await expectFailure(422, 'QUOTE_008', TransferFailure.amountBelowMinimum);
     await expectFailure(422, 'QUOTE_009', TransferFailure.amountAboveMaximum);
   });
+  test('payment verification failure is distinct from an already confirmed transfer', () async {
+    await expectFailure(409, 'PAYMENT_008', TransferFailure.paymentNotCompleted);
+    await expectFailure(409, 'QUOTE_003', TransferFailure.conflict);
+    await expectFailure(409, null, TransferFailure.conflict);
+  });
 }

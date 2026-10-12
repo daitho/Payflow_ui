@@ -91,9 +91,9 @@ class TransferRepositoryImpl implements TransferRepository {
         TransferErrorCodes.paymentIntentNotFound => TransferFailure.conflict,
         TransferErrorCodes.paymentNotReady ||
         TransferErrorCodes.paymentAmountMismatch ||
-        TransferErrorCodes.paymentRequired ||
-        TransferErrorCodes.paymentNotCompleted =>
+        TransferErrorCodes.paymentRequired =>
           TransferFailure.conflict,
+        TransferErrorCodes.paymentNotCompleted => TransferFailure.paymentNotCompleted,
         _ => switch (error.response?.statusCode) {
         400 => TransferFailure.invalid,
         401 => TransferFailure.sessionExpired,
