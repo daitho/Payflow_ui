@@ -209,6 +209,7 @@ class _HomeViewState extends State<HomeView> {
               },
 
               onSeeAll: widget.onSeeAllBeneficiaries,
+              onTransferTap: widget.onTransferTap,
             ),
 
             const SizedBox(height: 28),

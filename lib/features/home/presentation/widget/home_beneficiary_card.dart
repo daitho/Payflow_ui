@@ -13,10 +13,12 @@ class HomeBeneficiaryCard extends StatefulWidget {
     super.key,
     required this.beneficiary,
     required this.beneficiaries,
+    this.onTap,
   });
 
   final HomeBeneficiaryModel? beneficiary;
   final List<HomeBeneficiaryModel> beneficiaries;
+  final VoidCallback? onTap;
 
   @override
   State<HomeBeneficiaryCard> createState() => _HomeBeneficiaryCardState();
@@ -70,7 +72,6 @@ class _HomeBeneficiaryCardState extends State<HomeBeneficiaryCard> {
     return Container(
       key: const ValueKey('home-beneficiary-card'),
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
@@ -87,68 +88,84 @@ class _HomeBeneficiaryCardState extends State<HomeBeneficiaryCard> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.homeBeneficiaryLabel,
-            style: const TextStyle(
-              color: AppColors.secondaryDark,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.1,
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: bodyHeight,
-            child: ClipRect(
-              child: AnimatedSwitcher(
-                duration: reduceMotion
-                    ? Duration.zero
-                    : const Duration(milliseconds: 320),
-                reverseDuration: reduceMotion
-                    ? Duration.zero
-                    : const Duration(milliseconds: 240),
-                switchInCurve: Curves.easeOutCubic,
-                switchOutCurve: Curves.easeInCubic,
-                layoutBuilder: (currentChild, previousChildren) => Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    ...previousChildren,
-                    if (currentChild != null) currentChild,
-                  ],
-                ),
-                transitionBuilder: (child, animation) {
-                  final incoming = child.key == contentKey;
-                  final start = movement * (incoming ? -.22 : .22);
-                  return IgnorePointer(
-                    ignoring: !incoming,
-                    child: ExcludeSemantics(
-                      excluding: !incoming,
-                      child: FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: start,
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: child,
-                        ),
-                      ),
+      child: Semantics(
+        button: widget.onTap != null,
+        label: l10n.transferAction,
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.homeBeneficiaryLabel,
+                    style: const TextStyle(
+                      color: AppColors.secondaryDark,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.1,
                     ),
-                  );
-                },
-                child: KeyedSubtree(
-                  key: contentKey,
-                  child: widget.beneficiary == null
-                      ? _PaymentNetwork(hint: l10n.homeSelectBeneficiaryHint)
-                      : _BeneficiaryDetails(beneficiary: widget.beneficiary!),
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: bodyHeight,
+                    child: ClipRect(
+                      child: AnimatedSwitcher(
+                        duration: reduceMotion
+                            ? Duration.zero
+                            : const Duration(milliseconds: 320),
+                        reverseDuration: reduceMotion
+                            ? Duration.zero
+                            : const Duration(milliseconds: 240),
+                        switchInCurve: Curves.easeOutCubic,
+                        switchOutCurve: Curves.easeInCubic,
+                        layoutBuilder: (currentChild, previousChildren) => Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ...previousChildren,
+                            if (currentChild != null) currentChild,
+                          ],
+                        ),
+                        transitionBuilder: (child, animation) {
+                          final incoming = child.key == contentKey;
+                          final start = movement * (incoming ? -.22 : .22);
+                          return IgnorePointer(
+                            ignoring: !incoming,
+                            child: ExcludeSemantics(
+                              excluding: !incoming,
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: start,
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: KeyedSubtree(
+                          key: contentKey,
+                          child: widget.beneficiary == null
+                              ? _PaymentNetwork(hint: l10n.homeSelectBeneficiaryHint)
+                              : _BeneficiaryDetails(beneficiary: widget.beneficiary!),
+                        ),
               ),
             ),
           ),
         ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

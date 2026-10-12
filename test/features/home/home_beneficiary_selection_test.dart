@@ -53,6 +53,8 @@ class _Harness extends StatefulWidget {
 
 class _HarnessState extends State<_Harness> {
   HomeBeneficiaryModel? selected;
+  String? openedBeneficiaryId;
+  int transferOpenCount = 0;
   @override
   Widget build(BuildContext context) => MaterialApp(
     locale: const Locale('fr'),
@@ -70,6 +72,10 @@ class _HarnessState extends State<_Harness> {
         selectedBeneficiary: selected,
         onBeneficiarySelected: (contact) => setState(() => selected = contact),
         onBeneficiaryCleared: () => setState(() => selected = null),
+        onTransferTap: () {
+          openedBeneficiaryId = selected?.id;
+          transferOpenCount++;
+        },
       ),
     ),
   );
@@ -106,6 +112,35 @@ Offset slidePosition(WidgetTester tester, Finder content) {
 }
 
 void main() {
+  testWidgets('card opens transfer with the current contact or an empty seed', (tester) async {
+    await mount(tester);
+    final state = tester.state<_HarnessState>(find.byType(_Harness));
+    final card = find.byKey(const ValueKey('home-beneficiary-card'));
+    await tester.tap(card);
+    expect(state.transferOpenCount, 1);
+    expect(state.openedBeneficiaryId, isNull);
+
+    await tapContact(tester, 'a');
+    // A tap during the animation uses the new selection immediately.
+    await tester.tap(card);
+    expect(state.transferOpenCount, 2);
+    expect(state.openedBeneficiaryId, 'a');
+    await tester.pumpAndSettle();
+
+    await tapContact(tester, 'b');
+    await tester.pumpAndSettle();
+    await tester.tap(card);
+    expect(state.transferOpenCount, 3);
+    expect(state.openedBeneficiaryId, 'b');
+
+    await tapContact(tester, 'b');
+    await tester.pumpAndSettle();
+    await tester.tap(card);
+    expect(state.transferOpenCount, 4);
+    expect(state.openedBeneficiaryId, isNull);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('second tap clears selection; another contact replaces it', (tester) async {
     await mount(tester);
     expect(network, findsOneWidget);

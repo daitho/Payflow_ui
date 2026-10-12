@@ -14,6 +14,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
   final ValueChanged<HomeBeneficiaryModel>? onBeneficiaryTap;
 
   final VoidCallback? onSeeAll;
+  final VoidCallback? onTransferTap;
 
   const RecentBeneficiariesSection({
     super.key,
@@ -21,6 +22,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
     required this.selectedBeneficiary,
     this.onBeneficiaryTap,
     this.onSeeAll,
+    this.onTransferTap,
   });
 
   @override
@@ -56,6 +58,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
         HomeBeneficiaryCard(
           beneficiary: selectedBeneficiary,
           beneficiaries: displayedBeneficiaries,
+          onTap: onTransferTap,
         ),
 
         const SizedBox(height: 18),
