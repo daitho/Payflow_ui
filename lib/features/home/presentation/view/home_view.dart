@@ -24,12 +24,7 @@ class HomeView extends StatefulWidget {
 
   final ValueChanged<HomeBeneficiaryModel> onBeneficiarySelected;
 
-  /*
-   * Conservé pour rester compatible avec ton HomePage actuel.
-   *
-   * Visuellement nous n'affichons plus le bouton X dans le
-   * bénéficiaire sélectionné, conformément à la maquette.
-   */
+  // Tapping the selected quick contact again clears the transfer seed.
   final VoidCallback onBeneficiaryCleared;
 
   // =========================================================
@@ -205,7 +200,13 @@ class _HomeViewState extends State<HomeView> {
 
               selectedBeneficiary: widget.selectedBeneficiary,
 
-              onBeneficiaryTap: widget.onBeneficiarySelected,
+              onBeneficiaryTap: (beneficiary) {
+                if (widget.selectedBeneficiary?.id == beneficiary.id) {
+                  widget.onBeneficiaryCleared();
+                } else {
+                  widget.onBeneficiarySelected(beneficiary);
+                }
+              },
 
               onSeeAll: widget.onSeeAllBeneficiaries,
             ),

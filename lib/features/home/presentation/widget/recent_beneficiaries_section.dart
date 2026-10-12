@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/home_beneficiary_model.dart';
+import 'home_beneficiary_card.dart';
 import '../util/beneficiary_avatar_util.dart';
 import '../util/country_flag_util.dart';
 
@@ -30,6 +30,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
     final List<HomeBeneficiaryModel> displayedBeneficiaries = beneficiaries
         .take(4)
         .toList();
+    final textScale = MediaQuery.textScalerOf(context).scale(12) / 12;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +53,10 @@ class RecentBeneficiariesSection extends StatelessWidget {
         // =====================================================
         // SELECTED BENEFICIARY
         // =====================================================
-        _SelectedBeneficiaryCard(beneficiary: selectedBeneficiary),
+        HomeBeneficiaryCard(
+          beneficiary: selectedBeneficiary,
+          beneficiaries: displayedBeneficiaries,
+        ),
 
         const SizedBox(height: 18),
 
@@ -66,7 +70,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
           )
         else
           SizedBox(
-            height: 90,
+            height: 90 + (textScale > 1 ? (textScale - 1) * 24 : 0),
             child: Row(
               children: [
                 for (
@@ -76,6 +80,9 @@ class RecentBeneficiariesSection extends StatelessWidget {
                 )
                   Expanded(
                     child: _BeneficiaryItem(
+                      key: ValueKey(
+                        'home-quick-beneficiary-${displayedBeneficiaries[index].id}',
+                      ),
                       beneficiary: displayedBeneficiaries[index],
                       selected:
                           selectedBeneficiary?.id ==
@@ -101,158 +108,6 @@ class RecentBeneficiariesSection extends StatelessWidget {
 }
 
 // ===========================================================
-// SELECTED BENEFICIARY
-// ===========================================================
-
-class _SelectedBeneficiaryCard extends StatelessWidget {
-  final HomeBeneficiaryModel? beneficiary;
-
-  const _SelectedBeneficiaryCard({required this.beneficiary});
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
-
-    // =========================================================
-    // NOTHING SELECTED
-    // =========================================================
-
-    if (beneficiary == null) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFFFC77D)),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.info_outline_rounded,
-              color: Color(0xFFFF970F),
-              size: 21,
-            ),
-
-            const SizedBox(width: 10),
-
-            Expanded(
-              child: Text(
-                l10n.homeSelectBeneficiaryHint,
-                style: const TextStyle(
-                  color: Color(0xFF514A46),
-                  fontSize: 13,
-                  height: 1.35,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // =========================================================
-    // SELECTED
-    // =========================================================
-
-    final String flag = CountryFlagUtil.fromIsoCode2(
-      beneficiary!.countryIsoCode2,
-    );
-
-    final List<String> details = [
-      if (beneficiary!.phoneE164 != null &&
-          beneficiary!.phoneE164!.trim().isNotEmpty)
-        beneficiary!.phoneE164!.trim(),
-
-      if (beneficiary!.operatorName != null &&
-          beneficiary!.operatorName!.trim().isNotEmpty)
-        beneficiary!.operatorName!.trim(),
-    ];
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFDCD7D4)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // =====================================================
-          // LABEL
-          // =====================================================
-
-          Text(
-            l10n.homeBeneficiaryLabel,
-            style: const TextStyle(
-              color: Color(0xFFA09A96),
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          // =====================================================
-          // FLAG + NAME
-          // =====================================================
-          Row(
-            children: [
-              if (flag.isNotEmpty) ...[
-                Text(flag, style: const TextStyle(fontSize: 21)),
-
-                const SizedBox(width: 8),
-              ],
-
-              Expanded(
-                child: Text(
-                  beneficiary!.displayName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFF302B28),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              if (beneficiary!.operatorName?.trim().isNotEmpty == true) ...[
-                const SizedBox(width: 8),
-                PaymentOperatorLogo(
-                  name: beneficiary!.operatorName,
-                  width: 64,
-                  height: 44,
-                ),
-              ],
-            ],
-          ),
-
-          // =====================================================
-          // PHONE + OPERATOR
-          // =====================================================
-          if (details.isNotEmpty) ...[
-            const SizedBox(height: 5),
-
-            Text(
-              details.join('  '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Color(0xFF817A76),
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-// ===========================================================
 // BENEFICIARY ITEM
 // ===========================================================
 
@@ -264,6 +119,7 @@ class _BeneficiaryItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   const _BeneficiaryItem({
+    super.key,
     required this.beneficiary,
     required this.selected,
     this.onTap,
@@ -279,87 +135,91 @@ class _BeneficiaryItem extends StatelessWidget {
       beneficiary.countryIsoCode2,
     );
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(30),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // =====================================================
-          // AVATAR + FLAG
-          // =====================================================
+    return Semantics(
+      selected: selected,
+      button: onTap != null,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // =====================================================
+            // AVATAR + FLAG
+            // =====================================================
 
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: selected ? const Color(0xFFFF8A00) : Colors.transparent,
-                width: 2,
-              ),
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: avatarColor.withValues(alpha: 0.18),
-                  child: Icon(
-                    Icons.person_rounded,
-                    color: avatarColor,
-                    size: 29,
-                  ),
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: selected ? const Color(0xFFFF8A00) : Colors.transparent,
+                  width: 2,
                 ),
-
-                // =================================================
-                // COUNTRY FLAG
-                // =================================================
-                if (flag.isNotEmpty)
-                  Positioned(
-                    right: -5,
-                    bottom: -3,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.10),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Text(flag, style: const TextStyle(fontSize: 13)),
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: avatarColor.withValues(alpha: 0.18),
+                    child: Icon(
+                      Icons.person_rounded,
+                      color: avatarColor,
+                      size: 29,
                     ),
                   ),
-              ],
-            ),
-          ),
 
-          const SizedBox(height: 7),
-
-          // =====================================================
-          // FIRST NAME
-          // =====================================================
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Text(
-              beneficiary.firstName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: selected
-                    ? const Color(0xFFFF8A00)
-                    : const Color(0xFF4B4542),
-                fontSize: 12,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  // =================================================
+                  // COUNTRY FLAG
+                  // =================================================
+                  if (flag.isNotEmpty)
+                    Positioned(
+                      right: -5,
+                      bottom: -3,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.10),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Text(flag, style: const TextStyle(fontSize: 13)),
+                      ),
+                    ),
+                ],
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 7),
+
+            // =====================================================
+            // FIRST NAME
+            // =====================================================
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                beneficiary.firstName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: selected
+                      ? const Color(0xFFFF8A00)
+                      : const Color(0xFF4B4542),
+                  fontSize: 12,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
