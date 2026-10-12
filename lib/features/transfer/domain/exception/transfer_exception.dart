@@ -9,6 +9,7 @@ enum TransferFailure {
   unavailable,
   payoutUnavailable,
   providerUnavailable,
+  paymentNotCompleted,
   network,
   timeout,
   server,
