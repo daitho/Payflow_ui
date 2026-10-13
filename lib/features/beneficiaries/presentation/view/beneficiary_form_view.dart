@@ -202,29 +202,12 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
           ),
         )
         .toList();
-    if (!operatorValid && vm.operatorId != null && vm.original != null) {
-      operatorItems.add(
-        DropdownMenuItem(
-          value: vm.operatorId,
-          child: Row(
-            children: [
-              PaymentOperatorLogo(name: vm.original!.operatorName),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  vm.original!.operatorName ?? l10n.contactUnavailable,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
     final countryField = FormField<String>(
       key: ValueKey('country-${vm.countryId}'),
       initialValue: vm.countryId,
-      validator: (value) => value == null ? l10n.contactRequired : null,
+      validator: (value) => !countries.any((c) => c.id == value)
+          ? l10n.contactRequired
+          : null,
       builder: (field) => InkWell(
         onTap: vm.saving ? null : () => _chooseCountry(vm, countries),
         borderRadius: BorderRadius.circular(12),
@@ -251,13 +234,19 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     );
     final operatorField = DropdownButtonFormField<String>(
       key: ValueKey('operator-${vm.countryId}-${vm.operatorId}'),
-      initialValue: vm.operatorId,
+      initialValue: operatorValid ? vm.operatorId : null,
       isExpanded: true,
       decoration: _decoration(label: l10n.contactOperator),
-      hint: Text(l10n.contactChoose),
+      hint: Text(countryValid && operatorItems.isEmpty
+          ? l10n.contactUnavailable
+          : l10n.contactChoose),
       items: operatorItems,
-      onChanged: vm.saving || !countryValid ? null : vm.selectOperator,
-      validator: (v) => v == null ? l10n.contactRequired : null,
+      onChanged: vm.saving || !countryValid || operatorItems.isEmpty
+          ? null
+          : vm.selectOperator,
+      validator: (v) => !vm.operators.any((o) => o.id == v)
+          ? l10n.contactRequired
+          : null,
     );
     return PopScope(
       canPop: !vm.saving,
@@ -503,3 +492,4 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     );
   }
 }
+
