@@ -15,8 +15,19 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
   BeneficiaryFailure? error;
   int _generation = 0;
   bool get ready => catalog != null && (id == null || original != null);
-  List<BeneficiaryOperator> get operators =>
-      catalog?.operators.where((o) => o.countryId == countryId).toList() ?? [];
+  List<BeneficiaryOperator> get operators {
+    if (!(catalog?.countries.any((c) => c.id == countryId) ?? false)) {
+      return const [];
+    }
+    // One dropdown value per operator, scoped to the selected country.
+    final byId = <String, BeneficiaryOperator>{};
+    for (final operator in catalog!.operators) {
+      if (operator.countryId == countryId) {
+        byId.putIfAbsent(operator.id, () => operator);
+      }
+    }
+    return List.unmodifiable(byId.values);
+  }
   Future<void> load() async {
     final generation = ++_generation;
     loading = true;
@@ -29,7 +40,9 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
       catalog = result;
       original = contact;
       countryId = contact?.countryId;
-      operatorId = contact?.operatorId;
+      operatorId = operators.any((o) => o.id == contact?.operatorId)
+          ? contact?.operatorId
+          : null;
       gender = contact?.gender;
     } catch (e) {
       if (!_disposed && generation == _generation)
@@ -45,17 +58,20 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
   }
 
   void selectCountry(String? value) {
-    if (saving || countryId == value) return;
+    if (saving || _disposed || countryId == value) return;
+    if (value != null && !(catalog?.countries.any((c) => c.id == value) ?? false)) {
+      return;
+    }
     countryId = value;
     operatorId = null;
     notifyListeners();
   }
 
   void selectOperator(String? value) {
-    if (!saving) {
-      operatorId = value;
-      notifyListeners();
-    }
+    if (saving || _disposed) return;
+    if (value != null && !operators.any((o) => o.id == value)) return;
+    operatorId = value;
+    notifyListeners();
   }
 
   void selectGender(BeneficiaryGender? value) {
@@ -68,6 +84,7 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
   Future<BeneficiaryContact?> save(String fullName, String phone) async {
     if (saving || !ready || _disposed) return null;
     if (countryId == null ||
+        !catalog!.countries.any((c) => c.id == countryId) ||
         operatorId == null ||
         !operators.any((o) => o.id == operatorId)) {
       error = BeneficiaryFailure.invalid;
@@ -109,3 +126,4 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
+

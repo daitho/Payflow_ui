@@ -23,3 +23,25 @@ flutter test test/features/beneficiaries/
 Tests ajoutés : stabilité/unicité des couleurs, recherche accentuée, formulaire vierge/prérempli, remise à zéro de l'opérateur au changement de pays, conservation de l'identifiant et du genre, normalisation du téléphone, blocage des doubles clics.
 
 Vérifications statiques réalisées : intégrité des traductions FR/EN et différences sans erreurs d'espacement. Flutter n'est pas installé dans l'environnement de préparation : ni analyse, ni tests Flutter, ni comparaison visuelle sur appareil n'ont été exécutés. Vérifier sur le téléphone les captures de référence, les petits écrans et la taille de texte agrandie.
+
+
+## Sélection pays/opérateur renforcée
+
+Branche `fix/beneficiary-country-operator`, basée sur `fix/stripe-payment-feedback`.
+Les opérateurs sont filtrés par le pays du catalogue serveur et dédupliqués par ID
+pour éviter les valeurs multiples du dropdown. Changer de pays remet l'opérateur
+à zéro ; une sélection d'un opérateur d'un autre pays est refusée par le ViewModel.
+L'édition d'un ancien contact conserve son historique mais efface la sélection si
+l'opérateur ne figure plus dans le catalogue actif du pays. Le formulaire n'ajoute
+plus cet ancien opérateur incompatible aux options. Un pays sans opérateur rend
+le sélecteur indisponible et empêche l'enregistrement.
+
+Les nouveaux pays, leurs opérateurs et les routes d'agrégateurs sont administrés
+par les scripts backend documentés dans `docs/country-operator-aggregator-catalogue.md`.
+Le formulaire Mobile Money reste limité aux corridors/taux et opérateurs disponibles ;
+il n'affiche pas tous les pays de la table pays comme destinations transférables.
+
+Tests de régression : `test/features/beneficiaries/beneficiary_country_operator_test.dart`
+(changement de pays, opérateur étranger, doublons, ancien opérateur incompatible,
+pays inconnu). Syntaxe Dart vérifiée ; `flutter test test/features/beneficiaries/`
+non exécuté ici car le SDK Flutter est absent. Validation appareil à effectuer.
