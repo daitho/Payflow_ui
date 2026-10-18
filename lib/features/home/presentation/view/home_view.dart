@@ -197,6 +197,7 @@ class _HomeViewState extends State<HomeView> {
             // =================================================
             RecentBeneficiariesSection(
               beneficiaries: home.recentBeneficiaries,
+              hasMore: home.hasMoreBeneficiaries,
 
               selectedBeneficiary: widget.selectedBeneficiary,
 
@@ -219,6 +220,7 @@ class _HomeViewState extends State<HomeView> {
             // =================================================
             RecentTransactionsSection(
               transactions: home.recentTransactions,
+              hasMore: home.hasMoreTransactions,
 
               onViewAll: widget.onViewAllTransactions,
               onTransactionTap: widget.onTransactionTap,
@@ -235,9 +237,9 @@ class _HomeViewState extends State<HomeView> {
              * 1. Voir plus dans le titre Historique
              * 2. Voir plus sous les transactions
              *
-             * Les deux ouvriront plus tard l'historique complet.
+             * Les deux utilisent le même indicateur de dépassement de cinq transactions.
              */
-            if (home.recentTransactions.isNotEmpty) ...[
+            if (home.hasMoreTransactions) ...[
               const SizedBox(height: 12),
 
               SizedBox(

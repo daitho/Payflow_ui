@@ -7,6 +7,8 @@ import '../../domain/model/home_transfer_model.dart';
 class RecentTransactionsSection extends StatelessWidget {
   final List<HomeTransferModel> transactions;
 
+  final bool hasMore;
+
   final VoidCallback? onViewAll;
 
   final ValueChanged<HomeTransferModel>? onTransactionTap;
@@ -14,6 +16,7 @@ class RecentTransactionsSection extends StatelessWidget {
   const RecentTransactionsSection({
     super.key,
     required this.transactions,
+    this.hasMore = false,
     this.onViewAll,
     this.onTransactionTap,
   });
@@ -42,7 +45,7 @@ class RecentTransactionsSection extends StatelessWidget {
               ),
             ),
 
-            if (onViewAll != null)
+            if (hasMore && onViewAll != null)
               TextButton(
                 onPressed: onViewAll,
                 child: Text(

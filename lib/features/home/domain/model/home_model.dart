@@ -12,10 +12,16 @@ class HomeModel {
 
   final List<HomeTransferModel> recentTransactions;
 
+  final bool hasMoreBeneficiaries;
+
+  final bool hasMoreTransactions;
+
   const HomeModel({
     required this.user,
     required this.exchangeRate,
     required this.recentBeneficiaries,
     required this.recentTransactions,
+    this.hasMoreBeneficiaries = false,
+    this.hasMoreTransactions = false,
   });
 }

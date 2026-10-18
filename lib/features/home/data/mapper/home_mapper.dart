@@ -24,6 +24,8 @@ class HomeMapper {
           .map(_mapBeneficiary)
           .toList(),
       recentTransactions: dto.recentTransactions.map(_mapTransfer).toList(),
+      hasMoreBeneficiaries: dto.hasMoreBeneficiaries,
+      hasMoreTransactions: dto.hasMoreTransactions,
     );
   }
 
