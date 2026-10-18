@@ -357,5 +357,16 @@
   "passwordLoginUnavailable": "This account uses an external sign-in provider and does not have a PayFlow password.",
   "changePasswordNetworkError": "Unable to change the password. Check your connection.",
   "changePasswordServerError": "The password service is temporarily unavailable.",
-  "changePasswordUnexpectedError": "Unable to change the password right now."
+  "changePasswordUnexpectedError": "Unable to change the password right now.",
+  "bankIbanLabel": "IBAN",
+  "bankIbanHint": "e.g. FR14 2004 1010 0505 0001 3M02 606",
+  "bankIbanInvalid": "Enter a valid supported European IBAN.",
+  "bankSandboxNotice": "Test mode: pawaPay sandbox collection and simulated bank payout. No real bank transfer.",
+  "fundingMobileMoney": "Mobile Money · pawaPay",
+  "payinChooseNetwork": "Wallet to debit",
+  "payinNoSource": "Mobile Money is unavailable. Check your account country, currency and verified phone number.",
+  "payinPending": "Waiting for Mobile Money approval. You may leave this screen; tracking will continue.",
+  "payinCheckStatus": "Check payment status",
+  "payinFailed": "Payment failed or was refunded. Check your history before starting again.",
+  "payinRefundPending": "Refund pending confirmation."
 }

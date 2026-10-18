@@ -15,6 +15,8 @@ class BeneficiaryContactDto {
     phoneE164: json['phoneE164'] as String?,
     currencyCode: json['currencyCode'] as String?,
     favorite: json['favorite'] as bool? ?? false,
+    iban: json['iban'] as String?, maskedIban: json['maskedIban'] as String?,
+    payoutMethod: json['payoutMethod'] as String? ?? 'MOBILE_MONEY',
     gender: switch (json['gender']) {
       'MALE' => BeneficiaryGender.male,
       'FEMALE' => BeneficiaryGender.female,
@@ -44,6 +46,7 @@ class BeneficiaryCatalogDto {
             r['countryId'] as String,
             r['name'] as String,
             r['currencyCode'] as String,
+            payoutMethod: r['payoutMethod'] as String? ?? 'MOBILE_MONEY',
             // Older backends do not expose this flag. Wave is the sole
             // independent service until the catalog migration is deployed.
             networkIndependent: r['networkIndependent'] as bool? ??

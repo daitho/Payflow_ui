@@ -357,5 +357,16 @@
   "passwordLoginUnavailable": "此账户使用外部登录提供商，没有 PayFlow 密码。",
   "changePasswordNetworkError": "无法更改密码，请检查网络连接。",
   "changePasswordServerError": "密码服务暂时不可用。",
-  "changePasswordUnexpectedError": "目前无法更改密码。"
+  "changePasswordUnexpectedError": "目前无法更改密码。",
+  "bankIbanLabel": "IBAN",
+  "bankIbanHint": "例如 FR14 2004 1010 0505 0001 3M02 606",
+  "bankIbanInvalid": "请输入有效且受支持的欧洲 IBAN。",
+  "bankSandboxNotice": "测试模式：pawaPay 沙盒收款与模拟银行付款，不会发起真实银行转账。",
+  "fundingMobileMoney": "Mobile Money · pawaPay",
+  "payinChooseNetwork": "扣款钱包",
+  "payinNoSource": "Mobile Money 暂不可用。请检查账户国家、币种及已验证手机号。",
+  "payinPending": "正在等待 Mobile Money 授权。离开此页面后仍会继续跟踪。",
+  "payinCheckStatus": "查询付款状态",
+  "payinFailed": "付款失败或已退款。重新开始前请先查看记录。",
+  "payinRefundPending": "退款正在等待确认。"
 }

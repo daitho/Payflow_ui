@@ -1,3 +1,4 @@
+import '../../features/payments/data/pawapay_sandbox_funding_service.dart';
 import '../../features/payments/data/stripe_test_funding_service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -285,6 +286,7 @@ GoRouter _createRouter() {
               beneficiaryService: _beneficiaryService,
               savedCardService: _savedCardService,
               fundingService: _stripeFundingService,
+              mobileMoneyFunding: PawaPaySandboxFundingService(_dioClient.dio),
               seed: seed,
             )..initialize(),
             child: const TransferView(),

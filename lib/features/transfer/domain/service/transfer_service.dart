@@ -66,7 +66,7 @@ class TransferService {
   }) {
     if (quoteId.trim().isEmpty ||
         idempotencyKey.trim().isEmpty ||
-        (fundingMethod == TransferFundingMethod.paypal &&
+        ((fundingMethod == TransferFundingMethod.paypal || fundingMethod == TransferFundingMethod.mobileMoney) &&
             (paymentIntentId == null || paymentIntentId.trim().isEmpty)) ||
         (fundingMethod == TransferFundingMethod.card &&
             (cardId == null || cardId.trim().isEmpty))) {

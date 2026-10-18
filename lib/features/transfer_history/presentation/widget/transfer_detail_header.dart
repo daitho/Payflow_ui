@@ -32,6 +32,9 @@ class TransferDetailHeader extends StatelessWidget {
           transferDate(context, detail.createdAt),
           style: const TextStyle(color: Color(0xFF948C88), fontSize: 12),
         ),
+        if (detail.providerReference?.startsWith('BANK-SBX-') == true)
+          Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: Text(l10n.bankSandboxNotice,
+            textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFF765143)))),
         const SizedBox(height: 8),
         TransferStatusChip(status: detail.status),
         const SizedBox(height: 24),

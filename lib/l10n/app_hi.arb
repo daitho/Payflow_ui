@@ -357,5 +357,16 @@
   "passwordLoginUnavailable": "यह खाता बाहरी साइन-इन प्रदाता का उपयोग करता है और इसमें PayFlow पासवर्ड नहीं है।",
   "changePasswordNetworkError": "पासवर्ड नहीं बदला जा सका। अपना कनेक्शन जाँचें।",
   "changePasswordServerError": "पासवर्ड सेवा अस्थायी रूप से उपलब्ध नहीं है।",
-  "changePasswordUnexpectedError": "अभी पासवर्ड नहीं बदला जा सकता।"
+  "changePasswordUnexpectedError": "अभी पासवर्ड नहीं बदला जा सकता।",
+  "bankIbanLabel": "IBAN",
+  "bankIbanHint": "जैसे FR14 2004 1010 0505 0001 3M02 606",
+  "bankIbanInvalid": "मान्य और समर्थित यूरोपीय IBAN दर्ज करें।",
+  "bankSandboxNotice": "परीक्षण मोड: pawaPay सैंडबॉक्स संग्रह और सिम्युलेटेड बैंक भुगतान। कोई वास्तविक बैंक हस्तांतरण नहीं।",
+  "fundingMobileMoney": "Mobile Money · pawaPay",
+  "payinChooseNetwork": "डेबिट किया जाने वाला वॉलेट",
+  "payinNoSource": "Mobile Money उपलब्ध नहीं है। अपने खाते का देश, मुद्रा और सत्यापित फ़ोन नंबर जाँचें।",
+  "payinPending": "Mobile Money अनुमोदन की प्रतीक्षा है। इस स्क्रीन से बाहर जाने पर भी स्थिति जाँची जाती रहेगी।",
+  "payinCheckStatus": "भुगतान की स्थिति जाँचें",
+  "payinFailed": "भुगतान विफल हुआ या वापस कर दिया गया। फिर शुरू करने से पहले इतिहास देखें।",
+  "payinRefundPending": "धनवापसी की पुष्टि की प्रतीक्षा है।"
 }

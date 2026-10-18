@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../domain/model/beneficiary_contact.dart';
+import '../../domain/model/iban.dart';
 import '../../domain/exception/beneficiary_exception.dart';
 import '../../domain/service/beneficiary_service.dart';
 
@@ -28,6 +29,7 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
     }
     return List.unmodifiable(byId.values);
   }
+  bool get isBankAccount => operators.any((o) => o.id == operatorId && o.isBankAccount);
   Future<void> load() async {
     final generation = ++_generation;
     loading = true;
@@ -81,7 +83,7 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<BeneficiaryContact?> save(String fullName, String phone) async {
+  Future<BeneficiaryContact?> save(String fullName, String phone, {String? iban}) async {
     if (saving || !ready || _disposed) return null;
     if (countryId == null ||
         !catalog!.countries.any((c) => c.id == countryId) ||
@@ -90,6 +92,9 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
       error = BeneficiaryFailure.invalid;
       notifyListeners();
       return null;
+    }
+    if (isBankAccount && (iban == null || !isSupportedIban(iban))) {
+      error = BeneficiaryFailure.invalid; notifyListeners(); return null;
     }
     saving = true;
     error = null;
@@ -102,6 +107,7 @@ class BeneficiaryFormViewModel extends ChangeNotifier {
           operatorId: operatorId!,
           phoneE164: phone,
           gender: gender,
+          iban: isBankAccount ? normalizeIban(iban!) : null,
         ),
         id: id,
       );

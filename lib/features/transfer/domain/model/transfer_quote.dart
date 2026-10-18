@@ -3,6 +3,7 @@ enum TransferFundingMethod {
   googlePay,
   paypal,
   card,
+  mobileMoney,
 }
 
 extension TransferFundingMethodApi on TransferFundingMethod {
@@ -11,6 +12,7 @@ extension TransferFundingMethodApi on TransferFundingMethod {
     TransferFundingMethod.googlePay => 'GOOGLE_PAY',
     TransferFundingMethod.paypal => 'PAYPAL',
     TransferFundingMethod.card => 'CARD',
+    TransferFundingMethod.mobileMoney => 'MOBILE_MONEY',
   };
 }
 

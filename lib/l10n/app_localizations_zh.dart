@@ -953,4 +953,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get changePasswordUnexpectedError => '目前无法更改密码。';
+  @override
+  String get bankIbanLabel => 'IBAN';
+
+  @override
+  String get bankIbanHint => '例如 FR14 2004 1010 0505 0001 3M02 606';
+
+  @override
+  String get bankIbanInvalid => '请输入有效且受支持的欧洲 IBAN。';
+
+  @override
+  String get bankSandboxNotice => '测试模式：pawaPay 沙盒收款与模拟银行付款，不会发起真实银行转账。';
+
+  @override
+  String get fundingMobileMoney => 'Mobile Money · pawaPay';
+
+  @override
+  String get payinChooseNetwork => '扣款钱包';
+
+  @override
+  String get payinNoSource => 'Mobile Money 暂不可用。请检查账户国家、币种及已验证手机号。';
+
+  @override
+  String get payinPending => '正在等待 Mobile Money 授权。离开此页面后仍会继续跟踪。';
+
+  @override
+  String get payinCheckStatus => '查询付款状态';
+
+  @override
+  String get payinFailed => '付款失败或已退款。重新开始前请先查看记录。';
+
+  @override
+  String get payinRefundPending => '退款正在等待确认。';
+
 }

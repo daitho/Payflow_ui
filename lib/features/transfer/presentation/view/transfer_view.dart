@@ -12,6 +12,7 @@ import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../../beneficiaries/domain/model/beneficiary_contact.dart';
 import '../../../beneficiaries/presentation/widget/beneficiary_avatar.dart';
 import '../../../payment_cards/presentation/view/card_text.dart';
+import '../../../payment_cards/domain/model/saved_payment_card.dart';
 import '../../domain/exception/transfer_exception.dart';
 import '../../domain/model/paypal_return_link.dart';
 import '../../domain/model/transfer_amount_input.dart';
@@ -247,7 +248,7 @@ class _TransferViewState extends State<TransferView> {
     final quote = vm.quote;
     final flag = contact == null ? '' : beneficiaryFlag(contact.countryCode);
     final fundingMethods = vm.availableFundingMethods;
-    final cards = vm.savedCards;
+    final cards = vm.isBankTransfer ? const <SavedPaymentCard>[] : vm.savedCards;
     final fundingValue = vm.fundingSelectionValue;
     final fundingValues = [
       for (final method in fundingMethods)
@@ -256,7 +257,7 @@ class _TransferViewState extends State<TransferView> {
     ];
     _synchronizeQuotedAmount(vm);
     return PopScope(
-      canPop: !vm.confirming,
+      canPop: !vm.confirming || vm.collectionPending,
       child: Scaffold(
         backgroundColor: const Color(0xFFFDFDFD),
         body: SafeArea(
@@ -271,7 +272,7 @@ class _TransferViewState extends State<TransferView> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: IconButton(
-                          onPressed: vm.confirming ? null : () => context.pop(),
+                          onPressed: vm.confirming && !vm.collectionPending ? null : () => context.pop(),
                           icon: const Icon(Icons.close_rounded, size: 28),
                         ),
                       ),
@@ -303,7 +304,7 @@ class _TransferViewState extends State<TransferView> {
                       _BeneficiaryCard(
                         contact: contact,
                         loading: vm.initializing,
-                        onTap: vm.confirming
+                        onTap: vm.confirming || vm.collectionPending
                             ? null
                             : () => _chooseBeneficiary(vm),
                       ),
@@ -316,7 +317,7 @@ class _TransferViewState extends State<TransferView> {
                               label: l10n.transferYouSend,
                               controller: _sentAmount,
                               currency: _displayCurrency(vm.sentCurrency),
-                              enabled: !vm.confirming,
+                              enabled: !vm.confirming && !vm.collectionPending,
                               loading:
                                   vm.quoting &&
                                   vm.amountInput == TransferAmountInput.received,
@@ -333,7 +334,7 @@ class _TransferViewState extends State<TransferView> {
                                     contact?.currencyCode ??
                                     '',
                               ),
-                              enabled: !vm.confirming && contact != null,
+                              enabled: !vm.confirming && !vm.collectionPending && contact != null,
                               loading:
                                   vm.quoting &&
                                   vm.amountInput == TransferAmountInput.sent,
@@ -352,7 +353,7 @@ class _TransferViewState extends State<TransferView> {
                             vm.amountInput == TransferAmountInput.sent
                             ? vm.sentAmount
                             : null,
-                        enabled: !vm.confirming,
+                        enabled: !vm.confirming && !vm.collectionPending,
                         onSelected: (amount) =>
                             _selectSuggestedAmount(vm, amount),
                       ),
@@ -372,7 +373,7 @@ class _TransferViewState extends State<TransferView> {
                             key: ValueKey('transfer-payout-${option.id}'),
                             name: option.name,
                             selected: option.id == vm.selectedPayoutOperatorId,
-                            enabled: !vm.confirming,
+                            enabled: !vm.confirming && !vm.collectionPending,
                             onTap: () => vm.selectPayoutOperator(option.id),
                           ),
                           const SizedBox(height: 8),
@@ -392,11 +393,28 @@ class _TransferViewState extends State<TransferView> {
                         ),
                       ),
                       const SizedBox(height: 9),
+                      if (vm.isBankTransfer) ...[
+                        Text(l10n.bankSandboxNotice, style: const TextStyle(color: Color(0xFF765143))),
+                        const SizedBox(height: 12),
+                        if (!vm.mobileMoneyAvailable)
+                          _InlineError(message: l10n.payinNoSource, onRetry: vm.refreshMobileMoney),
+                        DropdownButtonFormField<String>(
+                          key: ValueKey('mobile-source-${vm.sourceProvider}'),
+                          initialValue: vm.sourceProviders.any((p) => p.provider == vm.sourceProvider) ? vm.sourceProvider : null,
+                          isExpanded: true,
+                          decoration: _methodFieldDecoration().copyWith(labelText: l10n.payinChooseNetwork),
+                          items: [for (final p in vm.sourceProviders) DropdownMenuItem(value: p.provider,
+                            child: Text('${p.label} · ${p.maskedPhone}', overflow: TextOverflow.ellipsis))],
+                          onChanged: vm.busy ? null : vm.selectSourceProvider,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                      if (vm.mobilePayment != null) _MobileMoneyStatus(viewModel: vm, onConfirmed: (id) => context.pop(id)),
                       if (vm.paymentConfigurationFailed)
                         _InlineError(message: cardText(context, 'stripeUnavailable'), onRetry: vm.refreshCards),
                       if (vm.stripeUnsupported)
                         _InlineError(message: cardText(context, 'stripeUnsupported')),
-                      if (vm.stripeEnabled && !vm.paymentConfigurationLoading &&
+                      if (!vm.isBankTransfer && vm.stripeEnabled && !vm.paymentConfigurationLoading &&
                           !vm.paymentConfigurationFailed && !vm.supportsStripeApplePay)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
@@ -427,7 +445,7 @@ class _TransferViewState extends State<TransferView> {
                                   size: 20, color: Color(0xFF24466E)), const SizedBox(width: 10),
                                   Text(card.displayLabel)])),
                           ],
-                          onChanged: vm.confirming || vm.paymentConfigurationLoading ||
+                          onChanged: vm.confirming || vm.collectionPending || vm.paymentConfigurationLoading ||
                               vm.stripeUnsupported || vm.paymentConfigurationFailed
                               ? null : (value) {
                                   if (value == null) return;
@@ -441,7 +459,7 @@ class _TransferViewState extends State<TransferView> {
                                 },
                         ),
                       ),
-                      Align(
+                      if (!vm.isBankTransfer) Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton.icon(
                           onPressed: vm.confirming ? null : () async {
@@ -875,7 +893,7 @@ class _TransferReviewSheet extends StatelessWidget {
       final quote = viewModel.quote!;
       final contact = viewModel.beneficiary!;
       return PopScope(
-        canPop: !viewModel.confirming,
+        canPop: !viewModel.confirming || viewModel.collectionPending,
         child: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(
             24,
@@ -903,7 +921,7 @@ class _TransferReviewSheet extends StatelessWidget {
                     key: const ValueKey('transfer-review-back'),
                     tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                     icon: const BackButtonIcon(),
-                    onPressed: viewModel.confirming
+                    onPressed: viewModel.confirming && !viewModel.collectionPending
                         ? null
                         : () => Navigator.of(context).pop(),
                   ),
@@ -935,6 +953,11 @@ class _TransferReviewSheet extends StatelessWidget {
                 name: viewModel.selectedPayoutName ?? '—',
                 operatorName: viewModel.selectedPayoutName,
               ),
+              if (contact.isBankAccount) ...[
+                _ReviewLine(label: l10n.bankIbanLabel, value: contact.maskedIban ?? '—'),
+                Text(l10n.bankSandboxNotice, style: const TextStyle(color: Color(0xFF765143))),
+                const SizedBox(height: 12),
+              ],
               _ReviewLine(
                 key: const ValueKey('transfer-review-sent'),
                 label: l10n.transferSent,
@@ -946,7 +969,7 @@ class _TransferReviewSheet extends StatelessWidget {
                 name: viewModel.fundingMethod == TransferFundingMethod.card &&
                         viewModel.selectedCard != null
                     ? viewModel.selectedCard!.displayLabel
-                    : _fundingLabel(l10n, viewModel.fundingMethod),
+                    : viewModel.isBankTransfer ? (viewModel.sourceFundingLabel ?? l10n.fundingMobileMoney) : _fundingLabel(l10n, viewModel.fundingMethod),
                 logoAsset: _fundingLogoAsset(viewModel.fundingMethod),
                 fallbackIcon: _fundingIcon(viewModel.fundingMethod),
               ),
@@ -985,6 +1008,8 @@ class _TransferReviewSheet extends StatelessWidget {
                   style: const TextStyle(color: Color(0xFF765143), height: 1.4),
                 ),
               ),
+              if (viewModel.mobilePayment != null)
+                _MobileMoneyStatus(viewModel: viewModel, onConfirmed: onConfirmed),
               if (viewModel.error != null) ...[
                 const SizedBox(height: 14),
                 Text(
@@ -1018,7 +1043,7 @@ class _TransferReviewSheet extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        l10n.transferConfirm,
+                        viewModel.collectionPending ? l10n.payinCheckStatus : l10n.transferConfirm,
                         style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
@@ -1031,6 +1056,33 @@ class _TransferReviewSheet extends StatelessWidget {
       );
     },
   );
+}
+
+class _MobileMoneyStatus extends StatelessWidget {
+  final TransferViewModel viewModel;
+  final ValueChanged<String> onConfirmed;
+  const _MobileMoneyStatus({required this.viewModel, required this.onConfirmed});
+  @override
+  Widget build(BuildContext context) {
+    final payment = viewModel.mobilePayment;
+    if (payment == null) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    final message = payment.status == 'REFUND_PENDING' ? l10n.payinRefundPending
+        : payment.terminal ? l10n.payinFailed : payment.transferId != null ? l10n.bankSandboxNotice : l10n.payinPending;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12), padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: const Color(0xFFF0F7F6), borderRadius: BorderRadius.circular(12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(message), const SizedBox(height: 6),
+        Text(payment.maskedIban, textDirection: TextDirection.ltr),
+        if ((payment.pending || payment.transferId != null) && !viewModel.confirming)
+          TextButton(onPressed: () async {
+            final result = await viewModel.continueMobileMoney();
+            if (result != null && context.mounted) onConfirmed(result.id);
+          }, child: Text(l10n.payinCheckStatus)),
+      ]),
+    );
+  }
 }
 
 class _ReviewLine extends StatelessWidget {
@@ -1202,7 +1254,7 @@ String? _fundingLogoAsset(TransferFundingMethod method) => switch (method) {
   TransferFundingMethod.applePay => 'assets/images/transfer/apple_pay.png',
   TransferFundingMethod.googlePay => 'assets/images/transfer/google_pay.png',
   TransferFundingMethod.paypal => 'assets/images/transfer/paypal.png',
-  TransferFundingMethod.card => null,
+  TransferFundingMethod.card || TransferFundingMethod.mobileMoney => null,
 };
 
 String _decimal(num value) {
@@ -1276,6 +1328,7 @@ String _fundingLabel(
   TransferFundingMethod.googlePay => l10n.transferFundingGooglePay,
   TransferFundingMethod.paypal => l10n.transferFundingPaypal,
   TransferFundingMethod.card => l10n.transferFundingCard,
+  TransferFundingMethod.mobileMoney => l10n.fundingMobileMoney,
 };
 
 IconData _fundingIcon(TransferFundingMethod method) => switch (method) {
@@ -1283,4 +1336,5 @@ IconData _fundingIcon(TransferFundingMethod method) => switch (method) {
   TransferFundingMethod.googlePay => Icons.g_mobiledata_rounded,
   TransferFundingMethod.paypal => Icons.account_balance_wallet_rounded,
   TransferFundingMethod.card => Icons.credit_card_rounded,
+  TransferFundingMethod.mobileMoney => Icons.phone_android_rounded,
 };

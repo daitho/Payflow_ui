@@ -7,6 +7,9 @@ class BeneficiaryContact {
       operatorName,
       phoneE164,
       currencyCode;
+  final String? iban, maskedIban;
+  final String payoutMethod;
+  bool get isBankAccount => payoutMethod == 'BANK_ACCOUNT' || payoutMethod == 'BANQUE';
   final BeneficiaryGender? gender;
   final bool favorite;
   const BeneficiaryContact({
@@ -22,6 +25,7 @@ class BeneficiaryContact {
     this.currencyCode,
     this.gender,
     this.favorite = false,
+    this.iban, this.maskedIban, this.payoutMethod = 'MOBILE_MONEY',
   });
 }
 
@@ -33,12 +37,15 @@ class BeneficiaryCountry {
 class BeneficiaryOperator {
   final String id, countryId, name, currencyCode;
   final bool networkIndependent;
+  final String payoutMethod;
+  bool get isBankAccount => payoutMethod == 'BANK_ACCOUNT' || payoutMethod == 'BANQUE';
   const BeneficiaryOperator(
     this.id,
     this.countryId,
     this.name,
     this.currencyCode, {
     this.networkIndependent = false,
+    this.payoutMethod = 'MOBILE_MONEY',
   });
 }
 
@@ -55,12 +62,14 @@ class BeneficiaryCatalog {
 class BeneficiaryContactInput {
   final String fullName, countryId, operatorId, phoneE164;
   final BeneficiaryGender? gender;
+  final String? iban;
   const BeneficiaryContactInput({
     required this.fullName,
     required this.countryId,
     required this.operatorId,
     required this.phoneE164,
     this.gender,
+    this.iban,
   });
 }
 

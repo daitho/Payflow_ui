@@ -1,4 +1,5 @@
 import '../../../payments/domain/test_funding_service.dart';
+import '../../../payments/domain/mobile_money_sandbox_funding.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -22,19 +23,94 @@ class TransferViewModel extends ChangeNotifier {
   final BeneficiaryService _beneficiaries;
   final SavedPaymentCardService? _savedCardService;
   final TestFundingService? _fundingService;
+  final MobileMoneySandboxFunding? _mobileMoneyFunding;
+  MobileMoneyFundingOptions? _mobileOptions;
+  MobileMoneyFundingProgress? _mobilePayment;
+  String? _sourceProvider;
+  bool get isBankTransfer => _beneficiary?.isBankAccount == true || collectionPending;
+  MobileMoneyFundingProgress? get mobilePayment => _mobilePayment;
+  bool get collectionPending => _mobilePayment != null && !_mobilePayment!.terminal;
+  List<MobileMoneyFundingOption> get sourceProviders => _mobileOptions?.providers ?? const [];
+  String? get sourceProvider => _sourceProvider;
+  String? get sourceFundingLabel {
+    for (final p in sourceProviders) { if(p.provider == _sourceProvider) return '${p.label} · ${p.maskedPhone}'; }
+    return null;
+  }
+  bool get mobileMoneyAvailable => _mobileOptions?.enabled == true && sourceProviders.isNotEmpty;
+  void selectSourceProvider(String? value) {
+    if (_confirming || collectionPending || !sourceProviders.any((p) => p.provider == value)) return;
+    _sourceProvider = value; _notify();
+  }
+  Future<void> refreshMobileMoney() async {
+    if (_disposed) return;
+    try {
+      final options = await _mobileMoneyFunding?.options();
+      if (_disposed) return;
+      _mobileOptions = options;
+      _mobilePayment = options?.activePayment ?? _mobilePayment;
+      if (!sourceProviders.any((p) => p.provider == _sourceProvider)) {
+        _sourceProvider = sourceProviders.isEmpty ? null : sourceProviders.first.provider;
+      }
+      // Source currency is owned profile data returned by the server, never a phone/country selector.
+      final currency = options?.sourceCurrency;
+      if (currency != null && currency != _sentCurrency) {
+        _sentCurrency = currency; _invalidateQuote();
+      }
+    } catch (_) { /* The normal card flow remains available if mobile-money setup is unavailable. */ }
+    _notify();
+  }
+  Future<ConfirmedTransfer?> continueMobileMoney() async {
+    if (_disposed || _confirming || _mobileMoneyFunding == null) return null;
+    final pending = _mobilePayment;
+    final existingTransfer = pending?.transferId;
+    if (existingTransfer != null && pending != null) {
+      return ConfirmedTransfer(id: existingTransfer, status: pending.bankStatus);
+    }
+    _confirming = true; _error = null; _notify();
+    try {
+      if (pending?.pending != true) {
+        final currentQuote = await ensureQuote();
+        if (_disposed || currentQuote == null || !mobileMoneyAvailable || _sourceProvider == null) return null;
+        _mobilePayment = await _mobileMoneyFunding!.start(quoteId: currentQuote.id,
+          provider: _sourceProvider!, idempotencyKey: _paymentIdempotencyKey ??= _uuid.v4());
+      }
+      // Bound the foreground wait. The durable server worker continues after navigation/app closure.
+      for (var attempt = 0; attempt < 20 && !_disposed; attempt++) {
+        final payment = _mobilePayment!;
+        _notify();
+        if (payment.transferId != null) return ConfirmedTransfer(id: payment.transferId!, status: payment.bankStatus);
+        if (payment.terminal) { _error = TransferFailure.paymentNotCompleted; return null; }
+        await Future<void>.delayed(const Duration(seconds: 2));
+        if (_disposed) return null;
+        _mobilePayment = await _mobileMoneyFunding!.progress(payment.paymentIntentId);
+      }
+      final latest = _mobilePayment;
+      if (!_disposed && latest != null && latest.transferId != null) return ConfirmedTransfer(id: latest.transferId!, status: latest.bankStatus);
+      return null;
+    } on TransferException catch(e) {
+      if (!_disposed) _error = e.failure;
+      await refreshMobileMoney(); // Recover a server-created payment after a lost POST response.
+      return null;
+    } catch (_) {
+      if (!_disposed) _error = TransferFailure.unexpected;
+      await refreshMobileMoney(); return null;
+    } finally {
+      if (!_disposed) { _confirming = false; _notify(); }
+    }
+  }
   bool _paymentConfigurationFailed = false;
   bool _loadingPaymentOptions = false;
   bool _paymentOptionsLoaded = false;
-  bool get paymentConfigurationFailed => _paymentConfigurationFailed;
+  bool get paymentConfigurationFailed => !isBankTransfer && _paymentConfigurationFailed;
   bool get paymentConfigurationLoading =>
-      _loadingPaymentOptions || (_fundingService != null && !_paymentOptionsLoaded);
+      !isBankTransfer && (_loadingPaymentOptions || (_fundingService != null && !_paymentOptionsLoaded));
   bool get stripeEnabled => _fundingService?.enabled == true;
-  bool get stripeUnsupported => stripeEnabled && _fundingService?.supported != true;
+  bool get stripeUnsupported => !isBankTransfer && stripeEnabled && _fundingService?.supported != true;
   bool get supportsStripeApplePay => _fundingService?.supportsApplePay == true;
   bool get supportsStripeGooglePay => _fundingService?.supportsGooglePay == true;
   bool get applePayRequiresIos => kIsWeb || defaultTargetPlatform != TargetPlatform.iOS;
   List<TransferFundingMethod> get availableFundingMethods =>
-      TransferFundingAvailability.resolve(
+      isBankTransfer ? const [TransferFundingMethod.mobileMoney] : TransferFundingAvailability.resolve(
         supportsApplePay: !stripeEnabled || supportsStripeApplePay,
         supportsGooglePay: stripeEnabled ? supportsStripeGooglePay
             : kIsWeb || (defaultTargetPlatform != TargetPlatform.iOS &&
@@ -55,12 +131,14 @@ class TransferViewModel extends ChangeNotifier {
     required BeneficiaryService beneficiaryService,
     SavedPaymentCardService? savedCardService,
     TestFundingService? fundingService,
+    MobileMoneySandboxFunding? mobileMoneyFunding,
     this.seed = const TransferDraftSeed(),
     Uuid uuid = const Uuid(),
   }) : _transfers = transferService,
        _beneficiaries = beneficiaryService,
        _savedCardService = savedCardService,
        _fundingService = fundingService,
+       _mobileMoneyFunding = mobileMoneyFunding,
        _uuid = uuid,
        _sentAmount = seed.sentAmount ?? 10,
        _sentCurrency = (seed.sentCurrency ?? 'EUR').toUpperCase();
@@ -75,7 +153,7 @@ class TransferViewModel extends ChangeNotifier {
   num _sentAmount;
   num _receivedAmount = 0;
   TransferAmountInput _amountInput = TransferAmountInput.sent;
-  final String _sentCurrency;
+  String _sentCurrency;
   TransferFundingMethod _fundingMethod = TransferFundingMethod.applePay;
   PaypalPaymentIntent? _paypalPayment;
   List<SavedPaymentCard> _savedCards = const [];
@@ -121,12 +199,13 @@ class TransferViewModel extends ChangeNotifier {
               contact.currencyCode ?? '',
               networkIndependent:
                   contact.operatorName?.trim().toUpperCase() == 'WAVE',
+              payoutMethod: contact.payoutMethod,
             ),
       );
     }
     final independentOptions = <BeneficiaryOperator>[];
     for (final option in _catalog?.operators ?? const <BeneficiaryOperator>[]) {
-      if (contact.phoneE164?.trim().isNotEmpty == true &&
+      if (!contact.isBankAccount && contact.phoneE164?.trim().isNotEmpty == true &&
           option.countryId == contact.countryId &&
           option.id != contact.operatorId &&
           option.networkIndependent &&
@@ -170,7 +249,7 @@ class TransferViewModel extends ChangeNotifier {
   bool get initializing => _initializing;
   bool get quoting => _quoting;
   bool get confirming => _confirming;
-  bool get busy => _initializing || _quoting || _confirming || paymentConfigurationLoading;
+  bool get busy => _initializing || _quoting || _confirming || collectionPending || paymentConfigurationLoading;
   bool get hasUsableDestination =>
       _selectedOperatorId != null &&
       (_catalog == null ||
@@ -199,7 +278,8 @@ class TransferViewModel extends ChangeNotifier {
       availableFundingMethods.contains(_fundingMethod) &&
       !busy &&
       !stripeUnsupported &&
-      !_paymentConfigurationFailed &&
+      !paymentConfigurationFailed &&
+      (!isBankTransfer || mobileMoneyAvailable) &&
       !hasBlockingAmountError && !hasBlockingDestinationError;
 
   String get initialAmountText {
@@ -210,6 +290,10 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
+    await refreshMobileMoney();
+    if (collectionPending) {
+      await _loadCatalog(); await refreshCards(); return;
+    }
     final id = seed.beneficiaryId?.trim();
     if (_initializing || _disposed) return;
     if (id == null || id.isEmpty) {
@@ -224,6 +308,7 @@ class TransferViewModel extends ChangeNotifier {
       final contact = await _beneficiaries.get(id);
       if (_disposed) return;
       _beneficiary = contact;
+      if (contact.isBankAccount) _fundingMethod = TransferFundingMethod.mobileMoney;
       _selectedOperatorId = contact.operatorId;
       await _requestQuote();
     } on BeneficiaryException {
@@ -301,8 +386,9 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void selectBeneficiary(BeneficiaryContact contact) {
-    if (_disposed) return;
+    if (_disposed || _confirming || collectionPending) return;
     _beneficiary = contact;
+    if (contact.isBankAccount) _fundingMethod = TransferFundingMethod.mobileMoney;
     _selectedOperatorId = contact.operatorId;
     _invalidateQuote();
     _scheduleQuote();
@@ -311,7 +397,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void selectPayoutOperator(String operatorId) {
-    if (_disposed || _confirming || _selectedOperatorId == operatorId ||
+    if (_disposed || _confirming || collectionPending || _selectedOperatorId == operatorId ||
         !payoutOptions.any((option) => option.id == operatorId)) return;
     _selectedOperatorId = operatorId;
     _invalidateQuote();
@@ -320,7 +406,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void setSentAmount(String rawValue) {
-    if (_disposed) return;
+    if (_disposed || _confirming || collectionPending) return;
     _amountInput = TransferAmountInput.sent;
     _sentAmount = _parseAmount(rawValue);
     _receivedAmount = 0;
@@ -330,7 +416,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void setReceivedAmount(String rawValue) {
-    if (_disposed) return;
+    if (_disposed || _confirming || collectionPending) return;
     _amountInput = TransferAmountInput.received;
     _receivedAmount = _parseAmount(rawValue);
     _sentAmount = 0;
@@ -340,7 +426,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void selectSuggestedAmount(num amount) {
-    if (_disposed || amount <= 0) return;
+    if (_disposed || _confirming || collectionPending || amount <= 0) return;
     _amountInput = TransferAmountInput.sent;
     _sentAmount = amount;
     _receivedAmount = 0;
@@ -366,7 +452,7 @@ class TransferViewModel extends ChangeNotifier {
     final quoteMatchesInput = _amountInput == TransferAmountInput.sent
         ? _quote?.sentAmount == _sentAmount
         : _quote?.receivedAmount == _receivedAmount;
-    if (_quote?.isUsable == true &&
+    if (_mobilePayment?.terminal != true && _quote?.isUsable == true &&
         quoteMatchesInput &&
         _quotedOperatorId == _selectedOperatorId &&
         _quote!.beneficiaryId == _beneficiary?.id) {
@@ -444,6 +530,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   Future<ConfirmedTransfer?> confirm() async {
+    if (isBankTransfer || collectionPending) return continueMobileMoney();
     if (paymentConfigurationLoading || !availableFundingMethods.contains(_fundingMethod)) return null;
     if (!stripeEnabled && _fundingMethod == TransferFundingMethod.paypal) {
       return capturePaypalAndConfirm();
@@ -587,6 +674,7 @@ class TransferViewModel extends ChangeNotifier {
   }
 
   void _invalidateQuote() {
+    if (_mobilePayment?.terminal == true) _mobilePayment = null;
     _quoteGeneration++;
     _quote = null;
     _quotedOperatorId = null;
@@ -600,7 +688,7 @@ class TransferViewModel extends ChangeNotifier {
 
   void _notify() {
     if (_disposed) return;
-    if (!paymentConfigurationLoading && !availableFundingMethods.contains(_fundingMethod)) {
+    if (!paymentConfigurationLoading && availableFundingMethods.isNotEmpty && !availableFundingMethods.contains(_fundingMethod)) {
       _fundingMethod = availableFundingMethods.first;
       _invalidateQuote();
       _scheduleQuote();

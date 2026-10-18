@@ -1010,4 +1010,37 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get changePasswordUnexpectedError => 'अभी पासवर्ड नहीं बदला जा सकता।';
+  @override
+  String get bankIbanLabel => 'IBAN';
+
+  @override
+  String get bankIbanHint => 'जैसे FR14 2004 1010 0505 0001 3M02 606';
+
+  @override
+  String get bankIbanInvalid => 'मान्य और समर्थित यूरोपीय IBAN दर्ज करें।';
+
+  @override
+  String get bankSandboxNotice => 'परीक्षण मोड: pawaPay सैंडबॉक्स संग्रह और सिम्युलेटेड बैंक भुगतान। कोई वास्तविक बैंक हस्तांतरण नहीं।';
+
+  @override
+  String get fundingMobileMoney => 'Mobile Money · pawaPay';
+
+  @override
+  String get payinChooseNetwork => 'डेबिट किया जाने वाला वॉलेट';
+
+  @override
+  String get payinNoSource => 'Mobile Money उपलब्ध नहीं है। अपने खाते का देश, मुद्रा और सत्यापित फ़ोन नंबर जाँचें।';
+
+  @override
+  String get payinPending => 'Mobile Money अनुमोदन की प्रतीक्षा है। इस स्क्रीन से बाहर जाने पर भी स्थिति जाँची जाती रहेगी।';
+
+  @override
+  String get payinCheckStatus => 'भुगतान की स्थिति जाँचें';
+
+  @override
+  String get payinFailed => 'भुगतान विफल हुआ या वापस कर दिया गया। फिर शुरू करने से पहले इतिहास देखें।';
+
+  @override
+  String get payinRefundPending => 'धनवापसी की पुष्टि की प्रतीक्षा है।';
+
 }
