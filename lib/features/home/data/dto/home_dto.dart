@@ -12,11 +12,17 @@ class HomeDto {
 
   final List<HomeTransferDto> recentTransactions;
 
+  final bool hasMoreBeneficiaries;
+
+  final bool hasMoreTransactions;
+
   const HomeDto({
     required this.user,
     required this.exchangeRate,
     required this.recentBeneficiaries,
     required this.recentTransactions,
+    this.hasMoreBeneficiaries = false,
+    this.hasMoreTransactions = false,
   });
 
   factory HomeDto.fromJson(Map<String, dynamic> json) {
@@ -46,6 +52,9 @@ class HomeDto {
       recentTransactions: rawTransactions
           .map((item) => HomeTransferDto.fromJson(item as Map<String, dynamic>))
           .toList(),
+
+      hasMoreBeneficiaries: json['hasMoreBeneficiaries'] as bool? ?? false,
+      hasMoreTransactions: json['hasMoreTransactions'] as bool? ?? false,
     );
   }
 }

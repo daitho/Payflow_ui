@@ -9,6 +9,8 @@ import '../util/country_flag_util.dart';
 class RecentBeneficiariesSection extends StatelessWidget {
   final List<HomeBeneficiaryModel> beneficiaries;
 
+  final bool hasMore;
+
   final HomeBeneficiaryModel? selectedBeneficiary;
 
   final ValueChanged<HomeBeneficiaryModel>? onBeneficiaryTap;
@@ -19,6 +21,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
   const RecentBeneficiariesSection({
     super.key,
     required this.beneficiaries,
+    this.hasMore = false,
     required this.selectedBeneficiary,
     this.onBeneficiaryTap,
     this.onSeeAll,
@@ -69,7 +72,7 @@ class RecentBeneficiariesSection extends StatelessWidget {
         if (displayedBeneficiaries.isEmpty)
           _EmptyBeneficiaries(
             message: l10n.homeNoRecentBeneficiaries,
-            onSeeAll: onSeeAll,
+            onSeeAll: hasMore ? onSeeAll : null,
           )
         else
           SizedBox(
@@ -101,7 +104,8 @@ class RecentBeneficiariesSection extends StatelessWidget {
                 // =================================================
                 // PLUS
                 // =================================================
-                Expanded(child: _MoreBeneficiariesItem(onTap: onSeeAll)),
+                if (hasMore)
+                  Expanded(child: _MoreBeneficiariesItem(onTap: onSeeAll)),
               ],
             ),
           ),
