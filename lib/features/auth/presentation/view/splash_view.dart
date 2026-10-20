@@ -65,6 +65,22 @@ class _SplashViewState extends State<SplashView> {
   }
 
   // =========================================================
+  // EXPLICIT SIGN-IN AFTER A TECHNICAL ERROR
+  // =========================================================
+
+  Future<void> _openLogin() async {
+    final SplashDestination? destination = await context
+        .read<SplashViewModel>()
+        .continueToLogin();
+
+    if (!mounted || destination != SplashDestination.login) {
+      return;
+    }
+
+    context.go(AppRoutes.login);
+  }
+
+  // =========================================================
   // BUILD
   // =========================================================
 
@@ -133,6 +149,14 @@ class _SplashViewState extends State<SplashView> {
           ElevatedButton(
             onPressed: viewModel.isLoading ? null : _initializeApplication,
             child: Text(l10n.retry),
+          ),
+
+          const SizedBox(height: 12),
+
+          TextButton(
+            key: const ValueKey('splash-sign-in'),
+            onPressed: viewModel.isLoading ? null : _openLogin,
+            child: Text(l10n.signIn),
           ),
         ],
       );

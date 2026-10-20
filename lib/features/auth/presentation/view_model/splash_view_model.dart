@@ -54,6 +54,36 @@ class SplashViewModel extends ChangeNotifier {
   int get biometricAttemptsRemaining =>
       _maxBiometricAttempts - _biometricAttemptCount;
 
+  /// Explicitly abandon session restoration before opening a guest route.
+  /// A technical refresh failure alone must not delete the stored session.
+  Future<SplashDestination?> continueToLogin() async {
+    if (_isLoading) {
+      return null;
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // GuestGuard must observe unauthenticated before /login is opened.
+      await _sessionService.clearSession();
+      _biometricAttemptCount = 0;
+      _biometricState = SplashBiometricState.none;
+      _hasTechnicalError = false;
+      return SplashDestination.login;
+    } catch (error, stackTrace) {
+      debugPrint(
+        '[SPLASH] Unable to clear local session: ${error.runtimeType}',
+      );
+      debugPrintStack(stackTrace: stackTrace);
+      _hasTechnicalError = true;
+      return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // =========================================================
   // INITIALIZE
   // =========================================================
