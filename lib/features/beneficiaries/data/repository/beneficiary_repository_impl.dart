@@ -26,6 +26,7 @@ class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
       'countryId': input.countryId,
       'operatorId': input.operatorId,
       'phoneE164': input.phoneE164,
+      if (input.iban != null) 'iban': input.iban,
       'gender': switch (input.gender) {
         BeneficiaryGender.male => 'MALE',
         BeneficiaryGender.female => 'FEMALE',

@@ -36,6 +36,7 @@ class PaymentOperatorLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final asset = paymentOperatorLogoAsset(name);
     final normalized = name?.toUpperCase() ?? '';
+    final isBank = normalized.contains('BANQUE') || normalized.contains('BANK');
     final isOrange = normalized.contains('ORANGE');
     final isMtn = normalized.contains('MTN');
     final accent = isMtn
@@ -87,7 +88,7 @@ class PaymentOperatorLogo extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: asset == null
-              ? Icon(Icons.account_balance_wallet_outlined, color: accent)
+              ? Icon(isBank ? Icons.account_balance_outlined : Icons.account_balance_wallet_outlined, color: accent)
               : Image.asset(
                   asset,
                   fit: BoxFit.contain,

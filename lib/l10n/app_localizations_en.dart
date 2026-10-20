@@ -1014,4 +1014,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get changePasswordUnexpectedError =>
       'Unable to change the password right now.';
+  @override
+  String get bankIbanLabel => 'IBAN';
+
+  @override
+  String get bankIbanHint => 'e.g. FR14 2004 1010 0505 0001 3M02 606';
+
+  @override
+  String get bankIbanInvalid => 'Enter a valid supported European IBAN.';
+
+  @override
+  String get bankSandboxNotice => 'Test mode: pawaPay sandbox collection and simulated bank payout. No real bank transfer.';
+
+  @override
+  String get fundingMobileMoney => 'Mobile Money · pawaPay';
+
+  @override
+  String get payinChooseNetwork => 'Wallet to debit';
+
+  @override
+  String get payinNoSource => 'Mobile Money is unavailable. Check your account country, currency and verified phone number.';
+
+  @override
+  String get payinPending => 'Waiting for Mobile Money approval. You may leave this screen; tracking will continue.';
+
+  @override
+  String get payinCheckStatus => 'Check payment status';
+
+  @override
+  String get payinFailed => 'Payment failed or was refunded. Check your history before starting again.';
+
+  @override
+  String get payinRefundPending => 'Refund pending confirmation.';
+
 }

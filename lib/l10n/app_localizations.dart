@@ -1967,6 +1967,28 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to change the password right now.'**
   String get changePasswordUnexpectedError;
+  String get bankIbanLabel;
+
+  String get bankIbanHint;
+
+  String get bankIbanInvalid;
+
+  String get bankSandboxNotice;
+
+  String get fundingMobileMoney;
+
+  String get payinChooseNetwork;
+
+  String get payinNoSource;
+
+  String get payinPending;
+
+  String get payinCheckStatus;
+
+  String get payinFailed;
+
+  String get payinRefundPending;
+
 }
 
 class _AppLocalizationsDelegate

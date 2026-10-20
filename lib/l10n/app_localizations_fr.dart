@@ -1028,4 +1028,37 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get changePasswordUnexpectedError =>
       'Impossible de modifier le mot de passe pour le moment.';
+  @override
+  String get bankIbanLabel => 'IBAN';
+
+  @override
+  String get bankIbanHint => 'Ex. FR14 2004 1010 0505 0001 3M02 606';
+
+  @override
+  String get bankIbanInvalid => 'Saisissez un IBAN européen valide et pris en charge.';
+
+  @override
+  String get bankSandboxNotice => 'Mode test : encaissement pawaPay sandbox et versement bancaire simulé. Aucun virement bancaire réel.';
+
+  @override
+  String get fundingMobileMoney => 'Mobile Money · pawaPay';
+
+  @override
+  String get payinChooseNetwork => 'Portefeuille à débiter';
+
+  @override
+  String get payinNoSource => 'Mobile Money indisponible. Vérifiez le pays, la devise et le numéro vérifié de votre compte.';
+
+  @override
+  String get payinPending => 'Validation Mobile Money en attente. Vous pouvez quitter cet écran : le suivi continue.';
+
+  @override
+  String get payinCheckStatus => 'Vérifier le paiement';
+
+  @override
+  String get payinFailed => 'Le paiement a échoué ou a été remboursé. Vérifiez l’historique avant de recommencer.';
+
+  @override
+  String get payinRefundPending => 'Remboursement en attente de confirmation.';
+
 }

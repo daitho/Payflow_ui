@@ -32,6 +32,7 @@ class BeneficiaryService {
         operatorId: input.operatorId,
         phoneE164: phone,
         gender: input.gender,
+        iban: input.iban,
       ),
       id: id,
     );

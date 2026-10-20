@@ -1028,4 +1028,37 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get changePasswordUnexpectedError =>
       'No se puede cambiar la contraseña en este momento.';
+  @override
+  String get bankIbanLabel => 'IBAN';
+
+  @override
+  String get bankIbanHint => 'Ej. FR14 2004 1010 0505 0001 3M02 606';
+
+  @override
+  String get bankIbanInvalid => 'Introduce un IBAN europeo válido y compatible.';
+
+  @override
+  String get bankSandboxNotice => 'Modo de prueba: cobro en pawaPay sandbox y envío bancario simulado. Sin transferencia bancaria real.';
+
+  @override
+  String get fundingMobileMoney => 'Mobile Money · pawaPay';
+
+  @override
+  String get payinChooseNetwork => 'Monedero a debitar';
+
+  @override
+  String get payinNoSource => 'Mobile Money no está disponible. Revisa el país, la moneda y el teléfono verificado de tu cuenta.';
+
+  @override
+  String get payinPending => 'Esperando autorización de Mobile Money. Puedes salir de esta pantalla; el seguimiento continuará.';
+
+  @override
+  String get payinCheckStatus => 'Consultar el pago';
+
+  @override
+  String get payinFailed => 'El pago falló o fue reembolsado. Revisa el historial antes de volver a empezar.';
+
+  @override
+  String get payinRefundPending => 'Reembolso pendiente de confirmación.';
+
 }

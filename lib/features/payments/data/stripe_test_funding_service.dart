@@ -78,6 +78,7 @@ class StripeTestFundingService implements TestFundingService {
   }
   @override Future<String?> pay({required String quoteId, required TransferFundingMethod method,
       String? cardId, required String idempotencyKey}) async {
+    if (method == TransferFundingMethod.mobileMoney) throw StateError('Unsupported Stripe funding method.');
     await initialize(); _requireSupported();
     final funding = (await _dio.post<Map<String, dynamic>>('$_path/funding',
       data: {'quoteId': quoteId, 'method': method.apiValue, if (cardId != null) 'cardId': cardId},
@@ -87,6 +88,8 @@ class StripeTestFundingService implements TestFundingService {
     final secret = funding['clientSecret'] as String;
     try {
       switch (method) {
+        case TransferFundingMethod.mobileMoney:
+          throw StateError('Unsupported Stripe funding method.');
         case TransferFundingMethod.card:
           await Stripe.instance.confirmPayment(paymentIntentClientSecret: secret,
             data: PaymentMethodParams.cardFromMethodId(paymentMethodData: PaymentMethodDataCardFromMethod(

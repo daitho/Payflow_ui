@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/payment_operator_logo.dart';
 import '../../domain/model/beneficiary_contact.dart';
+import '../../domain/model/iban.dart';
 import '../view_model/beneficiary_form_view_model.dart';
 import '../widget/beneficiary_avatar.dart';
 import '../widget/beneficiary_error.dart';
@@ -19,12 +20,14 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
   final _form = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _phone = TextEditingController();
+  final _iban = TextEditingController();
   final _phoneConfirmation = TextEditingController();
   bool _initialized = false;
   @override
   void dispose() {
     _name.dispose();
     _phone.dispose();
+    _iban.dispose();
     _phoneConfirmation.dispose();
     super.dispose();
   }
@@ -106,6 +109,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
     final changed = selected.id != vm.countryId;
     vm.selectCountry(selected.id);
     if (changed) {
+      _iban.clear();
       _phone.clear();
       _phoneConfirmation.clear();
     }
@@ -172,6 +176,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
         : '';
     if (vm.ready && !_initialized) {
       _name.text = vm.original?.fullName ?? '';
+      _iban.text = vm.original?.iban ?? '';
       final storedPhone = (vm.original?.phoneE164 ?? '').replaceAll(
         RegExp(r'[\s().-]'),
         '',
@@ -194,7 +199,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
             value: o.id,
             child: Row(
               children: [
-                PaymentOperatorLogo(name: o.name),
+                if (o.isBankAccount) const Icon(Icons.account_balance_outlined) else PaymentOperatorLogo(name: o.name),
                 const SizedBox(width: 12),
                 Expanded(child: Text(o.name, overflow: TextOverflow.ellipsis)),
               ],
@@ -392,6 +397,22 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                         const SizedBox(height: 16),
                         operatorField,
                         const SizedBox(height: 16),
+                        if (vm.isBankAccount) ...[
+                          TextFormField(
+                            key: const ValueKey('beneficiary-iban'),
+                            controller: _iban,
+                            enabled: !vm.saving,
+                            textCapitalization: TextCapitalization.characters,
+                            autocorrect: false, enableSuggestions: false,
+                            keyboardType: TextInputType.text,
+                            maxLength: 42,
+                            textDirection: TextDirection.ltr,
+                            decoration: _decoration(label: l10n.bankIbanLabel, hint: l10n.bankIbanHint),
+                            validator: (v) => !isSupportedIban(v ?? '') ? l10n.bankIbanInvalid : null,
+                          ),
+                          Text(l10n.bankSandboxNotice, style: const TextStyle(color: Color(0xFF765143))),
+                          const SizedBox(height: 16),
+                        ],
                         DropdownButtonFormField<int>(
                           initialValue: switch (vm.gender) {
                             BeneficiaryGender.male => 1,
@@ -460,6 +481,7 @@ class _BeneficiaryFormViewState extends State<BeneficiaryFormView> {
                                   final saved = await vm.save(
                                     _name.text,
                                     '$dialCode${_phone.text}',
+                                    iban: vm.isBankAccount ? _iban.text : null,
                                   );
                                   if (saved != null && context.mounted)
                                     context.pop(saved);

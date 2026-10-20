@@ -1,4 +1,5 @@
 abstract final class ApiErrorCodes {
+  static const String sessionUserNotFound = 'SESSION_007';
   static const String invalidCredentials = 'AUTH_002';
   static const String accountVerificationRequired = 'AUTH_011';
   static const String identifierNotVerified = 'AUTH_012';
