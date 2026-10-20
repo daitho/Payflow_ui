@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/api_error_codes.dart';
@@ -301,10 +302,38 @@ class AuthApiService {
 
       return AuthSessionDto.fromJson(data);
     } on DioException catch (exception) {
-      if (exception.response?.statusCode == 401) {
+      final status = exception.response?.statusCode;
+      final data = exception.response?.data;
+      final code = data is Map && data['code'] is String
+          ? data['code'] as String
+          : null;
+
+      if (kDebugMode) {
+        final uri = exception.requestOptions.uri;
+        // No body, headers, credentials, query parameters or tokens in diagnostics.
+        final endpoint = Uri(
+          scheme: uri.scheme,
+          host: uri.host,
+          port: uri.hasPort ? uri.port : null,
+          path: uri.path,
+        );
+        final safeCode = code != null &&
+                RegExp(r'^(SESSION_[0-9]{3}|AUTH_[0-9]{3}|VALIDATION_ERROR|INTERNAL_ERROR)$')
+                    .hasMatch(code)
+            ? code
+            : 'NONE';
+        debugPrint(
+          '[AUTH-REFRESH] ${exception.requestOptions.method} $endpoint '
+          'status=${status ?? 'NO_RESPONSE'} code=$safeCode',
+        );
+      }
+
+      if (status == 401 ||
+          (status == 404 && code == ApiErrorCodes.sessionUserNotFound)) {
         throw const SessionExpiredException();
       }
 
+      // A route/proxy 404, timeout or server failure does not invalidate the session.
       rethrow;
     }
   }
